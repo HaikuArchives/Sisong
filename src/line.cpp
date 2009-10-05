@@ -243,7 +243,7 @@ void clLine::set_insertion_point(int newip)
 		
 		if (offset > 0)
 		{
-			MoveGapLeft(offset);
+			MoveGapRight(offset);
 		}
 		else
 		{
@@ -268,7 +268,7 @@ void clLine::MoveGapRight(int nchars)
 	}
 	
 	// move characters just after end of gap to start of gap.
-	memmove(&text[gap_start], &text[gap_end+1], nchars);
+	memmove(&this->text[gap_start], &text[gap_end+1], nchars);
 	
 	this->gap_start += nchars;
 	this->gap_end += nchars;
