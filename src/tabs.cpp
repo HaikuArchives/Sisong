@@ -313,7 +313,7 @@ BPoint pos;
 		}
 		else if (buttons == B_SECONDARY_MOUSE_BUTTON)
 		{	// right-click; close tab
-			ConfirmCloseEditView(tab->ev);
+			tab->ev->ConfirmClose(false);
 		}		
 	}
 	else if (buttons == B_SECONDARY_MOUSE_BUTTON)

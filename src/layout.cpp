@@ -92,7 +92,7 @@ BStopWatch *w = new BStopWatch("load_layout");
 		return 1;
 	}
 
-	editor_close_all();	
+	EditView::Close_All();
 	
 	EditView *ev = NULL, *lastvalidev = NULL;
 	for(i=0;i<docCount;i++)

@@ -96,6 +96,7 @@ struct EditorData
 	EditView *curev;
 	CList *DocList;
 	int NextUntitledID;				// next number for untitled documents
+	int NextDocID;					// next DocID value (unique ID for each document opened in a session)
 	
 	// information about the window
 	int width, height;				// width and height in chars
@@ -142,6 +143,10 @@ struct EditorData
 		bool DisableLexer;
 		bool ShowBuildHelp;		
 		bool CheckForUpdate;
+		
+		bool FixIndentationGaps;
+		bool RemoveTrailingWhitespace;
+		bool WarnHaikuGuidelines;
 		
 		// F-key shortcuts: maps F1-F12 to associated menu commands,
 		// or 0 if nothing set

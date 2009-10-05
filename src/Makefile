@@ -2,34 +2,36 @@
 all: ../line
 
 ../line:  IComm/IShelf.o MainWindow.o EditArea.o EditPane.o \
-	 main.o edit.o edit_keys.o edit_cursor.o UpdateLine.o \
-	 selection.o edit_actions.o line.o lexer.o redraw.o \
-	 Templates.o InputBox.o NewProject.o projects.o layout.o \
-	 PopupPane.o CompilePane.o SearchResults.o BuildHelpPane.o menu.o \
-	 draw_cursor.o LNPanel.o spacer.o cmdseq.o FindBox.o \
-	 DocPoint.o edit_mouse.o undo.o bmatch.o tabs.o \
-	 misc.o clipboard.o colors.o config.o ViewTimer.o \
-	 FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o FunctionList.o \
-	 AutoSaver.o testview.o CList.o MessageView.o NotifyUpdate.o \
-	 stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/GeneralPreflet.o Prefs/ColorsPreflet.o \
-	 Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o \
-	 FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o \
-	 DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o
+	 main.o edit.o edit_files.o edit_keys.o edit_cursor.o \
+	 UpdateLine.o selection.o edit_actions.o line.o lexer.o \
+	 redraw.o Templates.o InputBox.o NewProject.o projects.o \
+	 layout.o PopupPane.o CompilePane.o SearchResults.o BuildHelpPane.o \
+	 menu.o draw_cursor.o LNPanel.o spacer.o cmdseq.o \
+	 FindBox.o DocPoint.o edit_mouse.o undo.o bmatch.o \
+	 tabs.o misc.o clipboard.o colors.o config.o \
+	 ViewTimer.o FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o \
+	 FunctionList.o AutoSaver.o testview.o CList.o MessageView.o \
+	 NotifyUpdate.o stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/GeneralPreflet.o \
+	 Prefs/ColorsPreflet.o Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o \
+	 Prefs/MiscPreflet.o FileView/IconCache.o FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o \
+	 FileView/TitleView.o DirMenu/DirMenu.o DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o \
+	 ../common/stat.o ../common/smal.o
 	gcc -o ../line \
 	 IComm/IShelf.o MainWindow.o EditArea.o EditPane.o \
-	 main.o edit.o edit_keys.o edit_cursor.o UpdateLine.o \
-	 selection.o edit_actions.o line.o lexer.o redraw.o \
-	 Templates.o InputBox.o NewProject.o projects.o layout.o \
-	 PopupPane.o CompilePane.o SearchResults.o BuildHelpPane.o menu.o \
-	 draw_cursor.o LNPanel.o spacer.o cmdseq.o FindBox.o \
-	 DocPoint.o edit_mouse.o undo.o bmatch.o tabs.o \
-	 misc.o clipboard.o colors.o config.o ViewTimer.o \
-	 FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o FunctionList.o \
-	 AutoSaver.o testview.o CList.o MessageView.o NotifyUpdate.o \
-	 stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/GeneralPreflet.o Prefs/ColorsPreflet.o \
-	 Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o \
-	 FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o \
-	 DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o \
+	 main.o edit.o edit_files.o edit_keys.o edit_cursor.o \
+	 UpdateLine.o selection.o edit_actions.o line.o lexer.o \
+	 redraw.o Templates.o InputBox.o NewProject.o projects.o \
+	 layout.o PopupPane.o CompilePane.o SearchResults.o BuildHelpPane.o \
+	 menu.o draw_cursor.o LNPanel.o spacer.o cmdseq.o \
+	 FindBox.o DocPoint.o edit_mouse.o undo.o bmatch.o \
+	 tabs.o misc.o clipboard.o colors.o config.o \
+	 ViewTimer.o FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o \
+	 FunctionList.o AutoSaver.o testview.o CList.o MessageView.o \
+	 NotifyUpdate.o stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/GeneralPreflet.o \
+	 Prefs/ColorsPreflet.o Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o \
+	 Prefs/MiscPreflet.o FileView/IconCache.o FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o \
+	 FileView/TitleView.o DirMenu/DirMenu.o DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o \
+	 ../common/stat.o ../common/smal.o \
 	 -lbe -ltracker
 
 IComm/IShelf.o:	IComm/IShelf.cpp IComm/IShelf.fdh editor.h ../common/basics.h \
@@ -139,6 +141,24 @@ edit.o:	edit.cpp edit.fdh editor.h ../common/basics.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
 	gcc -g -c edit.cpp -o edit.o
+
+edit_files.o:	edit_files.cpp edit_files.fdh editor.h ../common/basics.h \
+		../common/smal.h SubWindow.h QListView.h \
+		MessageView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		menu.h main.h projects.h \
+		InputBox.h PopupPane.h SearchResults.h \
+		CompilePane.h BuildHelpPane.h FunctionList.h \
+		EditArea.h IComm/IShelf.h MainWindow.h \
+		ColoredStringItem.h
+	gcc -g -c edit_files.cpp -o edit_files.o
 
 edit_keys.o:	edit_keys.cpp edit_keys.fdh editor.h ../common/basics.h \
 		../common/smal.h SubWindow.h QListView.h \
@@ -817,7 +837,7 @@ Prefs/Prefs.o:	Prefs/Prefs.cpp Prefs/Prefs.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h Prefs/Prefs.h Prefs/Preflet.h \
 		Prefs/AboutPreflet.h Prefs/GeneralPreflet.h Prefs/ColorsPreflet.h \
 		Prefs/ColorView.h Prefs/ColorItem.h Walter/Spinner.h \
-		Prefs/ShortcutsPreflet.h Prefs/StatsPreflet.h
+		Prefs/ShortcutsPreflet.h Prefs/StatsPreflet.h Prefs/MiscPreflet.h
 	gcc -g -c Prefs/Prefs.cpp -o Prefs/Prefs.o
 
 Prefs/AboutPreflet.o:	Prefs/AboutPreflet.cpp Prefs/AboutPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
@@ -939,6 +959,25 @@ Prefs/StatsPreflet.o:	Prefs/StatsPreflet.cpp Prefs/StatsPreflet.fdh Prefs/Prefle
 		Prefs/StatsPreflet.h
 	gcc -g -c Prefs/StatsPreflet.cpp -o Prefs/StatsPreflet.o
 
+Prefs/MiscPreflet.o:	Prefs/MiscPreflet.cpp Prefs/MiscPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
+		SubWindow.h MessageView.h editor.h \
+		../common/basics.h ../common/smal.h QListView.h \
+		testview.h CList.h config.h \
+		colors.h messages.h lexer.h \
+		line.h DocPoint.h FindBox.h \
+		selection.h undo.h bmatch.h \
+		clipboard.h cmdseq.h edit_cursor.h \
+		edit_mouse.h edit.h tabs.h \
+		draw.h FontDrawer.h draw_cursor.h \
+		LNPanel.h spacer.h ViewTimer.h \
+		EditPane.h OffscreenBuffer.h menu.h \
+		main.h projects.h InputBox.h \
+		PopupPane.h SearchResults.h CompilePane.h \
+		BuildHelpPane.h FunctionList.h EditArea.h \
+		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
+		Prefs/MiscPreflet.h
+	gcc -g -c Prefs/MiscPreflet.cpp -o Prefs/MiscPreflet.o
+
 FileView/IconCache.o:	FileView/IconCache.cpp FileView/IconCache.fdh FileView/IconCache.h FileView/QuickSearch.h
 	gcc -g -c FileView/IconCache.cpp -o FileView/IconCache.o
 
@@ -987,6 +1026,7 @@ clean:
 	rm -f EditPane.o
 	rm -f main.o
 	rm -f edit.o
+	rm -f edit_files.o
 	rm -f edit_keys.o
 	rm -f edit_cursor.o
 	rm -f UpdateLine.o
@@ -1039,6 +1079,7 @@ clean:
 	rm -f Prefs/ColorView.o
 	rm -f Prefs/ShortcutsPreflet.o
 	rm -f Prefs/StatsPreflet.o
+	rm -f Prefs/MiscPreflet.o
 	rm -f FileView/IconCache.o
 	rm -f FileView/QuickSearch.o
 	rm -f FileView/FileView.o
@@ -1058,6 +1099,7 @@ cleanfdh:
 	rm -f EditPane.fdh
 	rm -f main.fdh
 	rm -f edit.fdh
+	rm -f edit_files.fdh
 	rm -f edit_keys.fdh
 	rm -f edit_cursor.fdh
 	rm -f UpdateLine.fdh
@@ -1110,6 +1152,7 @@ cleanfdh:
 	rm -f Prefs/ColorView.fdh
 	rm -f Prefs/ShortcutsPreflet.fdh
 	rm -f Prefs/StatsPreflet.fdh
+	rm -f Prefs/MiscPreflet.fdh
 	rm -f FileView/IconCache.fdh
 	rm -f FileView/QuickSearch.fdh
 	rm -f FileView/FileView.fdh

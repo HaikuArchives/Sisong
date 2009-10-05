@@ -87,7 +87,7 @@ stSearchResult *result;
 	result = (stSearchResult *)ResultsList.ItemAt(index);
 	if (!result) return;
 	
-	OpenFileAtLine(result->filename, result->lineNumber, \
+	DoFileOpenAtLine(result->filename, result->lineNumber, \
 					result->x, result->x + strlen(search_term) - 1);
 }
 

@@ -11,6 +11,7 @@ EditArea.cpp
 EditPane.cpp
 main.cpp
 edit.cpp
+edit_files.cpp
 edit_keys.cpp
 edit_cursor.cpp
 UpdateLine.cpp
@@ -63,6 +64,7 @@ Prefs/ColorItem.cpp
 Prefs/ColorView.cpp
 Prefs/ShortcutsPreflet.cpp
 Prefs/StatsPreflet.cpp
+Prefs/MiscPreflet.cpp
 FileView/IconCache.cpp
 FileView/QuickSearch.cpp
 FileView/FileView.cpp

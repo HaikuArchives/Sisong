@@ -47,10 +47,16 @@ public:
 
 	// files
 	bool Save(const char *filename);
+	static void Save_All();
+	
 	void SetDirty();
 	void ClearDirty();
 	void MakeUntitled();
 	void ReloadFile();
+
+	void Close(bool DoSanityCheck=true);
+	uint8 ConfirmClose(bool OfferCancelButton=true);
+	static void Close_All();
 	
 	// key handling
 	void HandleKey(int ch);
@@ -148,4 +154,3 @@ public:
 #define CEV_CLOSED_NOT_SAVED	1
 #define CEV_CLOSE_CANCELED		2
 
-int ConfirmCloseEditView(EditView *ev, bool OfferCancelButton=true);

@@ -123,7 +123,7 @@ void CProjectManager::OpenBuildScript(const char *path)
 char scriptname[MAXPATHLEN];
 
 	strcpy(scriptname, GetProjectFile(path, P_BUILDSCRIPT));
-	OpenFile(scriptname);
+	DoFileOpen(scriptname);
 	
 	if (editor.settings.ShowBuildHelp)
 	{
@@ -165,7 +165,7 @@ bool AProjectOpenPreviously = fCurProject[0] ? true : false;
 	// try to load last layout
 	if (load_layout(GetProjectFile(path, P_LAYOUT)))
 	{
-		editor_close_all();
+		EditView::Close_All();
 		
 		if (!allow_none_open)
 			TabBar->SetActiveTab(CreateEditView(NULL));

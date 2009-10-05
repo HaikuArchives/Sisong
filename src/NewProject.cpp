@@ -144,11 +144,12 @@ BString *projectPath;
 	
 	// open the project. (this also creates an empty build script).
 	ProjectManager.OpenProject(projectPath->String(), true);
-	editor_close_all();
-	
+
 	// open all files that were created from New Project window, as we assume
 	// they're part of the project.
-	int i, count=files_to_open.CountItems();
+	EditView::Close_All();
+	
+	int i, count=files_to_open.CountItems();	
 	for(i=0;i<count;i++)
 	{
 		CreateEditView((char *)files_to_open.ItemAt(i));

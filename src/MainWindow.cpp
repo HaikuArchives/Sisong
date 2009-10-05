@@ -79,10 +79,10 @@ CMainWindow::~CMainWindow()
 {
 	settings->SetInt("SelectedColorScheme", CurrentColorScheme.GetLoadedSchemeIndex());
 
-	// this needs to be done here, because when we leave here, our tab bar will
-	// be auto-destroyed, and we don't want to be closing documents with an
+	// this needs to be done here, because once we leave here, our tab bar will
+	// be auto-destroyed, and we don't want to try closing documents with an
 	// invalid tab bar pointer.
-	editor_close_all();
+	EditView::Close_All();
 	
 	// close popup panes
 	popup.pane->Close();

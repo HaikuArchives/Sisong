@@ -689,7 +689,7 @@ if (!line) return;
 	
 	if (info.lineNo != -1 && file_exists(info.filename))
 	{
-		OpenFileAtLine(info.filename, info.lineNo, -1, -1);
+		DoFileOpenAtLine(info.filename, info.lineNo, -1, -1);
 	}
 	else
 	{

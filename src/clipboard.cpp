@@ -3,7 +3,8 @@
 #include <Clipboard.h>
 #include "clipboard.fdh"
 
-// copy the selected text to the clipboard
+// copy the selected text to the clipboard.
+// returns the number of lines copied.
 void EditView::CopySelection()
 {
 int x1, y1, x2, y2;
@@ -15,6 +16,8 @@ BString *contents;
 	contents = this->RangeToString(x1, y1, x2, y2, "\n");
 	SetClipboardText(contents->String(), contents->Length());
 	delete contents;
+	
+	//return (y2 - y1) + 1;
 }
 
 // paste the contents of the clipboard into the document

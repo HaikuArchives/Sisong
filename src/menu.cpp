@@ -234,10 +234,10 @@ static bool FileMenu(unsigned int code, BMessage *msg)
 		case M_FILE_SAVE: FileSave(); break;
 		case M_FILE_SAVE_AS: FileSaveAs(false, false); break;
 		case M_FILE_SAVE_COPY: FileSaveAs(true, false); break;
-		case M_FILE_SAVE_ALL: editor_save_all(); break;
+		case M_FILE_SAVE_ALL: EditView::Save_All(); break;
 		
 		case M_FILE_CLOSE:
-			ConfirmCloseEditView(editor.curev, false);
+			editor.curev->ConfirmClose(false);
 		break;
 		
 		case M_FILE_CLOSE_ALL:
@@ -271,7 +271,7 @@ static bool FileMenu(unsigned int code, BMessage *msg)
 				
 				if (ev != exception)
 				{
-					if (ConfirmCloseEditView(ev, true) == CEV_CLOSE_CANCELED)
+					if (ev->ConfirmClose(true) == CEV_CLOSE_CANCELED)
 						break;
 				}
 			}
@@ -581,7 +581,7 @@ static bool RunMenu(unsigned int code, BMessage *msg)
 		case M_RUN_RUN:
 		case M_RUN_BUILD_NO_RUN:
 		{
-			editor_save_all();
+			EditView::Save_All();
 			MainWindow->popup.compile->RunScript((code == M_RUN_RUN));
 		}
 		break;
@@ -808,7 +808,7 @@ failure: ;
 		
 		if (ev->CloseAfterSave)
 		{
-			CloseEditView(ev);
+			ev->Close();
 		}
 		
 		if (shutdown_afterwards)

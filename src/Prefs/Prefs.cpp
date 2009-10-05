@@ -8,6 +8,7 @@
 #include "ColorsPreflet.h"
 #include "ShortcutsPreflet.h"
 #include "StatsPreflet.h"
+#include "MiscPreflet.h"
 
 #include "Prefs.fdh"
 
@@ -88,6 +89,7 @@ PrefsWindow::PrefsWindow()
 	AddPreflet(" Shortcuts", new ShortcutsPreflet(this));
 	//AddPreflet(" Appearance", NULL);
 	AddPreflet(" Stats", new StatsPreflet(this));
+	AddPreflet(" Misc", new MiscPreflet(this));
 	
 	fContainerContents = NULL;
 	

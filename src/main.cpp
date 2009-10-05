@@ -206,6 +206,10 @@ bool firsttime;
 	editor.settings.use_ibeam_cursor = settings->GetInt("use_ibeam", 0);
 	//editor.settings.swap_ctrl_and_alt = settings->GetInt("swap_ctrl_and_alt", 0);
 
+	editor.settings.FixIndentationGaps = settings->GetInt("FixIndentationGaps", 1);
+	editor.settings.RemoveTrailingWhitespace = settings->GetInt("RemoveTrailingWhitespace", 1);
+	editor.settings.WarnHaikuGuidelines = settings->GetInt("WarnHaikuGuidelines", 0);
+
 	editor.stats.keystrokes_typed = settings->GetInt("keystrokes_typed", 0);
 	editor.stats.mouse_clicks = settings->GetInt("mouse_clicks", 0);
 	editor.stats.CRs_typed = settings->GetInt("CRs_typed", 0);
@@ -251,6 +255,10 @@ void SaveEditorSettings()
 	settings->SetInt("use_ibeam", editor.settings.use_ibeam_cursor);
 	//settings->SetInt("swap_ctrl_and_alt", editor.settings.swap_ctrl_and_alt);
 	
+	settings->SetInt("FixIndentationGaps", editor.settings.FixIndentationGaps);
+	settings->SetInt("RemoveTrailingWhitespace", editor.settings.RemoveTrailingWhitespace);
+	settings->SetInt("WarnHaikuGuidelines", editor.settings.WarnHaikuGuidelines);
+
 	settings->SetInt("keystrokes_typed", editor.stats.keystrokes_typed);
 	settings->SetInt("mouse_clicks", editor.stats.mouse_clicks);
 	settings->SetInt("CRs_typed", editor.stats.CRs_typed);
