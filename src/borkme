@@ -1,0 +1,50 @@
+
+int main(int argc, char **argv)
+{
+	editor.settings.smart_indent_on_open = 1;
+	editor.settings.smart_indent_on_close = 1;
+	editor.settings.no_smart_open_at_baselevel = 1;
+	editor.settings.settings.language_settings = 0;
+	if (region->CountRects() > 0) {
+			// if the region still contains any rects
+			// offset to source location again
+			region->OffsetBy(-xOffset, -yOffset);
+
+			BRegion* allDirtyRegions = fRegionPool.GetRegion(fDirtyRegion);
+			if (allDirtyRegions != NULL) {
+				if (fPendingUpdateSession->IsUsed()) {
+					allDirtyRegions->Include(
+						&fPendingUpdateSession->DirtyRegion());
+				}
+				if (fCurrentUpdateSession->IsUsed()) {
+					allDirtyRegions->Include(
+						&fCurrentUpdateSession->DirtyRegion());
+				}
+				// Get just the part of the dirty regions which is semantically
+				// copied along
+				allDirtyRegions->IntersectWith(region);
+			}
+
+			BRegion* copyRegion = fRegionPool.GetRegion(*region);
+			if (copyRegion !=
+	smal_init();
+	
+	memset(&editor, 0, sizeof(editor));
+				if (argc < 2) editor.settings.esc_quits_immediately = 1;akdfhkausdfhaklsdufhasduklfhasduklfhasdklufhasduklfhldkfaskdufhaklsdufhalsdkufhasdklfhusd
+	try {
+		desktop = new Desktop(userID);
+
+		status_t status = desktop->Init();
+		if (status == B_OK) {
+			if (!desktop->Run())
+				status = B_ERROR;
+		}
+		if (status == B_OK && !fDesktops.AddItem(desktop))
+			status = B_NO_MEMORY;
+
+		if (status != B_OK) {
+	editor.settings.smart_indent_on_open = 1;
+	editor.settings.smart_indent_on_close = 1;
+	editor.settings.no_smart_open_at_baselevel = 1;
+	editor.settings.language_aware_indent = 0;
+}

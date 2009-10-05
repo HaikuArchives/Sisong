@@ -1,0 +1,14 @@
+
+resource app_signature "application/SS-IComponent-CursorPos";
+
+resource app_version {
+	major  = 1,
+	middle = 1,
+	minor  = 1,
+
+	variety = B_APPV_FINAL,
+	internal = 0,
+
+	short_info = "CursorPos Component",
+	long_info = "CursorPos sample component for IComm\n(c)2009 Caitlin Shaw"
+};

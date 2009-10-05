@@ -1,0 +1,25 @@
+
+// local header for the compile pane
+
+typedef struct rfContext
+{
+	int fd;
+	
+	char *line;
+	int line_len;
+	int max_line_len;
+};
+
+#define CP_MAX_LINE_LEN		256
+
+#define ET_NONE			0		// line is not a compiler error
+#define ET_ERROR		1		// line is a compiler error message
+#define ET_WARNING		2		// line is a compiler warning message
+#define ET_HEADER		3		// line is a section header ("In method 'x':")
+#define ET_INFO			4		// is additional info "(Each undeclared identifier..."
+typedef struct stLineInfo
+{
+	char errorType;
+	char filename[CP_MAX_LINE_LEN];	// file error is in
+	int lineNo;						// line number error is on
+};

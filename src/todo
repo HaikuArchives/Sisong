@@ -1,0 +1,226 @@
+TOP PRIORITY
+	
+		haiku guidelines warning
+
+		* "fix gaps in indentation when opening"
+		* "remove trailing whitespace when saving"
+
+		layer should save docs in tab order, not document order
+		(switch pointers in DocList when moving tabs)
+
+		running "replace all" while find pane up needlessly clears results
+
+		ev->filename() - make it a function, using BDirectory
+		and add ev->SetFilename()
+
+		context menu
+			"Add selection as identifier"
+			"Add selection as system constant"
+		
+		a third color for "true" and "false"
+		ordering for colors in menu
+		it borks if you delete the project which is currently active
+
+		better FL separators
+
+		text drag n' drop
+	
+		brace match fails when one but not other is PP'd
+
+	:: R3 todo
+
+		turn off closing of find all when F3
+
+		option to use native-style tabs
+
+		replace doesn't adjust X scroll
+
+		fix number/lexer glitch
+
+		ssbuild
+		continuous compilation
+
+		haiku-style grabby
+
+		change functionlist to a BOutlineListView
+
+		build-script -> project dir
+
+		fix "cd" problem with spaces
+
+		check for proper PostMessage usage: caller retains ownership of message. Do an "electric fence" type test.
+
+		add option to settings panel to configure "NPProjectDir".
+
+		do node monitoring for directory deletion, and detect when other
+		programs change open files.
+
+		when switching projects, unsaved changes are not saved
+
+		fix lack of hoz scroll bar on compile pane
+
+		replicant support:
+			side panel on right is now a replicant tray
+			Function List is a replicant that slots into the tray
+			also available is a Project Maanger
+			an additional tray can be opened on left as well
+
+====================================
+
+	separate shelfs for each replicant, with a resizer grabby between each
+
+	when a replicant is added to a shelf, it is checked whether it is a "Sisong-aware" replicant, or just a regular replicant like the clock
+
+	if replicant is Sisong aware, it is resized to take up the whole shelf, and the shelf is then marked as not accepting any more drags until that replicant is removed.
+
+	there are "add another shelf" and "remove this shelf" context menu items.
+=====================================
+
+		fix red line in spacer when changing color schemes 
+		
+		scroll wheel should work if mouse is over popup pane
+
+		Open Recent
+
+		handle slight-click on spacer
+		
+		intelligent matching of "break" to "case/default"
+
+		a status box when running Find in Files that shows which file
+		is currently being scanned and has a "stop" button like Tracker.
+
+		fix floating app feel of settings panel
+
+		----
+		
+		disable "smal" stuff for release
+
+		option to auto-convert space indents to tab indents
+
+		auto-compile in background
+
+		mouse gestures
+		
+		redo search-result pane etc to change the target of the
+		message so that we don't have to route through MainWindow
+
+		right-click in Build window to minimize it to bottomness
+		so that only the resizer bar is visible. it closes when
+		compile is done, or it pops open if an error occurs.
+		
+		make the cmdseq be owned by the preview panel, not the
+		current editview, and cancel when mouse is moved or tab
+		is changed.
+
+		search for memory leaks
+		
+		fix F3 after switching documents		
+		
+		when spaces selected, Find Box borks		
+	
+		fix "pinning" when changing size of edit pane
+		and build win is up: pin to bottom if already at bottom		
+	
+
+ok:
+	* - kill of child process fails, because it is actually
+		"sh" that gets killed, not the real child.
+			^ kill child's children, too?
+	* - thread fails to add the line about killing the child PID,
+		because the looper is locked by the other thread.
+			^ use LockingThread, check if we are holding it
+	
+	A - Show hoz scrollbar when necessary on compile pane
+	B - add "!" as prefix to ignore exit code
+	C - fixup finding temp directory dynamically etc
+	D - Popups should be in charge of there own title
+	
+
+Show Console menu item
+
+
+Font().TruncateString (for popup pane title)
+
+tab-bar shortcut for "open file in same folder"
+
+	: MainWindow->popup.pane->Open();"TestPane"
+	select );" from right to left, and delete. "TestPane" turns bold.
+
+indent on
+	for(;;)
+	{adfasdf
+
+tabs at start of line cause false negative in Function List
+
+set default dir used by "..." button in find in file dialog
+
+fix "pinning" (with an "extra" "empty" line at the bottom)
+
+whitespace-trimming feature
+
+fix "new 6".
+
+when replacing number in this:
+	ev->scroll_down(2)
+	by backspacing over the "2",
+	lexer does not color properly
+
+text in search results pane should be lexed
+
+pass PP state from one line to another via "\"
+
+switch all edit.Data... structs into classes so we can use
+destructors for them, and get rid of the "not C++ way" warning
+
+should be able to push ALT by itself to trigger cmd_seq
+after triggering an action, show the name of the action for a moment
+in the window.
+
+popup when a file is modified by another program
+
+show commented-out functions as a different color in Function List
+
+brace matching doesn't work within PP-colored lines
+
+numbers aren't colored as a number if they are last char on line
+
+bitmapped font
+
+
+MEDIUM PRIORITY
+
+option to turn nested comments on off
+
+
+
+LOW PRIORITY
+[things which could be feasibly fixed using
+ the editor itself]
+
+cursor erasure is SERIOUSLY a hack
+
+lexer: more identifier colors for things like "false",
+		"B_ALIGN_RIGHT", BButton.
+
+the ClearBelow when we delete a line with less than
+a full page visible could be a ClearRegion that clears
+just that line.
+
+C++ify line.cpp
+
+include option for calling fsync() after saving
+show length of undo buffer
+remember position within files even after closing
+bitmap font mode so we can have DOSLike back
+smart indentation
+fix scroll bars
+add status bar to left of scrollbar
+bold {/}
+option to switch CTRL and ALT
+create a brace set: (). use DEL to kill the ); '(' does not update to be broken.
+BraceScan was supposed to use a static if: it is inefficient to make it a regular function.
+proper mouse tracking
+objects created via new etc cannot be smal-checked
+use native min/max
+eliminate "EditView *ev = this"
+FunctionList: different FL's or FL sets for each open document soB_INSTRUCTION_ACCESS_EXCEPTION
