@@ -34,7 +34,6 @@ public:
 	char GetCharAtIndex(int index);
 	void GetLineToBuffer(char *buffer);
 	BString *GetLineAsString();
-	BString *GetLineAsStringAndRTrim();
 	BString *GetPartialLine(int start, int end);
 	
 	void set_insertion_point(int x);

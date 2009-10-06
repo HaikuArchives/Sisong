@@ -7,8 +7,8 @@ static const char *info_text[] =
 	B_UTF8_COPYRIGHT"2009 Caitlin Shaw",
 	"Released under GNU/GPL version 3",
 	"",
-	"Release Candidate 3",
-	"<Test Version 1>",
+	"Release Candidate 2+",
+	"<Development Version>",
 	"",
 	NULL
 };

@@ -159,8 +159,9 @@ char clLine::GetCharAtIndex(int index)
 	return text[index];
 }
 
-// write the entire contents of the line to the given buffer
-// you need to check first that the buffer is big enough.
+// write the entire contents of the line to the given buffer.
+// you must check first that the buffer is big enough, and
+// a terminating null is NOT written.
 void clLine::GetLineToBuffer(char *buffer)
 {
 	memcpy(buffer, this->text, this->gap_start);
@@ -177,35 +178,6 @@ BString *string = new BString;
 	
 	return string;
 }
-
-// return the contents of the line and trim trailing whitespace
-BString *clLine::GetLineAsStringAndRTrim()
-{
-BString *string = GetLineAsString();
-
-	int length = string->Length();
-	if (!length) return string;
-	
-	char *buffer = string->LockBuffer(0);
-	char *ptr = &buffer[length - 1];
-	
-	while(ptr >= buffer)
-	{
-		if (*ptr == ' ' || *ptr == TAB)
-		{
-			length--;
-			ptr--;
-		}
-		else
-		{
-			break;
-		}
-	}
-	
-	string->UnlockBuffer(length);
-	return string;
-}
-
 
 // returns partial contents of the given line as a String object.
 // start & end are inclusive indexes.

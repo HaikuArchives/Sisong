@@ -18,10 +18,14 @@ public:
 	int RunScriptLine(const char *line);
 	int Exec(const char *program, char *args[]);
 
-	bool has_errors;	// 1 if compile errors are in pane
-	int firstErrorLine;	// line no of first error
-	int firstClickableLine;
-	int lineCount;
+	bool fHasErrors;	// 1 if compile errors were detected during build
+	int fLineCount;
+	
+	// stuff for the auto-take-me-to-error if errors occur
+	int fAutoScrollLine;
+	int fAutoScrollLineType;
+	int fAutoJumpLine;
+	int fAutoJumpLineType;
 
 	friend status_t ScriptRunnerThread(void *);
 	

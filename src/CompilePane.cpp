@@ -127,7 +127,7 @@ float smax, oldsmax, oldval;
 		UnlockLooper();
 	}
 	
-	lineCount++;
+	fLineCount++;
 	release_sem_etc(ListSemaphore, 1, B_DO_NOT_RESCHEDULE);
 }
 
@@ -141,10 +141,13 @@ BListItem *item;
 
 	ListView->MakeEmpty();
 	
-	has_errors = false;
-	lineCount = 0;
-	firstErrorLine = -1;
-	firstClickableLine = -1;
+	fAutoScrollLine = -1;
+	fAutoScrollLineType = -1;
+	fAutoJumpLine = -1;
+	fAutoJumpLineType = -1;
+	
+	fHasErrors = false;
+	fLineCount = 0;
 }
 
 /*
@@ -315,11 +318,13 @@ bool scriptEmpty = true;
 		CompileThread = -1;
 		thread.quit_ack = -1;
 		
-		if (has_errors)
-		{	// snap up to first error
-			if (firstErrorLine != -1 && MainWindow->popup.pane->IsOpen())
+		if (fHasErrors)
+		{
+			if (editor.settings.build.JumpToErrors && \
+				MainWindow->popup.pane->IsOpen())
 			{
-				int y = firstErrorLine - 1;
+				// scroll pane up so first error is visible
+				int y = (fAutoScrollLine - 1);
 				if (y < 0) y = 0;
 				
 				if (LockLooper())
@@ -331,9 +336,9 @@ bool scriptEmpty = true;
 					UnlockLooper();
 				}
 				
-				// simulate click on the first error--take them right to it
-				if (firstClickableLine != -1)
-					ListView->Select(firstClickableLine);
+				// now simulate a click on the first clickable line--take them right to it
+				if (fAutoJumpLine != -1)
+					ListView->Select(fAutoJumpLine);
 			}
 		}
 		else if (exitcode == 0 && !scriptEmpty)
@@ -366,7 +371,7 @@ int CompilePane::RunScriptLine(const char *line)
 	}
 	else if (!strcmp(line, "hide"))
 	{
-		if (!has_errors)
+		if (!fHasErrors)
 			if (!MainWindow->top.menubar->ShowConsoleItem->IsMarked())				
 				MainWindow->PostMessage(new BMessage(M_POPUPPANE_CLOSE));
 		
@@ -608,24 +613,41 @@ char ch;
 			stLineInfo info;
 			ParseLineInfo(rf->line, &info);			
 			
+			// handle auto-jumping in case of errors
 			if (info.errorType != ET_NONE)
 			{
-				pane->has_errors = true;
+				pane->fHasErrors = true;
 				
-				if (pane->firstErrorLine == -1)
-					pane->firstErrorLine = pane->lineCount;
+				bool error_precedence = (editor.settings.build.NoJumpToWarning && \
+										 pane->fAutoScrollLineType != ET_ERROR && \
+										 info.errorType == ET_ERROR);
 				
+				// will scroll the pane up to the first line which is not "normal".
+				// errors take precedence over warnings in NoJumpToWarning mode.
+				if (pane->fAutoScrollLine == -1 || error_precedence)
+				{
+					pane->fAutoScrollLine = pane->fLineCount;
+					pane->fAutoScrollLineType = info.errorType;
+				}
+				
+				// will jump to the first non-normal line for which a line number is available.
+				// again, errors take precedence over warnings in NoJumpToWarning mode.
 				if (info.lineNo != -1)
 				{
-					if (pane->firstClickableLine == -1)
-						pane->firstClickableLine = pane->lineCount;
+					bool error_precedence = (editor.settings.build.NoJumpToWarning && \
+											 pane->fAutoJumpLineType != ET_ERROR && \
+											 info.errorType == ET_ERROR);
 					
-					if (pane->firstClickableLine == pane->lineCount - 1)
+					if (pane->fAutoJumpLine == -1 || error_precedence)
+						pane->fAutoJumpLine = pane->fLineCount;
+					
+					if (pane->fAutoJumpLine == pane->fLineCount - 1)
 					{
 						if (strstr(rf->line, "at this point in file") ||
 							strstr(rf->line, "within this context"))
 						{
-							pane->firstClickableLine = pane->lineCount;
+							pane->fAutoJumpLine = pane->fLineCount;
+							pane->fAutoJumpLineType = info.errorType;
 						}
 					}
 				}

@@ -145,8 +145,14 @@ struct EditorData
 		bool CheckForUpdate;
 		
 		bool FixIndentationGaps;
-		bool RemoveTrailingWhitespace;
+		bool TrimTrailingOnSave;
 		bool WarnHaikuGuidelines;
+		
+		struct
+		{
+			bool JumpToErrors;
+			bool NoJumpToWarning;
+		} build;
 		
 		// F-key shortcuts: maps F1-F12 to associated menu commands,
 		// or 0 if nothing set

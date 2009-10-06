@@ -97,7 +97,6 @@ char *buffer = NULL;
 			if (clip->FindData("text/plain", B_MIME_TYPE,
 							(const void **)&text, &textlength) == B_OK)
 			{
-				stat("textlength=%d", textlength);
 				if (textlength >= 0)
 				{
 					buffer = (char *)smal(textlength + 1);

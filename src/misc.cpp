@@ -180,6 +180,28 @@ void AddSuffixIfMissing(char *str, char ch)
 	}
 }
 
+// trims trailing spaces and tabs from the end of a string
+int RTrimWhitespace(char *string, int linelength)
+{
+	char *ptr = (string + (linelength - 1));
+	
+	while(ptr >= string)
+	{
+		if (*ptr == ' ' || *ptr == TAB)
+		{
+			*ptr = 0;
+			ptr--;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	return (ptr - string) + 1;
+}
+
+
 /*
 void c------------------------------() {}
 */

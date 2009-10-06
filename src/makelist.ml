@@ -1,5 +1,5 @@
 <DEFAULT
-COMPILE=gcc -g -c %SRCFILE% -o %MODULE%.%OBJ_EXT%
+COMPILE=gcc -O2 -c %SRCFILE% -o %MODULE%.%OBJ_EXT%
 LPREFIX=gcc -o %EXEFILE%
 LSUFFIX=-lbe -ltracker
 OUTPUT=../line
@@ -58,13 +58,12 @@ NotifyUpdate.cpp
 stats.cpp
 Prefs/Prefs.cpp
 Prefs/AboutPreflet.cpp
-Prefs/GeneralPreflet.cpp
+Prefs/CheckboxPreflet.cpp
 Prefs/ColorsPreflet.cpp
 Prefs/ColorItem.cpp
 Prefs/ColorView.cpp
 Prefs/ShortcutsPreflet.cpp
 Prefs/StatsPreflet.cpp
-Prefs/MiscPreflet.cpp
 FileView/IconCache.cpp
 FileView/QuickSearch.cpp
 FileView/FileView.cpp

@@ -207,8 +207,11 @@ bool firsttime;
 	//editor.settings.swap_ctrl_and_alt = settings->GetInt("swap_ctrl_and_alt", 0);
 
 	editor.settings.FixIndentationGaps = settings->GetInt("FixIndentationGaps", 1);
-	editor.settings.RemoveTrailingWhitespace = settings->GetInt("RemoveTrailingWhitespace", 1);
+	editor.settings.TrimTrailingOnSave = settings->GetInt("TrimTrailingOnSave", 1);
 	editor.settings.WarnHaikuGuidelines = settings->GetInt("WarnHaikuGuidelines", 0);
+	
+	editor.settings.build.JumpToErrors = settings->GetInt("JumpToErrors", 1);
+	editor.settings.build.NoJumpToWarning = settings->GetInt("NoJumpToWarning", 0);
 
 	editor.stats.keystrokes_typed = settings->GetInt("keystrokes_typed", 0);
 	editor.stats.mouse_clicks = settings->GetInt("mouse_clicks", 0);
@@ -256,8 +259,11 @@ void SaveEditorSettings()
 	//settings->SetInt("swap_ctrl_and_alt", editor.settings.swap_ctrl_and_alt);
 	
 	settings->SetInt("FixIndentationGaps", editor.settings.FixIndentationGaps);
-	settings->SetInt("RemoveTrailingWhitespace", editor.settings.RemoveTrailingWhitespace);
+	settings->SetInt("TrimTrailingOnSave", editor.settings.TrimTrailingOnSave);
 	settings->SetInt("WarnHaikuGuidelines", editor.settings.WarnHaikuGuidelines);
+	
+	settings->SetInt("JumpToErrors", editor.settings.build.JumpToErrors);
+	settings->SetInt("NoJumpToWarning", editor.settings.build.NoJumpToWarning);
 
 	settings->SetInt("keystrokes_typed", editor.stats.keystrokes_typed);
 	settings->SetInt("mouse_clicks", editor.stats.mouse_clicks);

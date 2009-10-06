@@ -4,7 +4,7 @@ int main(int argc, char **argv)
 	editor.settings.smart_indent_on_open = 1;
 	editor.settings.smart_indent_on_close = 1;
 	editor.settings.no_smart_open_at_baselevel = 1;
-	editor.settings.settings.language_settings = 0;
+	editor.settings.settings.language_settings = 5;
 	if (region->CountRects() > 0) {
 			// if the region still contains any rects
 			// offset to source location again
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 			BRegion* copyRegion = fRegionPool.GetRegion(*region);
 			if (copyRegion !=
 	smal_init();
-	
+
 	memset(&editor, 0, sizeof(editor));
 				if (argc < 2) editor.settings.esc_quits_immediately = 1;akdfhkausdfhaklsdufhasduklfhasduklfhasdklufhasduklfhldkfaskdufhaklsdufhalsdkufhasdklfhusd
 	try {

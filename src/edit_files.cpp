@@ -250,57 +250,61 @@ void c------------------------------() {}
 */
 
 // saves the document to the given file.
-// returns true if an error occurs.
+// returns nonzer if an error occurs.
 bool EditView::Save(const char *filename)
 {
 EditView *ev = this;
-static const char newline[] = { '\n', 0 };
-char *buffer;
-int buffer_sz = 1024;
-clLine *line;
 FILE *fp;
 
 	if (!(fp = fopen(filename, "wb")))
 	{
-		staterr("edit_save: failed to open file '%s'", filename);
-		return true;
+		staterr("EditView::Save(): failed to open file '%s'", filename);
+		return 1;
 	}
-
-	// this buffer should be start out large enough to hold most lines,
-	// although it will grow if needed.
-	buffer = (char *)smal(buffer_sz);
 	
-	line = ev->firstline;
+	clLine *line = ev->firstline;
 	if (line)
 	{
+		// the starting size should be large enough to all lines in most documents,
+		// but it will grow if needed.
+		int buffer_sz = 1024;
+		char *buffer = (char *)smal(buffer_sz);
+		
 		rept
 		{
+			// check line length. if we need to grow the buffer, do so now.
 			int linelength = line->GetLength();
 			if (linelength >= buffer_sz - 1)
 			{
 				buffer_sz = (linelength + 80);
-				// we don't care about contents of buffer, so i avoid "resmal"
+				// we don't care about prior contents of the buffer, so i avoid "resmal"
 				frees(buffer);
 				buffer = (char *)smal(buffer_sz);
 			}
 			
+			// copy line to buffer, and optionally remove unnecessary whitespace
 			line->GetLineToBuffer(buffer);
+			
+			if (editor.settings.TrimTrailingOnSave)
+				linelength = RTrimWhitespace(buffer, linelength);
+			
+			// write the line
 			fwrite(buffer, linelength, 1, fp);
 			
+			// advance to next line
 			line = line->next;
 			
-			if (line)
-				fputs(newline, fp);
-			else
-				break;
+			if (!line) break;
+			fputc('\n', fp);
 		}
+		
+		frees(buffer);
 	}
 	
-	frees(buffer);
 	fclose(fp);
-
-	return false;
+	return 0;
 }
+
 
 void EditView::Save_All(void)
 {

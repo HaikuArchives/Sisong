@@ -45,7 +45,6 @@ clLine *line;
 	}
 	else
 	{	// insert at beginning
-		
 		if (ev->firstline) ev->firstline->prev = line;
 		else ev->lastline = line;
 		
