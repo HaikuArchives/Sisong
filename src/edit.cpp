@@ -7,7 +7,7 @@ EditView::EditView()
 {
 	// zero out all the structures inside the ev
 	memset(this, 0, sizeof(EditView));
-	
+
 	DocID = editor.NextDocID++;
 	cursor.ev = this;
 	CloseAfterSave = false;
@@ -30,39 +30,39 @@ EditView *ev = this;
 clLine *line;
 
 	line = new clLine(initial_string);
-	
+
 	if (insertafter)
 	{	// insert after
 		line->prev = insertafter;
 		line->next = insertafter->next;
-		
+
 		if (insertafter->next)
 			insertafter->next->prev = line;
 		else
 			ev->lastline = line;
-		
+
 		insertafter->next = line;
 	}
 	else
 	{	// insert at beginning
 		if (ev->firstline) ev->firstline->prev = line;
 		else ev->lastline = line;
-		
+
 		line->prev = NULL;
 		line->next = ev->firstline;
-		
+
 		ev->firstline = line;
 	}
 
 	ev->nlines++;
-	
+
 	/* prevent line pointers from desync'ing
 	    0 LINE A
 		  <----- insertion here  cursor Y is still 1, but curline points to line 2
 	  > 1 LINE B
 		2 LINE C
 	*/
-	
+
 	if (ev->cursor.y > y)
 		ev->curline = ev->curline->prev;
 	if (ev->scroll.y > y)
@@ -79,14 +79,14 @@ EditView *ev = this;
 		line->prev->next = line->next;
 	else
 		ev->firstline = line->next;
-	
+
 	if (line->next)
 		line->next->prev = line->prev;
 	else
 		ev->lastline = line->prev;
-	
+
 	ev->nlines--;
-	
+
 	// -- fixup line pointers to handle the deletion --
 	// cursor
 	if (ev->cursor.y >= ev->nlines)
@@ -110,7 +110,7 @@ EditView *ev = this;
 	{
 		ev->scroll.topline = ev->scroll.topline->next;
 	}
-	
+
 	//staterr("SY:%d   PREDICTED: %x  ACTUAL: %x", ev->scroll.y, ev->scroll.topline, ev->GetLineHandleFromStart(ev->scroll.y));
 //	staterr("%d:  %x/%x", ev->scroll.y, ev->scroll.topline, ev->GetLineHandleFromEnd(ev->scroll.y));
 	delete line;
@@ -127,14 +127,14 @@ clLine *EditView::GetLineHandle(int y)
 EditView *ev = this;
 
 	if (y == ev->cursor.y) return ev->curline;
-	
+
 	if (y < 0) y = 0;
 	if (y >= ev->nlines) y = ev->nlines-1;
-	
+
 	int dist_start = y;
 	int dist_end = (ev->nlines - 1) - y;
 	int dist_cursor = abs(ev->cursor.y - y);
-	
+
 	if (dist_cursor < dist_start)
 	{
 		if (dist_cursor < dist_end)
@@ -145,7 +145,7 @@ EditView *ev = this;
 		if (dist_start <= dist_end)
 			return GetLineHandleFromStart(y);
 	}
-	
+
 	return GetLineHandleFromEnd(y);
 }
 
@@ -158,7 +158,7 @@ clLine *curline = this->firstline;
 		curline = curline->next;
 		y--;
 	}
-	
+
 	return curline;
 }
 
@@ -166,13 +166,13 @@ clLine *EditView::GetLineHandleFromEnd(int y)
 {
 clLine *curline = this->lastline;
 
-	y = (this->nlines - 1) - y;	
+	y = (this->nlines - 1) - y;
 	while(y > 0)
 	{
 		curline = curline->prev;
 		y--;
 	}
-	
+
 	return curline;
 }
 
@@ -182,7 +182,7 @@ EditView *ev = this;
 clLine *curline;
 
 	curline = ev->curline;
-	
+
 	if (y > ev->cursor.y)
 	{
 		rept
@@ -202,7 +202,7 @@ clLine *curline;
 			}
 		}
 	}
-	
+
 	return curline;
 }
 
@@ -220,17 +220,17 @@ clLine *line;
 BString *totals;
 
 	totals = new BString;
-	
+
 	line = GetLineHandle(y1);
 	for(y=y1;;y++)
 	{
 		BString *string = line->GetLineAsString();
-		
+
 		if (y==y2)
 		{
 			DeleteAfter(string, x2);
 		}
-		
+
 		if (y==y1)
 		{
 			if (x1) DeleteBefore(string, x1);
@@ -239,17 +239,17 @@ BString *totals;
 		{
 			totals->Append(crlf_seq);
 		}
-		
+
 		totals->Append(*string);
 		delete string;
-		
+
 		if (y == y2) break;
 		line = line->next;
 	}
-	
+
 	if (x2 >= line->GetLength())
 		totals->Append(crlf_seq);
-	
+
 	//stat("RangeToString: '%s'", totals->String());
 	return totals;
 }
@@ -260,7 +260,7 @@ void EditView::AddToDocPoint(int x, int y, clLine *line, int count, int *x_out, 
 	rept
 	{
 		int line_remain = (line->GetLength() - x) + 1;
-		
+
 		if (count <= line_remain)
 		{
 			*x_out = (x + count);
@@ -273,7 +273,7 @@ void EditView::AddToDocPoint(int x, int y, clLine *line, int count, int *x_out, 
 			line = line->next;
 		}
 	}
-	
+
 	*y_out = y;
 }
 
@@ -288,7 +288,7 @@ void EditView::scroll_up(int nlines)
 		nlines = scroll.y;
 
 	scroll.y -= nlines;
-	
+
 	while(nlines--)
 		scroll.topline = scroll.topline->prev;
 }
@@ -298,12 +298,12 @@ void EditView::scroll_down(int nlines)
 int max;
 
 	max = this->GetMaxScroll();
-	
+
 	if ((scroll.y + nlines) > max)
 		nlines = (max - scroll.y);
-	
+
 	scroll.y += nlines;
-	
+
 	while(nlines > 0)
 	{
 		scroll.topline = scroll.topline->next;
@@ -329,9 +329,9 @@ int maxScroll = GetMaxScroll();
 
 	if (y < 0) y = 0;
 	if (y > maxScroll) y = maxScroll;
-	
+
 	diff = (y - this->scroll.y);
-	
+
 	if (diff > 0)
 	{
 		scroll_down(diff);
@@ -353,17 +353,17 @@ int line_screen_y;
 int window_height;
 
 	//staterr("BringLineIntoView: requested to visibilize line %d, cursor @ %d", y, ev->cursor.y);
-	
+
 	// sanity checking of input, if they asked for a line outside the document
 	ENSURE_LINE_IN_RANGE(y);
-	
+
 	// get current screen position of the requested line
 	line_screen_y = (y - ev->scroll.y);
-	
+
 	window_height = editor.height;
 	if (editor.PartialLineAtBottom) window_height--;
 	if (editor.HozBarVisible) window_height--;
-	
+
 	// if the line is already visible, we're done
 	if (line_screen_y >= 0 && line_screen_y < window_height)
 	{
@@ -372,9 +372,9 @@ int window_height;
 		if (vismode != BV_FORCE_SPECIFIC_Y)
 			return;
 	}
-	
+
 	//stat(" ** Visibilizing line: y=%d, vismode=%d, target_screen_y=%d", y, vismode, target_screen_y);
-	
+
 	switch(vismode)
 	{
 		// bring line to top or bottom of display, as needed
@@ -384,7 +384,7 @@ int window_height;
 			else
 				target_screen_y = (window_height - 1);
 		break;
-		
+
 		// try to bring the line to a specified Y coordinate
 		case BV_SPECIFIC_Y:
 		case BV_FORCE_SPECIFIC_Y:
@@ -398,15 +398,15 @@ int window_height;
 		// center line on display
 		case BV_CENTERED:
 			target_screen_y = (window_height / 2);
-		break;		
+		break;
 	}
-	
+
 	// how many lines are between the two?
 	int dist = (line_screen_y - target_screen_y);
 	if (dist != 0)
 	{
 		ev->scroll.y += dist;
-		
+
 		// set new scroll position
 		ENSURE_LINE_IN_RANGE(ev->scroll.y);
 		ev->scroll.topline = ev->GetLineHandle(ev->scroll.y);
@@ -423,6 +423,50 @@ void EditView::GetCurrentWordExtent(int *x1_out, int *x2_out)
 	curline->GetWordExtent(cursor.x, x1_out, x2_out);
 }
 
+// find "gaps" in indentation, that make tab lines look ugly, and fix them.
+void EditView::FixIndentationGaps()
+{
+EditView *ev = this;
+int level;
+
+	clLine *line = ev->firstline->next;
+	int lastlevel = -1;
+
+	while(line)
+	{
+		clLine *nextline = line->next;
+
+		if (nextline)
+		{
+			if (line->GetLength() == 0)
+			{
+				if (lastlevel > 0)
+				{
+					int nextlevel = nextline->GetIndentationLevel();
+
+					if (nextlevel > 0)
+					{	// looks like we're the odd one out, fix up
+						int indent_amt = min(lastlevel, nextlevel);
+
+						line->set_insertion_point(0);
+						for(int i=0;i<indent_amt;i++)
+							line->insert_char(TAB);
+
+						lastlevel = indent_amt;
+					}
+				}
+				lastlevel = 0;
+			}
+			else
+			{
+				lastlevel = line->GetIndentationLevel();
+			}
+		}
+
+		line = nextline;
+	}
+}
+
 /*
 void c------------------------------() {}
 */
@@ -432,7 +476,7 @@ void EditView::SetXScroll(int newvalue)
 	if (this->xscroll != newvalue)
 	{
 		this->xscroll = newvalue;
-		
+
 		scrHorizontal->SetValue(newvalue);
 		rd_invalidate_all(this);
 	}
@@ -444,36 +488,32 @@ void EditView::XScrollToCursor()
 {
 EditView *ev = this;
 int hmin, hmax, cursor_x, cursor_px;
-int xscroll;
+int newxscroll = ev->xscroll;
 #define XS_JUMP		60
 
 	// get leftmost and rightmost visible column
-	xscroll = ev->xscroll;
-
 	hmin = (ev->xscroll / editor.font_width);
 	hmax = (hmin + editor.width);
-	
+
 	UpdateCursorPos(ev);
 	cursor_x = ev->cursor.screen_x;
-	
+
 	//staterr("cursor_x=%d,  hmin/max=%d-%d", cursor_x,hmin,hmax);
 	if (cursor_x >= hmax)
 	{
 		cursor_px = (cursor_x * editor.font_width);
-		xscroll = (cursor_px - editor.pxwidth) + XS_JUMP;
-		if (xscroll < 0) xscroll = 0;
+		newxscroll = (cursor_px - editor.pxwidth) + XS_JUMP;
+		if (newxscroll < 0) newxscroll = 0;
 	}
 	else if (cursor_x <= hmin && ev->xscroll > 0)
 	{
 		cursor_px = (cursor_x * editor.font_width);
-		xscroll = (cursor_px - XS_JUMP);
-		if (xscroll < 0) xscroll = 0;
+		newxscroll = (cursor_px - XS_JUMP);
+		if (newxscroll < 0) newxscroll = 0;
 	}
-	
-	if (xscroll != ev->xscroll)
-	{
-		SetXScroll(xscroll);
-	}
+
+	if (newxscroll != ev->xscroll)
+		SetXScroll(newxscroll);
 }
 
 // handles some stuff having to do with redraw during vertical scrolling operations.
@@ -488,20 +528,20 @@ int delta_px;
 
 	if (oldY1 == newY1)
 		return;
-	
+
 	// if data was inserted/removed, don't risk it
 	if (ev->nlines != ev->lastnlines)
 	{
 		rd_invalidate_all(ev);
 		return;
 	}
-	
+
 	// get the visible areas before and after
 	oldY2 = oldY1 + (editor.height - 1);
 	newY2 = newY1 + (editor.height - 1);
-	
+
 	//stat("doc scroll: old[%d-%d]  new[%d-%d]", oldY1,oldY2,newY1,newY2);
-	
+
 	if (newY1 > oldY1)
 	{
 		// if the regions don't overlap, can't CopyBits, so just invalidate everything
@@ -509,17 +549,17 @@ int delta_px;
 		{
 			rd_invalidate_all(ev);
 			return;
-		}		
-		
+		}
+
 		if (MainView->cursor.visible)
 			MainView->cursor.erase();
-		
+
 		common_start = (newY1 - oldY1) * editor.font_height;
 		int h = editor.pxheight - 1;
-		
+
 		BRect source(0, common_start, editor.pxwidth - 1, h);
 		BRect dest(0, 0, editor.pxwidth - 1, h - common_start);
-		
+
 		MainView->CopyBits(source, dest);
 		rd_invalidate_range(ev, (oldY2 + !editor.PartialLineAtBottom), newY2);
 	}
@@ -531,18 +571,18 @@ int delta_px;
 			rd_invalidate_all(ev);
 			return;
 		}
-		
+
 		if (MainView->cursor.visible)
 			MainView->cursor.erase();
-		
+
 		delta_px = (oldY1 - newY1) * editor.font_height;
-		
+
 		common_btm = (editor.pxheight - 1);
 		common_btm -= delta_px;
-		
+
 		BRect source(0, 0, editor.pxwidth - 1, common_btm);
 		BRect dest(0, delta_px, editor.pxwidth - 1, common_btm + delta_px);
-		
+
 		MainView->CopyBits(source, dest);
 		rd_invalidate_range(ev, newY1, oldY1 - !editor.PartialLineAtBottom);
 	}
@@ -553,16 +593,16 @@ void c------------------------------() {}
 */
 
 void EditView::FullRedrawView()
-{	
+{
 	// this *evil hack* avoids a bug where switching from one document
 	// to another could cause a false scroll in the destination
 	// document.
 	ignore_scrollbars++;
-	
+
 	rd_invalidate_all(this);
 	RedrawView();
 	//edit_UpdateHozScrollBar(this);
-	
+
 	ignore_scrollbars--;
 }
 
@@ -575,14 +615,14 @@ char redraw_line_numbers = is_fullredraw;
 
 	//BStopWatch *w = new BStopWatch("Redraw");
 	//stat("redraw");
-	
+
 	if (!app_running) return;
 	LockWindow();
 
 	/*
 		SCROLLING
 	*/
-	
+
 	// sanitize scroll position (just in case)
 	if (ev->scroll.y > ev->GetMaxScroll())
 	{
@@ -593,7 +633,7 @@ char redraw_line_numbers = is_fullredraw;
 
 	// double-check to ensure cursor screen position is up-to-date
 	UpdateCursorPos(ev);
-	
+
 	// if number of lines has changed, update the "max" value of the
 	// vertical scrollbar.
 	if (ev->nlines != ev->lastnlines || is_fullredraw)
@@ -605,43 +645,43 @@ char redraw_line_numbers = is_fullredraw;
 	if (ev->scroll.y != ev->scroll.lasty)
 	{
 		scrVertical->SetValue(ev->scroll.y);
-		
+
 		InvalidateForYScroll(ev, ev->scroll.lasty, ev->scroll.y);
 		redraw_line_numbers = true;
-		
+
 		FunctionList->UpdateSelectionHighlight();
 	}
 
 	/*
 		CURSOR
 	*/
-	
+
 	// get current screen position of cursor
 	bool cursor_need_erased = false;
 	bool cursor_need_drawn = false;
 	bool cursor_moved;
-	
+
 	// has the document cursor moved? if so, move the onscreen cursor to match
 	int cursor_old_screen_x = MainView->cursor.get_x();
 	int cursor_old_screen_y = MainView->cursor.get_y();
-	
+
 	if (ev->cursor.screen_x != cursor_old_screen_x || \
 		ev->cursor.screen_y != cursor_old_screen_y)
 	{
 		MainView->cursor.move(ev->cursor.screen_x, ev->cursor.screen_y);
-		
+
 		// if cursor is currently visible when we move it, then after we're
 		// done drawing we need to ensure it's erased from it's current position.
 		if (MainView->cursor.visible)
-			cursor_need_erased = true;		
-		
+			cursor_need_erased = true;
+
 		cursor_moved = true;
 		cursor_need_drawn = true;
 	}
 	else
 	{
 		cursor_moved = false;
-		
+
 		if (!MainView->cursor.visible)
 		{	// definitely needs drawn, because we are about to "bump" it
 			cursor_need_drawn = true;
@@ -650,7 +690,7 @@ char redraw_line_numbers = is_fullredraw;
 
 	// "bump" cursor (force to visible for next full cycle)
 	MainView->cursor.bump();
-	
+
 	/*
 		LEX, BRACE MATCHING, AND DRAW
 	*/
@@ -659,15 +699,15 @@ char redraw_line_numbers = is_fullredraw;
 	int NumVisibleLines = min(editor.height, ev->nlines);
 	int CurrentLineY = (ev->cursor.y - ev->scroll.y);
 	clLine *line = ev->scroll.topline;
-	
+
 	for(i=0;i<NumVisibleLines;i++)
 	{
 		if (rd_is_line_dirty(i))
 		{
 			int OldExitState = line->lexresult.exitstate;
-			
+
 			lexer_update_line(line);
-			
+
 			// if exit state is different perpetuate invalidity down
 			// to next line, for example when a new block comment is opened.
 			if (line->lexresult.exitstate != OldExitState &&
@@ -676,10 +716,10 @@ char redraw_line_numbers = is_fullredraw;
 				rd_invalidate_line(ev, ev->scroll.y+i+1);
 			}
 		}
-		
+
 		line = line->next;
 	}
-	
+
 	// brace matching
 	if (cursor_moved)
 	{
@@ -690,15 +730,15 @@ char redraw_line_numbers = is_fullredraw;
 		if (rd_is_line_dirty(CurrentLineY))
 			bmatch_update(ev);
 	}
-	
+
 	// redraw all dirty lines
 	int line_number = ev->scroll.y;
-	
+
 	line = ev->scroll.topline;
 	for(i=y=0;i<NumVisibleLines;i++)
 	{
 		if (rd_is_line_dirty(i))
-		{			
+		{
 			if (line != curline)
 			{
 				line->pxwidth = UpdateLine(MainView, ev, line, y, line_number);
@@ -706,18 +746,18 @@ char redraw_line_numbers = is_fullredraw;
 			else
 			{
 				line->pxwidth = UpdateLineBB(MainView, ev, line, y, line_number);
-				
+
 				// if we drew over the line the cursor is on now,
 				// we definitely need to draw it.
 				cursor_need_drawn = true;
 			}
-			
+
 			// if we drew over the line the cursor used to be on,
 			// we don't have to erase it, if we were planning to.
 			if (i == cursor_old_screen_y)
 				cursor_need_erased = false;
 		}
-		
+
 		line = line->next;
 		y += editor.font_height;
 		line_number++;
@@ -732,7 +772,7 @@ char redraw_line_numbers = is_fullredraw;
 			MainView->ClearBelow(NumVisibleLines);
 		}
 	}
-	
+
 	// when adding lines to a document which is less than 1 page high
 	// we must always add in the new line numbers.
 	if (ev->nlines <= editor.height && ev->nlines > ev->lastnlines)
@@ -742,39 +782,39 @@ char redraw_line_numbers = is_fullredraw;
 	if (redraw_line_numbers)
 	{
 		line_number = ev->scroll.y;
-		
+
 		for(int i=0;i<NumVisibleLines;i++)
 			ln_panel->SetLineNumber(i, ++line_number);
 	}
-	
+
 	ln_panel->SetNumVisibleLines(NumVisibleLines);
 	ln_panel->RedrawIfNeeded();
-	
+
 	// update range of H scroll bar
 	if (ev->ModifiedSinceRedraw || \
 		ev->scroll.y != ev->scroll.lasty)
 	{
 		ev->UpdateHozScrollBarRange(is_fullredraw);
 	}
-	
+
 	// ensure erasure of old copy of cursor
 	if (cursor_need_erased)
 	{
 		MainView->cursor.erase(cursor_old_screen_x, \
 							   cursor_old_screen_y);
 	}
-	
+
 	if (cursor_need_drawn)
 		MainView->cursor.draw();
-	
+
 	// finish up
 	ev->lastnlines = ev->nlines;
 	ev->scroll.lasty = ev->scroll.y;
 	ev->ModifiedSinceRedraw = false;
 	rd_clear_dirty_bits(ev);
-	
+
 	UnlockWindow();
-	
+
 	//delete w;
 	//fflush(stdout);
 }
@@ -791,7 +831,7 @@ clLine *line;
 
 	NumVisibleLines = min(editor.height, ev->nlines);
 	line = ev->scroll.topline;
-	
+
 	// i wanted to come up with some genius algorithm for tracking this,
 	// but the obvious method used here takes all of 2 microseconds.
 	// you know what they say about premature optimization...
@@ -799,20 +839,20 @@ clLine *line;
 	{
 		if (line->pxwidth > longest)
 			longest = line->pxwidth;
-		
+
 		line = line->next;
 	}
-	
+
 	int newmax = (longest + 8) - editor.pxwidth;
 	if (newmax < 0) newmax = 0;
-	
+
 	if (newmax != ev->scroll.last_hbar_max || force_set)
 	{
 		if (newmax > 0)
 		{
 			scrHorizontal->SetRange(0, newmax);
 			scrHorizontal->SetValue(ev->xscroll);
-			
+
 			float p = (float)editor.pxwidth / (float)longest;
 			scrHorizontal->SetProportion(p);
 		}
@@ -822,7 +862,7 @@ clLine *line;
 			scrHorizontal->SetValue(0);
 			scrHorizontal->SetProportion(1.0);
 		}
-		
+
 		ev->scroll.last_hbar_max = newmax;
 	}
 }
@@ -832,8 +872,8 @@ void EditView::UpdateVertScrollBarRange(bool force_set)
 EditView *ev = this;
 
 	scrVertical->SetRange(0, ev->GetMaxScroll());
-	scrVertical->SetValue(ev->scroll.y);	
-	
+	scrVertical->SetValue(ev->scroll.y);
+
 	if (ev->nlines >= editor.height)
 	{
 		float p = (float)editor.height / (float)ev->nlines;

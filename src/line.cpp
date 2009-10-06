@@ -18,10 +18,10 @@ int strlength;
 
 	length = (strlength + GAP_SIZE);
 	text = (char *)smal(length + 1);
-	
+
 	gap_start = strlength;
 	gap_end = (length - 1);
-	
+
 	memcpy(text, initial_string, strlength);
 	next = prev = NULL;
 }
@@ -44,10 +44,10 @@ void clLine::SetContents(const char *newContents)
 
 	this->length = (strlength + GAP_SIZE);
 	this->text = (char *)resmal(this->text, length + 1);
-	
+
 	this->gap_start = strlength;
 	this->gap_end = (length - 1);
-	
+
 	memcpy(this->text, newContents, strlength);
 }
 
@@ -62,25 +62,25 @@ int grow_amt;
 
 	// determine how much we will have to increase the gap
 	grow_amt = GAP_SIZE - GetGapLength(line);
-	
+
 	// allocate a bigger buffer
 	line->text = (char *)resmal(line->text, line->length + grow_amt + 1);
-	
+
 	// move the right-hand half of the text forward to make room for the new gap
 	memmove(&line->text[line->gap_start + GAP_SIZE],
 			&line->text[line->gap_end + 1],
-			line->length - (line->gap_end + 1));	
-	
+			line->length - (line->gap_end + 1));
+
 	line->gap_end += grow_amt;
 	line->length += grow_amt;
 }
 
-// insert a character at the cursor position
+// insert a character at the cursor position and advance the insertion point
 void clLine::insert_char(char ch)
-{	
+{
 	this->text[this->gap_start] = ch;
 	this->gap_start++;
-	
+
 	// grow gap if it gets filled up
 	if (this->gap_start > this->gap_end)
 	{
@@ -96,13 +96,13 @@ int insert_pos;
 
 	str_length = strlen(str);
 	insert_pos = this->gap_start;
-	
+
 	// make sure there is enough room in the gap
 	this->gap_start += str_length;
-	
+
 	if (this->gap_start > this->gap_end)
 		grow_gap(this);
-	
+
 	// copy the string into new larger gap
 	memcpy(&text[insert_pos], str, str_length);
 }
@@ -115,7 +115,7 @@ void clLine::delete_left()
 		errorblip();
 		return;
 	}
-	
+
 	this->gap_start--;
 }
 
@@ -127,7 +127,7 @@ void clLine::delete_right()
 		errorblip();
 		return;
 	}
-	
+
 	this->gap_end++;
 }
 
@@ -152,10 +152,10 @@ char clLine::GetCharAtIndex(int index)
 {
 	if (index >= this->gap_start)
 		index += GetGapLength(this);
-	
+
 	if (index >= this->length)
 		return 0;
-	
+
 	return text[index];
 }
 
@@ -175,7 +175,7 @@ BString *string = new BString;
 
 	string->Append(this->text, this->gap_start);
 	string->Append(&this->text[this->gap_end+1], (this->length - (this->gap_end + 1)));
-	
+
 	return string;
 }
 
@@ -185,14 +185,14 @@ BString *string = new BString;
 BString *clLine::GetPartialLine(int start, int end)
 {
 BString *string = GetLineAsString();
-	
+
 	if (start > 0) DeleteBefore(string, start);
-	
+
 	if (end != -1)
 	{
 		DeleteAfter(string, end);
 	}
-	
+
 	return string;
 }
 
@@ -212,7 +212,7 @@ void clLine::set_insertion_point(int newip)
 	if (this->gap_start != newip)
 	{
 		int offset = (newip - this->gap_start);
-		
+
 		if (offset > 0)
 		{
 			MoveGapRight(offset);
@@ -235,13 +235,13 @@ void clLine::MoveGapRight(int nchars)
 			MoveGapLeft(nchars - 1);
 		else
 			errorblip();
-		
+
 		return;
 	}
-	
+
 	// move characters just after end of gap to start of gap.
 	memmove(&this->text[gap_start], &text[gap_end+1], nchars);
-	
+
 	this->gap_start += nchars;
 	this->gap_end += nchars;
 }
@@ -256,14 +256,14 @@ void clLine::MoveGapLeft(int nchars)
 			MoveGapLeft(nchars - 1);
 		else
 			errorblip();
-		
+
 		return;
 	}
-	
+
 	// move character just before start of gap to end of gap.
 	this->gap_start -= nchars;
 	this->gap_end -= nchars;
-	
+
 	memmove(&text[gap_end+1], &text[gap_start], nchars);
 }
 
@@ -285,11 +285,11 @@ int i, width;
 				width += TAB_WIDTH;
 				width -= (width % TAB_WIDTH);
 			break;
-			
+
 			default: width++;
 		}
 	}
-	
+
 	return width;
 }
 
@@ -302,26 +302,26 @@ int length;
 
 	if (x == 0) return 0;
 	index = width = 0;
-	
+
 	length = GetLength();
-	
+
 	x++;
 	while(index < length)
-	{		
+	{
 		switch(GetCharAtIndex(index))
 		{
 			case TAB:
 				width += TAB_WIDTH;
 				width -= (width % TAB_WIDTH);
 			break;
-			
-			default: width++;		
+
+			default: width++;
 		}
-		
+
 		if (width >= x) return index;
 		index++;
 	}
-	
+
 	return length;
 }
 
@@ -335,7 +335,7 @@ char ch;
 	for(i=0;;i++)
 	{
 		ch = GetCharAtIndex(i);
-		
+
 		if (ch==TAB)
 			indent_level++;
 		else
@@ -356,13 +356,13 @@ char invert, ch;
 	str = this->GetLineAsString();
 	line = (char *)str->String();
 	linelength = str->Length();
-	
+
 	x1 = x2 = x;
-	
+
 	// if clicked in a space, select the whole space
 	ch = line[x1];
 	invert = (ch==TAB || ch==' ');
-	
+
 	// extend out to the left
 	if (x1 >= 0)
 	{
@@ -372,14 +372,14 @@ char invert, ch;
 			if (--x1 < 0) { x1 = 0; break; }
 		}
 	}
-	
+
 	// extend out to right
 	while(x2 < linelength)
 	{
 		if (IsWordSeperator(line[x2]) ^ invert) { x2--; break; }
 		x2++;
 	}
-	
+
 	*x1_out = x1;
 	*x2_out = x2;
 	delete str;
@@ -392,7 +392,7 @@ static char IsWordSeperator(int ch)
 	if (ch == '_') return 0;
 	if (ch == '%') return 0;	// for "%d" etc in strings
 	if (ch >= '0' && ch <= '9') return 0;
-	
+
 	return 1;
 }
 

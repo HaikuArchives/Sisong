@@ -21,9 +21,9 @@ PrefsWindow *CurrentPrefsWindow = NULL;
 static CheckboxPrefletData GeneralPanelData[] =
 {
 	"Auto-indent on block open", &editor.settings.smart_indent_on_open, NULL, 0,
-	"Auto-indent on block close", &editor.settings.smart_indent_on_close, NULL, 0,
+	"Auto-outdent on block close", &editor.settings.smart_indent_on_close, NULL, 0,
 	"Do not auto-indent from baselevel", &editor.settings.no_smart_open_at_baselevel, &editor.settings.smart_indent_on_open, 0,
-	"Smart indenting for \"switch\" statement", &editor.settings.language_aware_indent, &editor.settings.smart_indent_on_open, 0,
+	"Smart auto-indenting for \"switch\" statement", &editor.settings.language_aware_indent, &editor.settings.smart_indent_on_open, 0,
 	"", NULL, NULL, 0,
 	"Draw Tab Lines", &editor.settings.DrawTabLines, NULL, 0,
 	"Do Brace Matching", &editor.settings.DoBraceMatching, NULL, 0,
@@ -32,24 +32,26 @@ static CheckboxPrefletData GeneralPanelData[] =
 	"Show Build Help", &editor.settings.ShowBuildHelp, NULL, 0,
 	"Notify if update available", &editor.settings.CheckForUpdate, NULL, 0,
 
-	NULL, NULL, NULL, 0,
+	NULL, NULL, NULL, 0
 };
 
 static CheckboxPrefletData MiscPanelData[] =
 {
 	"Fix gaps in indentation when opening", &editor.settings.FixIndentationGaps, NULL, 0,
 	"Remove trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0,
+	"Periodically auto-save to /boot/var/tmp/Sisong", &editor.settings.EnableAutoSaver, NULL, 0,
 	"", NULL, NULL, 0,
 	"Warn if code doesn't match Haiku Coding Guidelines", &editor.settings.WarnHaikuGuidelines, NULL, 0,
 
-	NULL, NULL, NULL, 0,
+	NULL, NULL, NULL, 0
 };
 
 static CheckboxPrefletData BuildPanelData[] =
 {
 	"Auto-jump to first error/warning", &editor.settings.build.JumpToErrors, NULL, 0,
 	"Don't auto-jump to warnings if errors present", &editor.settings.build.NoJumpToWarning, &editor.settings.build.JumpToErrors, 0,
-	 NULL, NULL, NULL, 0,
+
+	 NULL, NULL, NULL, 0
 };
 
 
@@ -111,11 +113,9 @@ PrefsWindow::PrefsWindow()
 
 	// add all preflets to list
 	AddPreflet(" About", new AboutPreflet(this));
-	AddPreflet(" General", new CheckboxPreflet(this, GeneralPanelData));
-	//AddPreflet(" Files", NULL);
+	AddPreflet(" Editor", new CheckboxPreflet(this, GeneralPanelData));
 	AddPreflet(" Font/Colors", new ColorsPreflet(this));
 	AddPreflet(" Shortcuts", new ShortcutsPreflet(this));
-	//AddPreflet(" Appearance", NULL);
 	AddPreflet(" Stats", new StatsPreflet(this));
 	AddPreflet(" Build", new CheckboxPreflet(this, BuildPanelData));
 	AddPreflet(" Misc", new CheckboxPreflet(this, MiscPanelData));

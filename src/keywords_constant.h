@@ -1124,6 +1124,8 @@ static const char *keywords_constant[] = {
 	"B_PERMISSION_DENIED",
 	"B_TIMED_OUT",
 	"B_WOULD_BLOCK",
+	"B_NO_SERVER_SIDE_WINDOW_MODIFIERS",
+	"B_CLOSE_ON_ESCAPE",
 NULL
 };
 
