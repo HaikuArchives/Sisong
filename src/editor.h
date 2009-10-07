@@ -45,7 +45,7 @@ class EditView;
 extern int ignore_scrollbars;	//weee! i'm crazy edd and i love hacks!!! ba la la la!
 
 #define APPLICATION_NAME		"Sisong"
-#define APPLICATION_SIGNATURE	"application/x-vnd.KT-Sisong!"
+#define APPLICATION_SIGNATURE	"application/x-vnd.KT-Sisong"
 
 #include "SubWindow.h"
 #include "QListView.h"

@@ -7,7 +7,7 @@ static char dirty_bits[1000];
 static char fullredraw;
 static char dirty_bits_present;
 
-// clear the dirty bits after a screen update
+// clear the dirty bits, should be done after a screen update is finished
 void rd_clear_dirty_bits(EditView *ev)
 {
 	if (dirty_bits_present)
@@ -19,8 +19,6 @@ void rd_clear_dirty_bits(EditView *ev)
 }
 
 // mark the entire screen for redraw.
-// you should do this at all times if the scroll position has changed or the
-// window has been resized.
 void rd_invalidate_all(EditView *ev)
 {
 	//staterr("rd_invalidate_all...");
@@ -41,30 +39,42 @@ void rd_invalidate_line(EditView *ev, int y)
 	}
 }
 
-// mark the given range of line numbers, inclusive
+// invalidate the given range of line numbers, inclusive.
 void rd_invalidate_range(EditView *ev, int y1, int y2)
 {
 int i;
 
 	if (y1 > y2)
 		SWAP(y1, y2);
-	
+
 	//staterr("invalidating lines %d - %d", y1, y2);
 	y1 -= ev->scroll.y;
 	y2 -= ev->scroll.y;
 
 	if (y1 >= editor.height) return;
 	if (y2 < 0) return;
-	
+
 	if (y1 < 0) y1 = 0;
 	if (y2 >= editor.height) y2 = (editor.height - 1);
-	
+
 	//staterr("<after adjustment: [%d-%d]>", y1, y2);
 	for(i=y1;i<=y2;i++)
 		dirty_bits[i] = 1;
-	
+
 	dirty_bits_present = 1;
 }
+
+// invalidates the given range of line numbers, exclusive.
+// (lines y1 and y2 are not redrawn, only the lines between them).
+void rd_invalidate_range_exclusive(EditView *ev, int y1, int y2)
+{
+	y1++;
+	y2--;
+
+	if (y1 <= y2)
+		rd_invalidate_range(ev, y1, y2);
+}
+
 
 // mark the line the cursor is on invalid
 void rd_invalidate_current_line(EditView *ev)

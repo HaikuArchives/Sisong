@@ -25,7 +25,7 @@ static BFilePanel *BrowsePanel = NULL;
 #define NUM_TABS				3
 
 
-CFindBox::CFindBox(int mode)
+CFindBox::CFindBox(int initialMode)
 	: BWindow(box_size, "Search", B_TITLED_WINDOW,
 		B_NOT_RESIZABLE|B_NOT_ZOOMABLE|B_ASYNCHRONOUS_CONTROLS)
 {
@@ -37,33 +37,33 @@ CFindBox::CFindBox(int mode)
 		CurrentFindBox->Activate();
 		delete this;
 		return;
-	}	
-	
+	}
+
 	CurrentFindBox = this;
 	CenterWindow(MainWindow, this);
-	
+
 	// create tabs and views
 	BRect r(Bounds());
-	
+
 	tabview = new FBTabView(r, "tab_view");
 	tabview->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	
+
 	r = tabview->Bounds();
 	r.InsetBy(5, 5);
 	r.top += tabview->TabHeight();
 
 	FBView::InitTabData();
-	
+
 	views[0] = new FBView(Bounds(), FINDBOX_FIND);
-	views[1] = new FBView(Bounds(), FINDBOX_REPLACE);	
+	views[1] = new FBView(Bounds(), FINDBOX_REPLACE);
 	views[2] = new FBView(Bounds(), FINDBOX_FIND_FILES);
-	
+
 	tabview->AddTab(views[0], new BTab);
 	tabview->AddTab(views[1], new BTab);
 	tabview->AddTab(views[2], new BTab);
 
-	AddChild(tabview);	
-	tabview->Select(mode);
+	AddChild(tabview);
+	tabview->Select(initialMode);
 
 	// if there is a selection, make that the default thing to search for, else,
 	// use current word if any, else load the last word from the config
@@ -72,19 +72,19 @@ CFindBox::CFindBox(int mode)
 		int x1, y1, x2, y2;
 		BString *linestr;
 		clLine *line;
-		
+
 		// if selection is <= 1 line high, use whole selection, else, just
 		// use word at start of selection.
 		GetSelectionExtents(editor.curev, &x1, &y1, &x2, &y2);
 		line = editor.curev->GetLineHandle(y1);
 		linestr = line->GetLineAsString();
-		
+
 		if (y1 != y2)
 			line->GetWordExtent(x1, &x1, &x2);
-		
+
 		DeleteAfter(linestr, x2);
 		DeleteBefore(linestr, x1);
-		
+
 		GetCurrentView()->txtFindWhat->SetText(linestr->String());
 		delete linestr;
 	}
@@ -95,7 +95,7 @@ CFindBox::CFindBox(int mode)
 		editor.curev->GetCurrentWordExtent(&x1, &x2);
 		DeleteAfter(str, x2);
 		DeleteBefore(str, x1);
-		
+
 		// if word is no good (whitespace), load from prefs instead. because of the way
 		// the word scanner works, if the first char is whitespace, it's all whitespace.
 		char ch = str->String()[0];
@@ -103,12 +103,12 @@ CFindBox::CFindBox(int mode)
 			GetCurrentView()->txtFindWhat->SetText(settings->GetString("FBfindwhat", ""));
 		else
 			GetCurrentView()->txtFindWhat->SetText(str->String());
-		
-		delete str;		
+
+		delete str;
 	}
 
 	views[FINDBOX_REPLACE]->txtReplaceWith->SetText(settings->GetString("FBreplacewith", ""));
-	
+
 	// load checkbox settings
 	GetCurrentView()->chkWholeWord->SetValue(settings->GetInt("FBWholeWordOnly", 0));
 	GetCurrentView()->chkCaseSensitive->SetValue(settings->GetInt("FBCaseSensitive", 0));
@@ -126,13 +126,13 @@ CFindBox::~CFindBox()
 {
 	settings->SetString("FBfindwhat", GetCurrentView()->txtFindWhat->Text());
 	settings->SetString("FBreplacewith", views[FINDBOX_REPLACE]->txtReplaceWith->Text());
-	
+
 	settings->SetInt("FBWholeWordOnly", GetCurrentView()->chkWholeWord->Value());
 	settings->SetInt("FBCaseSensitive", GetCurrentView()->chkCaseSensitive->Value());
 	settings->SetInt("FBBackwards", GetCurrentView()->chkBackwards->Value());
 	settings->SetInt("FBrecursive", views[FINDBOX_FIND_FILES]->chkRecursive->Value());
 	settings->SetInt("FBignoredot", views[FINDBOX_FIND_FILES]->chkIgnoreHiddenFolders->Value());
-	
+
 	CurrentFindBox = NULL;
 	if (BrowsePanel)
 	{
@@ -150,38 +150,38 @@ int OldSelection, NewSelection;
 int i;
 
 	OldSelection = BTabView::Selection();
-	
+
 	// eliminates flicker
 	for(i=0;i<NUM_TABS;i++)
 	{
 		if (i == OldSelection) continue;
-		
+
 		CurrentFindBox->views[i]->chkWholeWord->SetValue(0);
 		CurrentFindBox->views[i]->chkCaseSensitive->SetValue(0);
 		CurrentFindBox->views[i]->txtFindWhat->SetText("");
 	}
-	
+
 	BTabView::MouseDown(where);
 	NewSelection = BTabView::Selection();
-	
+
 	newview = CurrentFindBox->views[NewSelection];
 	oldview = CurrentFindBox->views[OldSelection];
-	
+
 	if (NewSelection != OldSelection && CurrentFindBox && \
 		(NewSelection >= 0 && NewSelection < NUM_TABS))
 	{
 		// transfer contents of "find what" box
 		newview->txtFindWhat->SetText(oldview->txtFindWhat->Text());
-		
+
 		// set "find what" box to active focus and select contents
 		newview->txtFindWhat->MakeFocus();
-		newview->txtFindWhat->TextView()->Select(0, strlen(newview->txtFindWhat->Text()));		
-		
+		newview->txtFindWhat->TextView()->Select(0, strlen(newview->txtFindWhat->Text()));
+
 		// transfer values of checkboxes from old pane to new pane
 		newview->chkWholeWord->SetValue(oldview->chkWholeWord->Value());
 		newview->chkCaseSensitive->SetValue(oldview->chkCaseSensitive->Value());
 		newview->chkBackwards->SetValue(oldview->chkBackwards->Value());
-		
+
 		// set default button
 		newview->DefButton->MakeDefault(true);
 	}
@@ -191,7 +191,7 @@ int i;
 void CFindBox::DispatchMessage(BMessage *msg, BHandler *target)
 {
 	if (msg->what == B_KEY_DOWN)
-	{		
+	{
 		const char *bytes;
 		if (msg->FindString("bytes", &bytes) == B_OK)
 		{
@@ -200,7 +200,7 @@ void CFindBox::DispatchMessage(BMessage *msg, BHandler *target)
 				case 27:
 					PostMessage(B_QUIT_REQUESTED);
 					return;
-					
+
 				//case 'a': case 'A':
 				case 1:	// ALT+A
 					if (tabview->Selection()==FINDBOX_REPLACE)
@@ -209,7 +209,7 @@ void CFindBox::DispatchMessage(BMessage *msg, BHandler *target)
 						return;
 					}
 				break;
-				
+
 				//case 'f': case 'F':
 				case 6:	// ALT+F
 					switch(tabview->Selection())
@@ -225,7 +225,7 @@ void CFindBox::DispatchMessage(BMessage *msg, BHandler *target)
 			}
 		}
 	}
-	
+
 	BWindow::DispatchMessage(msg, target);
 }
 
@@ -253,7 +253,7 @@ void c------------------------------() {}
 struct
 {
 	char *name;
-	
+
 	char *button_text[3];
 	int button_msg[3];
 } tabdata[NUM_TABS];
@@ -275,13 +275,13 @@ void FBView::InitTabData()
 	tabdata[FINDBOX_REPLACE].button_msg[0] = M_REPLACE;
 	tabdata[FINDBOX_REPLACE].button_msg[1] = M_REPLACE_ALL;
 	tabdata[FINDBOX_REPLACE].button_msg[2] = M_REPLACE_ALL_IN_ALL;
-	
+
 	tabdata[FINDBOX_FIND_FILES].name = "Find in Files";
 	tabdata[FINDBOX_FIND_FILES].button_text[0] = "Find them All";
 	tabdata[FINDBOX_FIND_FILES].button_text[1] = NULL;
 	tabdata[FINDBOX_FIND_FILES].button_text[2] = NULL;
 	tabdata[FINDBOX_FIND_FILES].button_msg[0] = M_FIND_IN_FILES;
-	
+
 }
 
 FBView::FBView(BRect frame, int fbmode)
@@ -290,49 +290,49 @@ FBView::FBView(BRect frame, int fbmode)
 int checkbox_y = 53;
 
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	
-	// -- text boxes --	
-	
+
+	// -- text boxes --
+
 	// Find What
 	txtFindWhat = new BTextControl(BRect(40, 13, 335, 13+21), "",
 								"Find what:", "", NULL);
-	
+
 	txtFindWhat->SetDivider(95);
 	AddChild(txtFindWhat);
-	
+
 	if (fbmode == FINDBOX_REPLACE)
 	{
 		txtReplaceWith = new BTextControl(BRect(40, 13+31, 335, 13+31+21), "",
 								"Replace with:", "", NULL);
-		
+
 		txtReplaceWith->SetDivider(95);
 		AddChild(txtReplaceWith);
-		
+
 		checkbox_y += 32;
 	}
-	else 
+	else
 	if (fbmode == FINDBOX_FIND_FILES)
 	{
 		txtFilter = new BTextControl(BRect(40, 13+31, 335, 13+31+21), "",
 								"File filter:", "", NULL);
 		txtFolder = new BTextControl(BRect(40, 13+31+31, 305, 13+31+31+21), "",
-								"In folder:", "", NULL);		
-		
+								"In folder:", "", NULL);
+
 		txtFolder->SetDivider(95);
 		txtFilter->SetDivider(95);
 		AddChild(txtFilter);
 		AddChild(txtFolder);
-		
+
 		AddChild(new BButton(BRect(310, 13+31+31, 335, 13+31+31+21), "", \
 								"...", new BMessage(M_BROWSE_FOR_FOLDER)));
-		
+
 		checkbox_y += 32+32;
-		
+
 		// set default folder to that of current file
 		char *defaultFolder = RemoveFileSpec(editor.curev->filename);
 		txtFolder->SetText(defaultFolder);
 		frees(defaultFolder);
-		
+
 		// set default filter to all files with same extension as current one
 		char *ptr = strrchr(editor.curev->filename, '.');
 		if (ptr)
@@ -340,45 +340,45 @@ int checkbox_y = 53;
 			BString filter("*.");
 			filter.Append(ptr+1);
 			txtFilter->SetText(filter.String());
-		}		
+		}
 		else
 		{
 			txtFilter->SetText("*");
 		}
 	}
 
-	// -- buttons --	
+	// -- buttons --
 	DefButton = new BButton(BRect(348, 13, 490, 13+21+((fbmode==FINDBOX_FIND_FILES)?20:0)), "",
 		tabdata[fbmode].button_text[0], new BMessage(tabdata[fbmode].button_msg[0]));
 
 	AddChild(DefButton);
-	
+
 	if (tabdata[fbmode].button_text[1])
 	{
 		AddChild(new BButton(BRect(348, 13+31, 490, 13+31+38), "",
 			tabdata[fbmode].button_text[1], new BMessage(tabdata[fbmode].button_msg[1])));
-		
+
 		AddChild(new BButton(BRect(348, 13+31+38+5, 490, 13+31+41+5+41), "",
 			tabdata[fbmode].button_text[2], new BMessage(tabdata[fbmode].button_msg[2])));
 	}
-	
+
 	AddChild(new BButton(BRect(348, 13+71+21+31+15, 490, 13+71+21+31+41+10), "",
 						"Close", new BMessage(M_CLOSE)));
-	
+
 	// -- check boxes --
 
 	if (fbmode == FINDBOX_FIND_FILES)
 	{
 		const int kht = 22;
-		
+
 		chkRecursive = new BCheckBox(BRect(134, checkbox_y-15, 340, checkbox_y-15+(kht-1)), "",
 								"Recursive", NULL);
 		AddChild(chkRecursive);
-		
+
 		chkIgnoreHiddenFolders = new BCheckBox(BRect(134, kht+checkbox_y-15, 340, kht+checkbox_y-15+20), "",
 								"Ignore \".\" hidden folders", NULL);
 		AddChild(chkIgnoreHiddenFolders);
-		
+
 		checkbox_y += 29;
 	}
 	else
@@ -392,13 +392,13 @@ int checkbox_y = 53;
 
 	chkCaseSensitive = new BCheckBox(BRect(134, checkbox_y+23, 340, checkbox_y+23+20), "",
 							"Match case", NULL);
-	
+
 	AddChild(chkWholeWord);
 	AddChild(chkCaseSensitive);
 
 	chkBackwards = new BCheckBox(BRect(134, checkbox_y+35+23, 340, checkbox_y+35+23+20), "",
 				"Search backwards", NULL);
-	
+
 	if (fbmode != FINDBOX_FIND_FILES)
 		AddChild(chkBackwards);
 
@@ -433,10 +433,10 @@ FBView *view = GetCurrentView();
 
 	// setup options
 	*options = 0;
-	
+
 	if (view->chkWholeWord->Value() == B_CONTROL_ON)
 		*options |= FINDF_WHOLE_WORD;
-	
+
 	if (view->chkCaseSensitive->Value() == B_CONTROL_ON)
 		*options |= FINDF_CASE_SENSITIVE;
 
@@ -445,19 +445,19 @@ FBView *view = GetCurrentView();
 		if (view->chkBackwards->Value() == B_CONTROL_ON)
 			*options |= FINDF_BACKWARDS;
 	}
-	
+
 	if (view->chkRecursive)
 	{
 		if (view->chkRecursive->Value() == B_CONTROL_ON)
 			*options |= FINDF_RECURSIVE;
 	}
-	
+
 	if (view->chkIgnoreHiddenFolders)
 	{
 		if (view->chkIgnoreHiddenFolders->Value() == B_CONTROL_ON)
 			*options |= FINDF_IGNORE_DOT;
 	}
-	
+
 	return smal_strdup(search_term);
 }
 
@@ -478,39 +478,39 @@ void CFindBox::MessageReceived(BMessage *msg)
 			// this is an admitted hack so that the main thread does the search
 			// instead of ours. But makes things simpler. If you don't do this,
 			// it crashes sometimes, and I think it's because of threading issues.
-			// But adding code to support multiple threads accessing the document
-			// would be a needless complexity hike.
+			// But adding code to safely support multiple threads accessing the document
+			// at once would be a needless complexity hike.
 			msg->AddInt32("old_what", msg->what);
 			msg->what = M_FINDBOX_PINGPONG;
-			
+
 			MainWindow->PostMessage(msg);
 		}
 		break;
-		
+
 		case M_BROWSE_FOR_FOLDER:
 		{
 			if (BrowsePanel) delete BrowsePanel;
-			
+
 			BrowsePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL, B_DIRECTORY_NODE);
 			BrowsePanel->SetTarget(this);
 			BrowsePanel->Show();
 		}
 		break;
-		
+
 		case B_REFS_RECEIVED:
 			ProcessBrowseForFolderResults(msg);
 		break;
-		
+
 		case M_CLOSE:
 			PostMessage(B_QUIT_REQUESTED);
 		break;
-		
+
 		default:
 			BWindow::MessageReceived(msg);
 	}
 }
 
-// ping pong handler (see comment above)
+// "ping ponged" message handler (see comment above)
 void CFindBox::HandleSearchRequest(BMessage *msg)
 {
 char *search_string;
@@ -530,12 +530,12 @@ int options;
 	else
 	{
 		BString title;
-		
+
 		MainWindow->popup.searchresults->Clear();
 		MainWindow->popup.searchresults->SetSearchTerm(search_string);
-		
+
 		MainWindow->popup.searchresults->GetCaptionForTitlebar(&title);
-		
+
 		MainWindow->popup.pane->SetContents(title.String(), \
 											MainWindow->popup.searchresults);
 	}
@@ -549,44 +549,51 @@ int options;
 		{
 			int count = 9;	// just anything nonzero
 			bool quit = true;
-			
+
 			// save last search term for "F3"
 			if (editor.curev->search.lastSearch) frees(editor.curev->search.lastSearch);
 			editor.curev->search.lastSearch = smal_strdup(search_string);
-			editor.curev->search.lastOptions = options;			
-			
+			editor.curev->search.lastOptions = options;
+
 			switch(msg->what)
 			{
 				case M_FIND_NEXT:
 					if (DoFindNext(search_string, options) != FN_HIT_FOUND)
 						quit = false;
 				break;
-				
+
 				case M_FIND_ALL:
 					count = DoFindAll(editor.curev, search_string, options, true);
 				break;
-				
+
 				case M_FIND_ALL_IN_ALL:
 					count = DoFindAllInAll(search_string, options);
 				break;
-				
+
 				case M_FIND_IN_FILES:
 				{
 					const char *filter = GetCurrentView()->txtFilter->Text();
 					const char *folder = GetCurrentView()->txtFolder->Text();
 					bool recursive = (options & FINDF_RECURSIVE) ? true:false;
-					
+
+					// set filter to wildcard if it was empty
+					if (!filter[0])
+					{
+						filter = "*";
+						GetCurrentView()->txtFilter->SetText(filter);
+					}
+
 					count = DoFindInFiles(search_string, folder, filter, options, recursive);
 				}
 				break;
 			}
-			
+
 			if (!count)
 			{
 				(new BAlert("", "No matches found.", "OK"))->Go();
 				quit = false;
 			}
-			
+
 			if (quit)
 				PostMessage(B_QUIT_REQUESTED);
 			else
@@ -595,43 +602,43 @@ int options;
 				GetCurrentView()->txtFindWhat->TextView()->Select(0, 99999);
 				UnlockLooper();
 			}
-			
-			frees(search_string);			
+
+			frees(search_string);
 		}
 		break;
-		
+
 		// ---------------------------------------
-		
+
 		case M_REPLACE:
 		case M_REPLACE_ALL:
 		case M_REPLACE_ALL_IN_ALL:
 		{
-			int count;			
-			
+			int count;
+
 			replace_string = smal_strdup(GetCurrentView()->txtReplaceWith->Text());
-			
+
 			if (editor.curev->search.lastSearch) frees(editor.curev->search.lastSearch);
 			editor.curev->search.lastSearch = smal_strdup(search_string);
 			editor.curev->search.lastOptions = options;
-			
+
 			switch(msg->what)
 			{
 				case M_REPLACE:
 					count = DoInteractiveReplace(editor.curev, search_string, \
 										replace_string, options);
 				break;
-				
+
 				case M_REPLACE_ALL:
 					count = DoReplaceAll(editor.curev, search_string, \
 									replace_string, options);
 				break;
-				
+
 				case M_REPLACE_ALL_IN_ALL:
 					count = DoReplaceAllInAll(search_string, replace_string, \
 											options);
 				break;
 			}
-			
+
 			if (!count)
 			{
 				(new BAlert("", "No matches found.", "OK"))->Go();
@@ -644,21 +651,21 @@ int options;
 					// update function list immediately, so if they replaced function
 					// names the changes are visible while the alert is up
 					//FunctionList->ScanIfNeeded();
-					
+
 					PostMessage(B_QUIT_REQUESTED);
-					
+
 					char msg[800];
 					sprintf(msg, "%d instance%s were replaced.", count, (count>1)?"s":"");
-					
+
 					(new BAlert("", msg, "OK"))->Go();
 				}
 			}
-			
+
 			frees(search_string);
 			frees(replace_string);
 		}
 		break;
-		
+
 		// ---------------------------------------
 	}
 }
@@ -673,9 +680,9 @@ entry_ref ref;
 	{
 		BEntry entry(&ref, true);
 		BPath path;
-		
+
 		entry.GetPath(&path);
-		
+
 		BTextControl *txtFolder = GetCurrentView()->txtFolder;
 		if (txtFolder)
 			txtFolder->SetText(path.Path());
@@ -703,7 +710,7 @@ bool reverse = (options & FINDF_BACKWARDS);
 
 	startpoint.SetToCursor(ev);
 	seekpoint = startpoint;
-	
+
 	if (ev != editor.curev)
 		TabBar->SetActiveTab(ev);
 
@@ -713,7 +720,7 @@ bool reverse = (options & FINDF_BACKWARDS);
 			hit_start = find_next_hit(ev, seekpoint, search_string, options);
 		else
 			hit_start = find_prev_hit(ev, seekpoint, search_string, options);
-		
+
 		// wrap around when we get to end
 		if (!hit_start.IsValid())
 		{
@@ -723,7 +730,7 @@ bool reverse = (options & FINDF_BACKWARDS);
 					seekpoint.SetToStart(ev);
 				else
 					seekpoint.SetToEnd(ev);
-				
+
 				wrapped = true;
 				continue;
 			}
@@ -732,22 +739,22 @@ bool reverse = (options & FINDF_BACKWARDS);
 				break;
 			}
 		}
-		
+
 		// stop once we've been around the whole document, even
 		// if more hits were found (they were already marked NO).
 		if (wrapped)
-		{			
+		{
 			if (!reverse && hit_start >= startpoint)
 				break;
 			if (reverse && hit_start <= startpoint)
 				break;
 		}
-		
+
 		seekpoint = hit_start;
 		// prevents finding string again if replace string begins with search string
 		if (reverse)
 			seekpoint.DecrementBy(2);
-		
+
 		// hide the Replace box
 		if (firsthit)
 		{
@@ -755,45 +762,45 @@ bool reverse = (options & FINDF_BACKWARDS);
 			if (fb) fb->PostMessage(B_QUIT_REQUESTED);
 			firsthit = false;
 		}
-		
+
 		// select the hit and offer to replace it
 		SelectHit(search_string, hit_start, options|FINDF_FORCE_Y|FINDF_Y_AT_BOTTOM);
-		
+
 		BAlert *prompt = new BAlert("", "Replace this occurrance?", "Cancel", "No", "Yes");
-		SetPromptPos(prompt, ev, hit_start.y);		
-		
+		SetPromptPos(prompt, ev, hit_start.y);
+
 		switch(prompt->Go())
 		{
 			case 0:	// Cancel
 				goto done;
-			
+
 			case 1: // No
 				seekpoint.IncrementBy(strlen(search_string));
 			break;
-			
+
 			case 2: // Yes
 				selection_drop(ev);
-				
+
 				editor.curev->action_delete_right(hit_start.x, hit_start.y, strlen(search_string));
 				editor.curev->action_insert_string(hit_start.x, hit_start.y, replace_string, NULL, NULL);
-				
+
 				editor.curev->RedrawView();
 				seekpoint.IncrementBy(strlen(replace_string));
 			break;
 		}
-		
+
 		count++;
 	}
-	
+
 done: ;
 	EndUndoGroup(ev);
-	
+
 	// hack--noticed cursor wasn't always immediately visible after replace box
 	// went away; don't want to mess with it at the moment but this fixes it for now.
 	MainView->cursor.EnableFlashing(true);
 	MainView->cursor.bump();
 	editor.curev->FullRedrawView();
-	
+
 	return count;
 }
 
@@ -808,19 +815,19 @@ static void SetPromptPos(BAlert *prompt, EditView *ev, int y)
 	// get the approximate actual screen position by adding in the
 	// Y coord of the window.
 	y += (int)MainWindow->Frame().top;
-	
+
 	// get the current and flipped (at bottom) possible Y positions
 	// of the dialog prompt
 	int top_y = (int)(MainWindow->Frame().top + \
 		((MainWindow->Frame().bottom - MainWindow->Frame().top) / 4));
 
 	int bottom_y = (int)(MainWindow->Frame().bottom - \
-		((MainWindow->Frame().bottom - MainWindow->Frame().top) / 3));	
+		((MainWindow->Frame().bottom - MainWindow->Frame().top) / 3));
 
 	// pick whichever puts the dialog furthest from the selected line
 	int dist_top = abs(y - top_y);
 	int dist_bottom = abs(y - bottom_y);
-	
+
 	y = (dist_top > dist_bottom) ? top_y : bottom_y;
 
 	// center prompt horizontally within window
@@ -844,34 +851,34 @@ int count = 0;
 
 	BeginUndoGroup(ev, UG_NO_AFFECT_CURSOR);
 	selection_drop(ev);
-	
+
 	// for "Replace All" we can ignore forwards/backwards flag, because
 	// we are replacing them all anyway.
 	seekpoint.Set(ev, 0, 0);
-	
+
 	rept
 	{
 		hit_start = find_next_hit(ev, seekpoint, search_string, options);
 		if (!hit_start.IsValid()) break;
-		
+
 		ev->action_delete_right(hit_start.x, hit_start.y, ss_length);
 		ev->action_insert_string(hit_start.x, hit_start.y, replace_string, NULL, NULL);
-		
+
 		// must do this after replace so line wrap works
 		seekpoint = hit_start;
 		seekpoint.IncrementBy(replace_length);
-		
+
 		count++;
 	}
-	
+
 	EndUndoGroup(ev);
-	
+
 	if (ev == editor.curev)
 	{
 		UpdateCursorPos(ev);
 		ev->RedrawView();
 	}
-	
+
 	return count;
 }
 
@@ -887,10 +894,10 @@ int i;
 	{
 		ev = (EditView *)editor.DocList->ItemAt(i);
 		if (!ev) break;
-		
+
 		count += DoReplaceAll(ev, search_string, replace_string, options);
 	}
-	
+
 	return count;
 }
 
@@ -900,7 +907,7 @@ void c------------------------------() {}
 
 // finds and selects the next hit in the document.
 // can also find previous hit, if FINDF_BACKWARDS option is passed.
-// returns one of the following result codes: 
+// returns one of the following result codes:
 //	FN_HIT_FOUND: a hit was found and selected.
 //	FN_NO_HITS:	  no matches were found in the current document.
 //	FN_NO_ADDITIONAL_HITS:	a single hit was found, but it is already selected.
@@ -912,7 +919,7 @@ bool reverse = (options & FINDF_BACKWARDS);
 
 	// find the next hit
 	start.SetToCursor(editor.curev);
-	
+
 wrap: ;
 	if (!reverse)
 	{
@@ -924,7 +931,7 @@ wrap: ;
 		start.Decrement();
 		hit_start = find_prev_hit(editor.curev, start, search_string, options);
 	}
-	
+
 	if (!hit_start.IsValid())	// no more hits? wrap around to start and try again
 	{
 		if (wrapped)
@@ -939,18 +946,18 @@ wrap: ;
 				start.SetToStart(editor.curev);
 			else
 				start.SetToEnd(editor.curev);
-			
+
 			wrapped = true;
 			goto wrap;
 		}
 	}
-	
+
 	if (SelectHit(search_string, hit_start, options) == SH_ALREADY_SELECTED)
 	{
 		(new BAlert("", "No additional matches found.", "OK"))->Go();
 		return FN_NO_ADDITIONAL_HITS;
 	}
-	
+
 	return FN_HIT_FOUND;
 }
 
@@ -964,28 +971,28 @@ DocPoint hit_end;
 	// select the hit
 	hit_end = hit_start;
 	hit_end.IncrementBy(strlen(search_string) - 1);
-	
+
 	// detect if hit is already selected.
 	if (editor.curev->selection.present)
 	{
 		int x1, y1, x2, y2;
 		GetSelectionExtents(editor.curev, &x1, &y1, &x2, &y2);
-		
+
 		if (x1==hit_start.x && \
 			y1==hit_start.y && \
 			x2==hit_end.x && \
 			y2==hit_end.y)
-		{			
+		{
 			return SH_ALREADY_SELECTED;
 		}
-		
+
 		// else, drop selection in preparation for a new one
 		selection_drop(editor.curev);
 	}
-	
+
 	editor.curev->cursor.move(hit_start.x, hit_start.y);
 	selection_select_range(editor.curev, &hit_start, &hit_end);
-	
+
 	// this option affects whether we want to scroll the screen,
 	// if the line is already visible. in case of find box we do,
 	// in case of find next we don't.
@@ -994,10 +1001,10 @@ DocPoint hit_end;
 
 	int target_y = 8;
 	if (options & FINDF_Y_AT_BOTTOM) target_y = (editor.height - 8);
-	
+
 	editor.curev->BringLineIntoView(hit_start.y, seekmode, target_y);
 	editor.curev->RedrawView();
-	
+
 	return SH_OK;
 }
 
@@ -1017,11 +1024,11 @@ int i;
 	{
 		ev = (EditView *)editor.DocList->ItemAt(i);
 		if (!ev) break;
-		
+
 		count += DoFindAll(ev, search_string, options, clear_window_first);
 		clear_window_first = false;
 	}
-	
+
 	return count;
 }
 
@@ -1040,20 +1047,20 @@ int count = 0;
 	{
 		hit_start = find_next_hit(ev, seekpoint, search_string, options);
 		if (!hit_start.IsValid()) break;
-		
+
 		BString *linestr = hit_start.line->GetLineAsString();
-		
+
 		AddSearchResult(ev->filename, hit_start.x, hit_start.y, \
 						linestr->String(), search_string);
-		
+
 		delete linestr;
 		count++;
-		
+
 		// advance cursor past hit and get ready to search again
 		seekpoint = hit_start;
 		seekpoint.IncrementBy(ss_length);
 	}
-	
+
 	return count;
 }
 
@@ -1070,29 +1077,29 @@ stSearchResult *result;
 	// pop open search results if not already visible
 	if (!MainWindow->popup.pane->IsOpen())
 		MainWindow->popup.pane->Open();
-	
+
 	// generate the result structure
 	result = (stSearchResult *)smal(sizeof(*result));
 
 	result->x = x;
 	result->lineNumber = y;
 	result->filename = smal_strdup(filename);
-	
+
 	// create the line string:
 	//	* remove leading whitespace
 	//	* change tabs to spaces
 	char *sptr = (char *)linestr;
-	
+
 	while(*sptr==' ' || *sptr==9) sptr++;
 	sptr = smal_strdup(sptr);
-	
+
 	char *sptr2 = sptr;
 	while(*sptr2)
 	{
 		if (*sptr2==9) *sptr2 = ' ';
 		sptr2++;
 	}
-	
+
 	result->lineString = sptr;
 	MainWindow->popup.searchresults->AddResult(result, true);
 }
@@ -1114,15 +1121,15 @@ int count = 0;
 bool ignore_dot = (options & FINDF_IGNORE_DOT);
 
 	//stat("DoFindInFiles: '%s'; '%s' in '%s', recursive=%d", search_string, filter, folder, recursive);
-	
+
 	// get a list of all files and directories in "folder".
-	// for each file, run a SearchInFile operation	
+	// for each file, run a SearchInFile operation
 	// for each directory, call ourselves recursively, if "recursive" is true
 	if (recursive)
 		GetDirectoryContents(folder, filter, &files, &dirs);
 	else
 		GetDirectoryContents(folder, filter, &files, NULL);
-	
+
 	// search all files in the directory
 	i = 0;
 	while((fname = (char *)files.ItemAt(i++)))
@@ -1130,13 +1137,13 @@ bool ignore_dot = (options & FINDF_IGNORE_DOT);
 		count += SearchInFile(fname, search_string, options);
 		frees(fname);
 	}
-	
+
 	// search all directories recursively
 	if (recursive)
 	{
-		char *dir;		
+		char *dir;
 		i = 0;
-		
+
 		while((dir = (char *)dirs.ItemAt(i++)))
 		{
 			// TODO: this depends on the paths returned by GetDirectoryContents
@@ -1146,11 +1153,11 @@ bool ignore_dot = (options & FINDF_IGNORE_DOT);
 			{
 				count += DoFindInFiles(search_string, dir, filter, options, true);
 			}
-			
+
 			frees(dir);
 		}
 	}
-	
+
 	return count;
 }
 
@@ -1168,30 +1175,30 @@ int count = 0;
 
 	fp = fopen(filename, "rb");
 	if (!fp) return 0;
-	
+
 	StringScanner = GetStringScanner(options);
-	
+
 	while(!feof(fp))
 	{
 		fgetline(fp, line, sizeof(line));
-		
+
 		// scan the line for hits
 		seek = line;
 		rept
 		{
 			hit = (*StringScanner)(seek, search_string, needle_length);
 			if (!hit) break;
-			
+
 			x = (hit - line);
 			AddSearchResult(filename, x, lineNo, line, search_string);
-			
+
 			count++;
 			seek = (hit + needle_length);
 		}
-		
+
 		lineNo++;
 	}
-	
+
 	fclose(fp);
 	return count;
 }
@@ -1215,41 +1222,41 @@ int needle_length;
 int y;
 
 	//stat("searching for '%s' beginning at [%d,%d]...", search_string, start.x, start.y);
-	
+
 	// select which string-searching function to call based on options
 	StringScanner = GetStringScanner(options);
-	
+
 	// fetch contents of the first line
 	line = start.line;
 	y = start.y;
-	
+
 	bstr = line->GetLineAsString();
 	DeleteBefore(bstr, start.x);
 
 	needle_length = strlen(search_string);
-	
+
 	rept
 	{
 		str = bstr->String();
 		//stat("line %d: '%s'", y, str);
 		hit = (*StringScanner)(str, search_string, needle_length);
-		
+
 		if (hit)
 		{
 			int x = (hit - str);
 			if (y == start.y) x += start.x;
 			return DocPoint(ev, x, y, line);
 		}
-		
+
 		line = line->next;
 		if (!line) break;
-		
+
 		y++;
-		
+
 		delete bstr;
 		bstr = line->GetLineAsString();
 	}
-	
+
 	// return an invalid DocPoint to signal no hits found
 	return DocPoint();
 }
@@ -1270,20 +1277,20 @@ int y;
 
 	// select which string-searching function to call based on options
 	StringScanner = GetStringScanner(options);
-	
+
 	// fetch contents of the first line
 	line = start.line;
 	y = start.y;
-	
+
 	bstr = line->GetLineAsString();
 	DeleteAfter(bstr, start.x);
 
 	needle_length = strlen(search_string);
-	
+
 	rept
 	{
 		str = bstr->String();
-		
+
 		// are there any hits on this line?
 		hit = (*StringScanner)(str, search_string, needle_length);
 		if (hit)
@@ -1293,26 +1300,26 @@ int y;
 			rept
 			{
 				lasthit += needle_length;
-				
+
 				lasthit = (*StringScanner)(lasthit, search_string, needle_length);
 				if (lasthit)
 					hit = lasthit;
 				else
 					break;
 			}
-			
+
 			return DocPoint(ev, (hit - str), y, line);
 		}
-		
+
 		line = line->prev;
 		if (!line) break;
-		
+
 		y--;
-		
+
 		delete bstr;
 		bstr = line->GetLineAsString();
 	}
-	
+
 	// return an invalid DocPoint to signal no hits found
 	return DocPoint();
 }
@@ -1378,12 +1385,12 @@ char *hit;
 char ch;
 
 	initial_haystack = haystack;
-	
+
 	rept
 	{
 		hit = (*StringScanner)(haystack, needle);
-		if (!hit) return NULL;		
-		
+		if (!hit) return NULL;
+
 		// check that char before hit is not alphanumeric
 		if (hit > initial_haystack)
 		{
@@ -1394,7 +1401,7 @@ char ch;
 				continue;
 			}
 		}
-		
+
 		// check that char after hit is not alphanumeric
 		ch = *(hit + needle_length);
 		if (isalnum(ch) || ch=='_')
@@ -1402,7 +1409,7 @@ char ch;
 			haystack = (hit + needle_length);
 			continue;
 		}
-		
+
 		return hit;
 	}
 }

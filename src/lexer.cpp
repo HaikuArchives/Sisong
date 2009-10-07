@@ -18,7 +18,7 @@ void c------------------------------() {}
 char next_char(LexInstance *li)
 {
 char ch;
-	
+
 	if (li->curchar > li->line_end)
 	{
 		li->curchar++;
@@ -26,10 +26,10 @@ char ch;
 	}
 
 	ch = *(li->curchar++);
-	
+
 	if (li->curchar == li->gap_start)
 		li->curchar = (li->gap_end + 1);
-	
+
 	return ch;
 }
 
@@ -37,10 +37,10 @@ char ch;
 void back_char(LexInstance *li)
 {
 	li->curchar--;
-	
+
 	if (li->curchar == li->gap_end)
 		li->curchar = (li->gap_start - 1);
-	
+
 	if (li->curchar < li->line)
 		li->curchar = li->line;
 }
@@ -53,7 +53,7 @@ char *i;
 	i = li->curchar;
 	if (i >= li->gap_start)
 		i -= (li->gap_end - li->gap_start) + 1;
-	
+
 	return (i - li->line);
 }
 
@@ -61,7 +61,7 @@ char *i;
 void set_index(LexInstance *li, int index)
 {
 	li->curchar = (li->line + index);
-	
+
 	if (li->curchar >= li->gap_start)
 		li->curchar += (li->gap_end - li->gap_start);
 }
@@ -82,6 +82,7 @@ LexInstance li;
 
 	InitLexInstance(&li, line);
 	line->lexresult.exitstate = ParseLine(&li, entry_state);
+	//DumpLexResult(&line->lexresult);
 }
 
 /*
@@ -95,23 +96,23 @@ LexResult *output;
 	// initilize line pointers
 	li->line = line->text;
 	li->line_end = (line->text + (line->length - 1));
-	
+
 	li->gap_start = (line->text + line->gap_start);
 	li->gap_end = (line->text + line->gap_end);
-	
+
 	if (line->gap_start == 0)
 		li->curchar = (li->gap_end + 1);
 	else
 		li->curchar = li->line;
-	
+
 	// initilize LexResult output buffer
 	output = &line->lexresult;
 	li->output = output;
-	
+
 	FreeLexResult(output);
 
 	output->points = (LexPoint *)smal(128 * sizeof(LexPoint));
-	output->alloc_size = 128;	
+	output->alloc_size = 128;
 }
 
 void FreeLexResult(LexResult *lr)
@@ -143,39 +144,39 @@ char have_non_blank = 0;
 	if (entry_state != 0)
 	{
 		AddLexPoint(li, 0, COLOR_CMT_BLOCK);
-		
+
 		word_start = FindEndOfBlockComment(li, entry_state);
 		if (word_start < 0)
 		{
 			return -word_start;
 		}
-		
+
 		AddLexPoint(li, word_start, COLOR_NORMAL);
 		set_index(li, word_start);
 	}
-	
+
 	rept
 	{
 		ch = next_char(li);
 		//stat("read char %d/'%c'", ch);
-		
+
 		if (is_seperator[ch])
 		{
 			word_end = get_index(li);
-			
+
 			// identify the word and mark it with a special color if appropriate
 			if (have_chars)
-			{				
+			{
 				*word_ptr = 0;
 				wtype = identify_word(word);
-				
+
 				if (wtype != COLOR_NORMAL)
 				{
 					AddLexPoint(li, word_start, wtype);
 					AddLexPoint(li, (word_end - 1), COLOR_NORMAL);
 				}
-			}			
-			
+			}
+
 			// check for some special chars
 			switch(ch)
 			{
@@ -183,7 +184,7 @@ char have_non_blank = 0;
 				case '/':
 				{
 					ch = next_char(li);
-					
+
 					if (ch == '/')
 					{
 						AddLexPoint(li, get_index(li)-2, COLOR_CMT_LINE);
@@ -192,7 +193,7 @@ char have_non_blank = 0;
 					else if (ch == '*')
 					{
 						AddLexPoint(li, get_index(li)-2, COLOR_CMT_BLOCK);
-						
+
 						word_end = FindEndOfBlockComment(li, 1);
 						if (word_end >= 0)	// comment ended
 						{
@@ -211,13 +212,13 @@ char have_non_blank = 0;
 					}
 				}
 				break;
-				
+
 				// line-continuation
 				case '\\':
 					AddLexPoint(li, word_end - 1, COLOR_NUMBER);
 					AddLexPoint(li, word_end, COLOR_NORMAL);
 				break;
-				
+
 				// PP defines
 				case '#':
 				{
@@ -229,7 +230,7 @@ char have_non_blank = 0;
 					}
 				}
 				break;
-				
+
 				// braces
 				case '{': case '}':
 				case '[': case ']':
@@ -237,7 +238,7 @@ char have_non_blank = 0;
 					AddLexPoint(li, word_end - 1, COLOR_BRACE);
 					AddLexPoint(li, word_end, COLOR_NORMAL);
 				break;
-				
+
 				// operators
 				case '=': case ',':
 				case '.': case '>':
@@ -251,13 +252,13 @@ mark_operator: ;	// jump from "/*" comment detector ("/" operator)
 					AddLexPoint(li, word_end - 1, COLOR_OPERATOR);
 					AddLexPoint(li, word_end, COLOR_NORMAL);
 				break;
-				
+
 				// string literals
 				case '\"':
 				case '\'':
 				{
 					int string_start = (word_end - 1);
-					
+
 					word_end = FindEndOfString(li, ch);
 					if (word_end == -1)
 					{
@@ -270,13 +271,13 @@ mark_operator: ;	// jump from "/*" comment detector ("/" operator)
 					}
 				}
 				break;
-				
+
 				case 0: return 0;	// end of line, stop
 			}
-			
+
 			if (ch != 9 && ch != ' ')
 				have_non_blank = 1;
-			
+
 			word_start = word_end;
 			word_ptr = word;
 			have_chars = 0;
@@ -287,7 +288,7 @@ mark_operator: ;	// jump from "/*" comment detector ("/" operator)
 			have_chars = 1;
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -306,7 +307,7 @@ uchar ch;
 				if (!next_char(li)) return -1;
 			break;
 		}
-		
+
 		if (ch == quotetype)
 		{
 			return get_index(li);
@@ -336,13 +337,13 @@ uchar ch;
 					goto done;
 				}
 			break;
-			
+
 			case 0:
 				back_char(li);
 				goto done;
 		}
 	}
-	
+
 	done:	return get_index(li);
 }
 
@@ -369,7 +370,7 @@ int nest_level = entry_nesting;
 					back_char(li);
 				}
 			break;*/
-			
+
 			case '*':	// check for end of block comment
 				if (next_char(li) == '/')
 				{
@@ -387,7 +388,7 @@ int nest_level = entry_nesting;
 					back_char(li);
 				}
 			break;
-			
+
 			case 0:		// block comment did not end before line did
 				return -nest_level;
 			break;
@@ -400,7 +401,7 @@ int nest_level = entry_nesting;
 int identify_word(char *word)
 {
 	//stat("identify_word... '%s'", word);
-	
+
 	// check if it is a number
 	if (IsNumeric(*word))
 	{
@@ -420,7 +421,7 @@ unsigned char ch;
 	rept
 	{
 		ch = *(word++);
-		
+
 		if (node->branches[ch])
 		{
 			node = node->branches[ch];
@@ -433,7 +434,7 @@ unsigned char ch;
 			{
 				return node->terminator_type;
 			}
-			
+
 			return COLOR_NORMAL;
 		}
 	}
@@ -447,7 +448,7 @@ char ch;
 
 	// read first char of number
 	ch = *(word++);
-	
+
 	if (ch == '0')
 	{	// check for hex
 		ch = *word;
@@ -472,13 +473,13 @@ char ch;
 	{	// first char not numeric
 		return COLOR_NORMAL;
 	}
-	
+
 	// ensure that all remaining chars of word are numeric
 	rept
 	{
 		ch = *(word++);
 		if (!ch) return COLOR_NUMBER;
-		
+
 		if (!IsNumeric(ch))
 		{
 			if (hex_enable)
@@ -492,7 +493,7 @@ char ch;
 				if (ch == 'f' && *word == 0) continue;	// eg. "1.50f"
 				if (ch == '.') continue;
 			}
-			
+
 			return COLOR_NORMAL;
 		}
 	}
@@ -509,18 +510,18 @@ LexPoint *lp;
 	if (li->output->npoints >= li->output->alloc_size)
 	{
 		li->output->alloc_size += 128;
-		li->output->points = (LexPoint *)resmal(li->output->points, 
+		li->output->points = (LexPoint *)resmal(li->output->points,
 											li->output->alloc_size * sizeof(LexPoint));
 	}
 
-	lp = &li->output->points[li->output->npoints - 1];	
-	
+	lp = &li->output->points[li->output->npoints - 1];
+
 	if (!li->output->npoints || lp->index != index)
-		lp = &li->output->points[li->output->npoints++];	
-	
+		lp = &li->output->points[li->output->npoints++];
+
 	lp->index = index;
 	lp->type = type;
-	//stat("LexPoint #%d added: type %d at index %d", li->output->npoints-1, type, index);
+	//stat("  LexPoint #%d added: type %d at index %d", li->output->npoints-1, type, index);
 }
 
 void lexeme_add(const char *str, int color)
@@ -532,20 +533,20 @@ LTree *tree = LTIdent;
 	for(i=0;;i++)
 	{
 		ch = str[i];
-		
+
 		if (!ch)
 		{
 			tree->terminator_type = color;
 			return;
 		}
-		
+
 		if (!tree->branches[ch])
 		{
 			tree->branches[ch] = CreateLTNode();
 			if (ch < tree->minbranch) tree->minbranch = ch;
 			if (ch > tree->maxbranch) tree->maxbranch = ch;
 		}
-		
+
 		tree = tree->branches[ch];
 	}
 }
@@ -566,7 +567,7 @@ int i;
 	{
 		if (t->branches[i]) FreeLTNode(t->branches[i]);
 	}
-	
+
 	frees(t);
 }
 
@@ -579,7 +580,7 @@ void lexer_init()
 int i;
 
 	// initilize identifier tables
-	LTIdent = CreateLTNode();	
+	LTIdent = CreateLTNode();
 	lexeme_add("int", COLOR_IDENTIFIER);
 	lexeme_add("short", COLOR_IDENTIFIER);
 	lexeme_add("char", COLOR_IDENTIFIER);
@@ -611,13 +612,13 @@ int i;
 	lexeme_add("inline", COLOR_IDENTIFIER);
 	lexeme_add("true", COLOR_IDENTIFIER);
 	lexeme_add("false", COLOR_IDENTIFIER);
-	
+
 	load_builtin_keywords(keywords_constant, COLOR_SYSTEM_CONSTANT);
 	//load_keywords("keywords_constant", COLOR_SYSTEM_CONSTANT);
-	
+
 	//lexeme_add(LTIdent, "public");
 	//lexeme_add(LTIdent, "private");
-	
+
 	// initilize word-seperator table
 	memset(is_seperator, 1, sizeof(is_seperator));
 	for(i='A';i<='Z';i++) is_seperator[i] = 0;
@@ -646,15 +647,15 @@ char line[256];
 
 	fp = fopen(fname, "rb");
 	if (!fp) return 1;
-	
+
 	while(!feof(fp))
 	{
 		fgetline(fp, line, sizeof(line));
 		if (!line[0]) continue;
-		
+
 		lexeme_add(line, color);
 	}
-	
+
 	fclose(fp);
 	return 0;
 }
@@ -669,20 +670,20 @@ void lexer_test(char *line)
 clLine ln;
 
 	//line = "public int j = 37;";
-	
+
 	memset(&ln, 0, sizeof(ln));
 	ln.gap_start = ln.gap_end = 20000;
 	ln.text = line;
 	ln.length = strlen(line);
-	
+
 	//ln.gap_start = 0;
 	//ln.gap_end = 0;
-	
+
 	lexer_parse_line(&ln, 0);
 	testdraw(&ln, &ln.lexresult);
 	stat("exit state %d", ln.lexresult.exitstate);
 	DumpLexResult(&ln.lexresult);
-	
+
 	getch();
 }
 
@@ -695,6 +696,7 @@ int i;
 	{
 		stat("$%02x: change to color %d", lr->points[i].index, lr->points[i].type);
 	}
+	stat("exit state %d", lr->exitstate);
 }
 
 void testdraw(clLine *line, LexResult *lr)
@@ -704,7 +706,7 @@ int p = 0;
 
 	conshow(1);
 	gotoxy(0, 0);
-	
+
 	index = i = 0;
 	rept
 	{
@@ -712,17 +714,17 @@ int p = 0;
 			i = line->gap_end + 1;
 		if (i >= line->length)
 			break;
-		
+
 		if (index == lr->points[p].index && p < lr->npoints)
 		{
 			textbg(0);
-			
+
 			switch(lr->points[p].type)
 			{
 				case COLOR_NORMAL: textcolor(7); break;
-				case COLOR_IDENTIFIER: textcolor(14); textbg(1); break;				
-				case COLOR_PP: textcolor(6); break;				
-				case COLOR_NUMBER: textcolor(12); break;				
+				case COLOR_IDENTIFIER: textcolor(14); textbg(1); break;
+				case COLOR_PP: textcolor(6); break;
+				case COLOR_NUMBER: textcolor(12); break;
 				case COLOR_CMT_LINE: textcolor(3); break;
 				case COLOR_CMT_BLOCK: textcolor(2); break;
 				case COLOR_STRING_DOUBLE: textcolor(10); break;
@@ -730,15 +732,15 @@ int p = 0;
 				case COLOR_BROKEN_STRING: textcolor(4); break;
 				default: textcolor(12); textbg(10); break;
 			}
-			
+
 			p++;
 		}
-		
+
 		putch(line->text[i]);
 		i++;
 		index++;
 	}
-	
+
 	stat("");
 	textcolor(7);
 	textbg(0);

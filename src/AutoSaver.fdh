@@ -4,9 +4,7 @@
 /* located in misc.cpp */
 
 //-------------------[referenced from AutoSaver.cpp]-----------------//
-const char *GetFileSpec(const char *file_and_path);
 void AddSuffixIfMissing(char *str, char ch);
-bool file_exists(const char *filename);
 
 
 /* located in AutoSaver.cpp */
@@ -28,4 +26,11 @@ void stat(const char *str, ...);
 //-------------------[referenced from AutoSaver.cpp]-----------------//
 char *smal_strdup(const char *str, int extra);
 void frees(void *ptr);
+
+
+/* located in ../common/misc.cpp */
+
+//-------------------[referenced from AutoSaver.cpp]-----------------//
+const char *GetFileSpec(const char *file_and_path);
+bool file_exists(const char *filename);
 

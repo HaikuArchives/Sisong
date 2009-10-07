@@ -54,11 +54,7 @@ void undo_close(EditView *ev);
 /* located in misc.cpp */
 
 //------------------[referenced from edit_files.cpp]-----------------//
-void fgetline(FILE *fp, char *str, int maxlen);
-void maxcpy(char *dst, const char *src, int maxlen);
-const char *GetFileSpec(const char *file_and_path);
 int RTrimWhitespace(char *string, int linelength);
-bool file_exists(const char *filename);
 
 
 /* located in AutoSaver.cpp */
@@ -85,4 +81,13 @@ void staterr(const char *str, ...);
 //------------------[referenced from edit_files.cpp]-----------------//
 void *smal(int size);
 void frees(void *ptr);
+
+
+/* located in ../common/misc.cpp */
+
+//------------------[referenced from edit_files.cpp]-----------------//
+void fgetline(FILE *fp, char *str, int maxlen);
+void maxcpy(char *dst, const char *src, int maxlen);
+const char *GetFileSpec(const char *file_and_path);
+bool file_exists(const char *filename);
 

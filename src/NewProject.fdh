@@ -17,7 +17,6 @@ char *run_template_selector(BMessage msg_to_deliver, BMessenger target);
 
 //------------------[referenced from NewProject.cpp]-----------------//
 void FreeBList(BList *list);
-void touch(const char *filename);
 bool CopyFile(const char *src, const char *dst);
 
 
@@ -37,4 +36,10 @@ void stat(const char *str, ...);
 
 //------------------[referenced from NewProject.cpp]-----------------//
 char *smal_strdup(const char *str, int extra);
+
+
+/* located in ../common/misc.cpp */
+
+//------------------[referenced from NewProject.cpp]-----------------//
+void touch(const char *filename);
 

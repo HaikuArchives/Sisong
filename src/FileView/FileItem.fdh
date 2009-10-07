@@ -7,7 +7,7 @@
 static void DimmedIconBlitter(BView *view, BBitmap *bitmap, BPoint where);
 
 
-/* located in misc.cpp */
+/* located in ../common/misc.cpp */
 
 //---------------[referenced from FileView/FileItem.cpp]-------------//
 void maxcpy(char *dst, const char *src, int maxlen);

@@ -165,10 +165,6 @@ void EApp::MessageReceived(BMessage *msg)
 {
 	switch(msg->what)
 	{
-		case B_SAVE_REQUESTED:
-			MainWindow->PostMessage(msg);
-		break;
-
 		default:
 			BApplication::MessageReceived(msg);
 		break;

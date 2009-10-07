@@ -11,24 +11,25 @@ int bx;
 
 	if (!editor.settings.DoBraceMatching)
 		return;
-	
+
 	line = ev->GetLineHandle(ev->cursor.y);
-	
-	// try to find a brace cursor is hovering over
+
+	// check if cursor is hovering over a brace
 	bracetype = 0;
+	// first try to left of cursor
 	if (ev->cursor.x > 0)
 	{
 		bx = (ev->cursor.x - 1);
 		bracetype = is_brace(line, bx);
 	}
-	
+	// then to right
 	if (!bracetype)
 	{
 		bx = ev->cursor.x;
 		bracetype = is_brace(line, bx);
 	}
-	
-	// activate or deactive brace highlighting as necessary
+
+	// activate or deactivate the brace highlighting as necessary
 	if (bracetype)
 	{
 		// when moving cursor directly from one brace set to another,
@@ -41,30 +42,30 @@ int bx;
 				DeactivateBrace(ev);
 			}
 		}
-		// v Do not merge this statement into the above via an "else",
-		//	 it IS possible for both cases to run.
+		// v Do not merge this statement into the above with an "else",
+		//	 it _IS_ possible and necessary for both cases to run.
 		if (!ev->bmatch.active)
 		{
 			ActivateBrace(ev, line, bx, ev->cursor.y, bracetype);
-			
+
 			// light up tab lines for { and } braces
 			if ((bracetype == '{' || bracetype == '}') && ev->bmatch.matched)
 			{
 				ev->bmatch.highlight_tab_level = min(ev->bmatch.x1, ev->bmatch.x2);
-				rd_invalidate_range(ev, ev->bmatch.y1, ev->bmatch.y2);
+				rd_invalidate_range_exclusive(ev, ev->bmatch.y1, ev->bmatch.y2);
 			}
 		}
-		
+
 		if (ev->bmatch.matched)
 		{
 			clLine *line1, *line2;
-			
+
 			line1 = ev->GetLineHandle(ev->bmatch.y1);
 			if (ev->bmatch.y1 == ev->bmatch.y2) { line2 = line1; }
 			else { line2 = ev->GetLineHandle(ev->bmatch.y2); }
-			
+
 			SetBraceColor(line1, ev->bmatch.x1, COLOR_BRACE_MATCHED);
-			SetBraceColor(line2, ev->bmatch.x2, COLOR_BRACE_MATCHED);			
+			SetBraceColor(line2, ev->bmatch.x2, COLOR_BRACE_MATCHED);
 		}
 		else
 		{
@@ -86,12 +87,12 @@ int x2, y2;
 clLine *line2;
 
 	//staterr("activating brace '%c' at [%d,%d]", bracetype, x1, y1);
-	
+
 	// scan for the other brace of the pair
 	if (IsOpenBrace(bracetype))
 	{	// scan forward for end of pair
 		line2 = find_end_of_pair(line1, x1, y1, bracetype, InvertBrace(bracetype), &x2, &y2);
-		
+
 		ev->bmatch.x1 = x1;
 		ev->bmatch.y1 = y1;
 		ev->bmatch.x2 = x2;
@@ -100,28 +101,28 @@ clLine *line2;
 	else
 	{	// scan backwards for start of pair
 		line2 = find_start_of_pair(line1, x1, y1, bracetype, InvertBrace(bracetype), &x2, &y2);
-		
+
 		ev->bmatch.x1 = x2;
 		ev->bmatch.y1 = y2;
 		ev->bmatch.x2 = x1;
 		ev->bmatch.y2 = y1;
 	}
-	
+
 	ev->bmatch.active = 1;
 	ev->bmatch.match_x = x1;
 	ev->bmatch.match_y = y1;
-	
+
 	if (line2)
 	{
 		ev->bmatch.matched = 1;
-		
+
 		rd_invalidate_line(ev, y1);
-		rd_invalidate_line(ev, y2);		
+		rd_invalidate_line(ev, y2);
 	}
 	else
-	{		
+	{
 		ev->bmatch.matched = 0;
-		
+
 		rd_invalidate_line(ev, y1);
 	}
 }
@@ -131,25 +132,49 @@ static void DeactivateBrace(EditView *ev)
 	if (ev->bmatch.active)
 	{
 		//staterr("deactivating brace set");
-		if (ev->bmatch.highlight_tab_level > 0)
-		{
-			ev->bmatch.highlight_tab_level = -1;
-			rd_invalidate_range(ev, ev->bmatch.y1, ev->bmatch.y2);
-		}
-		
+
 		if (ev->bmatch.matched)
 		{
-			SetBraceColor(ev->GetLineHandle(ev->bmatch.y1), ev->bmatch.x1, COLOR_BRACE);
-			SetBraceColor(ev->GetLineHandle(ev->bmatch.y2), ev->bmatch.x2, COLOR_BRACE);
-			rd_invalidate_line(ev, ev->bmatch.y1);
-			rd_invalidate_line(ev, ev->bmatch.y2);
+			// don't mess with the brace color if the line is dirty,
+			// this means that:
+			//	A. the lexer has just been re-ran on the line, so our coloring
+			//	   is gone anyway, and
+			//  B. the line might have changed, so our X coordinate could be wrong.
+			if (!rd_is_line_dirty(ev->bmatch.y1))
+			{
+				rd_invalidate_line(ev, ev->bmatch.y1);
+				SetBraceColor(ev->GetLineHandle(ev->bmatch.y1), ev->bmatch.x1, COLOR_BRACE);
+
+				if (ev->bmatch.y1 == ev->bmatch.y2)
+				{	// otherwise, since the line isn't dirty anymore,
+					// the 2nd brace wouldn't be cleared
+					goto clearSecondBrace;
+				}
+			}
+
+			if (!rd_is_line_dirty(ev->bmatch.y2))
+			{
+				rd_invalidate_line(ev, ev->bmatch.y2);
+clearSecondBrace:
+				SetBraceColor(ev->GetLineHandle(ev->bmatch.y2), ev->bmatch.x2, COLOR_BRACE);
+			}
+
+			// unhighlight tab lines when moving off of {/} braces
+			if (ev->bmatch.highlight_tab_level > 0)
+			{
+				ev->bmatch.highlight_tab_level = -1;
+				rd_invalidate_range_exclusive(ev, ev->bmatch.y1, ev->bmatch.y2);
+			}
 		}
 		else
-		{
-			SetBraceColor(ev->GetLineHandle(ev->bmatch.match_y), ev->bmatch.match_x, COLOR_BRACE);
-			rd_invalidate_line(ev, ev->bmatch.match_y);
+		{	// brace was unmatched/broken, so there is only one char that was highlighted
+			if (!rd_is_line_dirty(ev->bmatch.match_y))
+			{
+				SetBraceColor(ev->GetLineHandle(ev->bmatch.match_y), ev->bmatch.match_x, COLOR_BRACE);
+				rd_invalidate_line(ev, ev->bmatch.match_y);
+			}
 		}
-		
+
 		ev->bmatch.active = 0;
 		ev->bmatch.highlight_tab_level = -1;
 	}
@@ -179,7 +204,7 @@ int nestlevel = 0;
 int linelength;
 
 	//staterr("find_pair: search for '%c' to close '%c' at [%d,%d]", CloseBrace, OpenBrace, x, y);
-	
+
 	linelength = line->GetLength();
 	rept
 	{
@@ -189,7 +214,7 @@ int linelength;
 			{
 				if (!y)		// reached beginning of document and no match
 					return NULL;
-				
+
 				y--;
 				line = line->prev;
 				linelength = line->GetLength();
@@ -204,23 +229,23 @@ int linelength;
 		else
 		{
 			x++;
-			
+
 			// move to next line when we reach the end
 			if (x >= linelength)
 			{
 				line = line->next;
 				if (!line)	// reached end of document and no match
 					return NULL;
-				
+
 				x = 0; y++;
 				linelength = line->GetLength();
 				lexer_update_line(line);
 			}
 		}
-		
+
 		// fetch char at check if it's one of the braces we're looking for
 		ch = line->GetCharAtIndex(x);
-		
+
 		if (ch == MoreNestedChar)
 		{
 			if (LexerAgreesIsBrace(line, x))
@@ -244,7 +269,7 @@ int linelength;
 					nestlevel--;
 				}
 			}
-		}		
+		}
 	}
 }
 
@@ -261,7 +286,7 @@ static char IsOpenBrace(char ch)
 		case '{':
 		case '[': return 1;
 	}
-	
+
 	return 0;
 }
 
@@ -273,14 +298,14 @@ static char InvertBrace(char ch)
 	{
 		case '(': return ')';
 		case ')': return '(';
-		
+
 		case '{': return '}';
 		case '}': return '{';
-		
+
 		case '[': return ']';
 		case ']': return '[';
 	}
-	
+
 	return 0;
 }
 
@@ -296,13 +321,13 @@ char ch;
 	switch(ch = line->GetCharAtIndex(x))
 	{
 		default: return 0;
-		
+
 		case '(': case ')':
 		case '{': case '}':
 		case '[': case ']':
 		break;
 	}
-	
+
 	if (LexerAgreesIsBrace(line, x)) return ch;
 	return 0;
 }
@@ -312,7 +337,7 @@ static char LexerAgreesIsBrace(clLine *line, int x)
 	// check if the lexer determined that it was a brace
 	// (filter out braces inside of quotes, comments, etc)
 	LexPoint *lp = FindLexPoint(line, x);
-	
+
 	if (!lp) return 0;
 	return (lp->type >= COLOR_BRACE && lp->type <= COLOR_BRACE_UNMATCHED);
 }
@@ -333,17 +358,17 @@ LexPoint *FindLexPoint(clLine *line, int index)
 {
 LexResult *lr = &line->lexresult;
 int npoints = lr->npoints;
-	
+
 	for(int i=0;i<npoints;i++)
 	{
 		if (lr->points[i].index >= index)
 		{
 			if (lr->points[i].index == index)
 				return &lr->points[i];
-			
+
 			return NULL;
 		}
 	}
-	
+
 	return NULL;
 }

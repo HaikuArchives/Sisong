@@ -15,7 +15,7 @@ all: ../line
 	 Prefs/ColorsPreflet.o Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o \
 	 FileView/IconCache.o FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o \
 	 DirMenu/DirMenu.o DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o \
-	 ../common/smal.o
+	 ../common/smal.o ../common/misc.o
 	gcc -o ../line \
 	 IComm/IShelf.o MainWindow.o EditArea.o EditPane.o \
 	 main.o edit.o edit_files.o edit_keys.o edit_cursor.o \
@@ -31,7 +31,7 @@ all: ../line
 	 Prefs/ColorsPreflet.o Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o \
 	 FileView/IconCache.o FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o \
 	 DirMenu/DirMenu.o DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o \
-	 ../common/smal.o \
+	 ../common/smal.o ../common/misc.o \
 	 -lbe -ltracker
 
 IComm/IShelf.o:	IComm/IShelf.cpp IComm/IShelf.fdh editor.h ../common/basics.h \
@@ -999,6 +999,9 @@ Walter/Spinner.o:	Walter/Spinner.cpp Walter/Spinner.fdh Walter/Spinner.h
 		../common/atree.h ../common/smal.h ../common/smal_record.h
 	ccache gcc -g -c ../common/smal.cpp -o ../common/smal.o
 
+../common/misc.o:	../common/misc.cpp ../common/misc.fdh ../common/basics.h
+	ccache gcc -g -c ../common/misc.cpp -o ../common/misc.o
+
 
 clean:
 	rm -f IComm/IShelf.o
@@ -1071,6 +1074,7 @@ clean:
 	rm -f Walter/Spinner.o
 	rm -f ../common/stat.o
 	rm -f ../common/smal.o
+	rm -f ../common/misc.o
 
 cleanfdh:
 	rm -f IComm/IShelf.fdh
@@ -1143,6 +1147,7 @@ cleanfdh:
 	rm -f Walter/Spinner.fdh
 	rm -f ../common/stat.fdh
 	rm -f ../common/smal.fdh
+	rm -f ../common/misc.fdh
 
 cleanall: clean cleanfdh
 

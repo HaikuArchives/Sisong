@@ -75,4 +75,5 @@ ColorPicker/ColorPicker.cpp
 Walter/Spinner.cpp
 ../common/stat.cpp
 ../common/smal.cpp
+../common/misc.cpp
 <<

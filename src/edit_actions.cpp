@@ -10,12 +10,12 @@ clLine *line;
 
 	ev->SetDirty();
 	undo_add(ev, x, y, 1, NULL);
-	
+
 	line = ev->GetLineHandle(y);
-	
+
 	line->set_insertion_point(x);
 	line->insert_char(ch);
-	
+
 	rd_invalidate_line(ev, y);
 	ModifiedSinceRedraw = true;
 }
@@ -27,26 +27,28 @@ clLine *line;
 void EditView::action_insert_string(int x, int y, const char *str, int *final_x, int *final_y)
 {
 EditView *ev = this;
-clLine *line;
+clLine *line, *startline;
 char hit_cr = 0;
 int orgy = y;
 
 	ev->SetDirty();
 	undo_add(ev, x, y, strlen(str), NULL);
 
-	line = ev->GetLineHandle(y);
+	line = startline = ev->GetLineHandle(y);
+	if (!line) return;
+
 	line->set_insertion_point(x);
-	
+
 	while(*str)
-	{		
+	{
 		if (*str == '\n')
 		{
 			InternalInsertCR(ev, x, y);		// calls invalidate_below and updates undo
 			hit_cr = 1;
-			
+
 			y++;
 			x = 0;
-			
+
 			line = line->next;
 			line->set_insertion_point(0);
 		}
@@ -55,10 +57,23 @@ int orgy = y;
 			line->insert_char(*str);
 			x++;
 		}
-		
+
 		str++;
 	}
-	
+
+	// do initial lex of all added lines, so block comments etc look correct
+	// in case of large pastes that are taller than the window.
+	if (line != startline)
+	{
+		clLine *lexme = startline;
+		do
+		{
+			lexer_update_line(lexme);
+			lexme = lexme->next;
+		}
+		while(lexme != line && lexme);
+	}
+
 	if (!hit_cr)
 		rd_invalidate_line(ev, orgy);
 	else
@@ -79,7 +94,7 @@ EditView *ev = this;
 	ev->SetDirty();
 	undo_add(ev, x, y, 1, NULL);
 	rd_invalidate_below(ev, y);
-	
+
 	InternalInsertCR(ev, x, y);
 	ModifiedSinceRedraw = true;
 }
@@ -90,22 +105,22 @@ static void InternalInsertCR(EditView *ev, int x, int y)
 clLine *line;
 
 	line = ev->GetLineHandle(y);
-	
+
 	// if inserting a CR into the middle of a line, split the line
 	if (x < line->GetLength())
 	{
 		BString *initial_string = line->GetLineAsString();
-		
+
 		DeleteBefore(initial_string, x);
 		line->DeleteAfterIndex(x);
-		
+
 		ev->insert_line((char *)initial_string->String(), line, y);
 		delete initial_string;
 	}
 	else
 	{
 		ev->insert_line("", line, y);
-	}	
+	}
 }
 
 
@@ -122,18 +137,18 @@ clLine *line;
 int x2, y2;
 BString *deldata;
 char hit_cr = 0;
-	
+
 	ev->SetDirty();
-	
+
 	line = ev->GetLineHandle(y);
 	line->set_insertion_point(x);
-	
+
 	// get the range of chars which will be deleted.
 	// this is (count-1) because, say we're deleting 1 char:
 	// the range is only [x,y]-[x,y].
 	ev->AddToDocPoint(x, y, line, count-1, &x2, &y2);
 	deldata = ev->RangeToString(x, y, x2, y2, "\n");
-	
+
 	// save the to-be-deleted data to the undo buffer
 	undo_add(ev, x, y, count, deldata);
 
@@ -143,23 +158,23 @@ char hit_cr = 0;
 		{
 			// can't delete past end-of-file
 			if (!line->next) break;
-			
+
 			// concatenate the following line onto the end of the current one,
 			// then delete the following line.
 			BString *string = line->next->GetLineAsString();
 			line->insert_string((char *)string->String());
 			delete string;
-			
+
 			ev->delete_line(line->next, y+1);
 			line->set_insertion_point(x);
-			
+
 			hit_cr = 1;
 		}
 		else
 		{
 			line->delete_right();
 		}
-		
+
 		if (count <= 1) break;
 		count--;
 	}
@@ -182,7 +197,7 @@ char not_wrapped = 1;
 
 	//staterr("edit_delete_range: [%d,%d] - [%d,%d]", x1, y1, x2, y2);
 	ev->SetDirty();
-	
+
 	// save the to-be-deleted data to the undo buffer
 	BString *deldata = ev->RangeToString(x1, y1, x2, y2, "\n");
 	undo_add(ev, x1, y1, deldata->Length(), deldata);
@@ -202,7 +217,7 @@ char not_wrapped = 1;
 			x2 = line->GetLength() - 1;
 		}
 	}
-	
+
 	// if y1 == y2, simply delete text between x1 and x2.
 	if (y1 == y2)
 	{
@@ -210,19 +225,19 @@ char not_wrapped = 1;
 		rd_invalidate_line(ev, y1);
 		return;
 	}
-	
+
 	rd_invalidate_below(ev, y1);
-	
+
 	// delete everything on line y1 after x1.
 	line1 = ev->GetLineHandle(y1);
 	line1->DeleteAfterIndex(x1);
-	
+
 	// obtain contents of line y2, and get portion of the text after x2.
 	line2 = ev->GetLineHandle(y2);
 	BString *line2str = line2->GetLineAsString();
 	char *y2str = (char *)line2str->String();
 	y2str += (x2 + not_wrapped);
-	
+
 	// delete line y2.
 	ev->delete_line(line2, y2);
 
@@ -237,7 +252,7 @@ char not_wrapped = 1;
 	if (y < y2)
 	{
 		line = ev->GetLineHandle(y);
-		
+
 		for(;y<y2;y++)
 		{
 			clLine *next = line->next;

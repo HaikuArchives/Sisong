@@ -25,10 +25,10 @@
 // the view that contains the controls, there is one for each tab
 class FBView : public BView
 {
-	FBView(BRect frame, int mode);
+	FBView(BRect frame, int initialMode);
 	~FBView();
 	static void InitTabData();
-	
+
 	friend class CFindBox;
 	friend class FBTabView;
 
@@ -38,13 +38,13 @@ private:
 	BTextControl *txtFolder;
 	BTextControl *txtFilter;
 	BButton *DefButton;
-	
+
 	BCheckBox *chkWholeWord;
 	BCheckBox *chkCaseSensitive;
 	BCheckBox *chkBackwards;
 	BCheckBox *chkRecursive;
 	BCheckBox *chkIgnoreHiddenFolders;
-	
+
 	int fbmode;
 };
 
@@ -54,7 +54,7 @@ class FBTabView : public BTabView
 public:
 	FBTabView(BRect frame, char *name)
 		: BTabView(frame, name) { }
-	
+
 	virtual void MouseDown(BPoint where);
 };
 
@@ -71,14 +71,14 @@ public:
 	void ProcessBrowseForFolderResults(BMessage *message);
 
 	friend class FBView;
-	friend class FBTabView;	
+	friend class FBTabView;
 
 private:
 	char *GetSearchSettings(int *options);
 	FBView *GetCurrentView();
-	
+
 	BTabView *tabview;
-	FBView *views[3];	
+	FBView *views[3];
 };
 
 

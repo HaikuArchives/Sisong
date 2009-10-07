@@ -79,11 +79,8 @@ UndoGroupRecord *EndUndoGroup(EditView *ev);
 
 //---------------------[referenced from menu.cpp]--------------------//
 void Unimplemented();
-const char *GetFileSpec(const char *file_and_path);
 void OpenFolderInTracker(const char *path);
 bool MoveToTrash(const char *orgpath);
-char *RemoveFileSpec(const char *input_file);
-void maxcpy(char *dst, const char *src, int maxlen);
 void errorblip();
 
 
@@ -117,4 +114,12 @@ void stat(const char *str, ...);
 void *smal(int size);
 void frees(void *ptr);
 char *smal_strdup(const char *str, int extra);
+
+
+/* located in ../common/misc.cpp */
+
+//---------------------[referenced from menu.cpp]--------------------//
+const char *GetFileSpec(const char *file_and_path);
+char *RemoveFileSpec(const char *input_file);
+void maxcpy(char *dst, const char *src, int maxlen);
 

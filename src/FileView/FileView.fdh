@@ -4,7 +4,6 @@
 /* located in misc.cpp */
 
 //---------------[referenced from FileView/FileView.cpp]-------------//
-void maxcpy(char *dst, const char *src, int maxlen);
 bool GetDirectoryContents(const char *folder, const char *filter, BList *files, BList *dirs);
 void FreeBList(BList *list);
 
@@ -13,4 +12,10 @@ void FreeBList(BList *list);
 
 //---------------[referenced from FileView/FileView.cpp]-------------//
 void stat(const char *str, ...);
+
+
+/* located in ../common/misc.cpp */
+
+//---------------[referenced from FileView/FileView.cpp]-------------//
+void maxcpy(char *dst, const char *src, int maxlen);
 

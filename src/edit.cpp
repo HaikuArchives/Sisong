@@ -708,7 +708,7 @@ char redraw_line_numbers = is_fullredraw;
 
 			lexer_update_line(line);
 
-			// if exit state is different perpetuate invalidity down
+			// if exit state is different, perpetuate the invalidity down
 			// to next line, for example when a new block comment is opened.
 			if (line->lexresult.exitstate != OldExitState &&
 				line->next && i+1 < NumVisibleLines)

@@ -7,15 +7,15 @@
 void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false)
 {
 	BRect mrect(parent->Frame());
-	
+
 	int x = (int)(mrect.left + (WIDTHOF(mrect) / 2));
 	int y = (int)(mrect.top + (HEIGHTOF(mrect) / 2));
-	
+
 	if (at_bottom)
 		y = (int)(mrect.bottom - HEIGHTOF(child->Frame()) - 16);
 	else
 		y -= (int)HEIGHTOF(child->Frame())/2;
-	
+
 	x -= (int)WIDTHOF(child->Frame())/2;
 	child->MoveTo(x, y);
 }
@@ -25,30 +25,16 @@ void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false)
 void FreeBList(BList *list)
 {
 int i, count = list->CountItems();
-	
+
 	for(i=0;i<count;i++)
 		frees(list->ItemAt(i));
-	
+
 	list->MakeEmpty();
 }
 
 /*
 void c------------------------------() {}
 */
-
-bool file_exists(const char *filename)
-{
-FILE *fp;
-
-	fp = fopen(filename, "rb");
-	if (fp)
-	{
-		fclose(fp);
-		return true;
-	}
-	
-	return false;
-}
 
 // simple function to copy small files.
 // returns nonzero on error.
@@ -62,54 +48,21 @@ char *buffer;
 	if (!fpi) return 1;
 	fpo = fopen(dst, "wb");
 	if (!fpo) { fclose(fpi); return 1; }
-	
+
 	fseek(fpi, 0, SEEK_END);
 	file_size = ftell(fpi);
 	fseek(fpi, 0, SEEK_SET);
-	
+
 	buffer = (char *)malloc(file_size);
-	
+
 	fread(buffer, file_size, 1, fpi);
 	fwrite(buffer, file_size, 1, fpo);
-	
+
 	free(buffer);
-	
+
 	fclose(fpi);
 	fclose(fpo);
 	return 0;
-}
-
-// given a full path to a file, return onto the name of the file.
-// the pointer returned is within the original string.
-const char *GetFileSpec(const char *file_and_path)
-{
-	char *ptr = strrchr(file_and_path, '/');
-	if (ptr)
-		return ptr+1;
-	else
-		return file_and_path;
-}
-
-// given a full path to a file, return the path part without the filename.
-// the pointer returned is an allocated area of memory that you need to frees().
-char *RemoveFileSpec(const char *input_file)
-{
-	char *buffer = smal_strdup(input_file);	
-	char *ptr = strrchr(buffer, '/');
-	if (ptr) *ptr = 0;
-	return buffer;
-}
-
-
-void touch(const char *filename)
-{
-FILE *fp;
-
-	if (!file_exists(filename))
-	{
-		if ((fp = fopen(filename, "wb")))
-			fclose(fp);
-	}
 }
 
 
@@ -128,22 +81,6 @@ int min(int a, int b)
 int max(int a, int b)
 {
 	return (a > b) ? a : b;
-}
-
-// a strncpy that works as you might expect
-void maxcpy(char *dst, const char *src, int maxlen)
-{
-int len = strlen(src);
-
-	if (len >= maxlen)
-	{
-		if (maxlen >= 2) memcpy(dst, src, maxlen - 2);
-		if (maxlen >= 1) dst[maxlen - 1] = 0;
-	}
-	else
-	{
-		memcpy(dst, src, len + 1);
-	}
 }
 
 void DeleteBefore(BString *string, int x)
@@ -166,7 +103,7 @@ void DeleteAfter(BString *string, int x)
 void AddSuffixIfMissing(char *str, char ch)
 {
 	int len = strlen(str);
-	
+
 	if (len)
 	{
 		if (str[len - 1] != ch)
@@ -174,7 +111,7 @@ void AddSuffixIfMissing(char *str, char ch)
 			char append[2];
 			append[0] = ch;
 			append[1] = 0;
-			
+
 			strcat(str, append);
 		}
 	}
@@ -184,7 +121,7 @@ void AddSuffixIfMissing(char *str, char ch)
 int RTrimWhitespace(char *string, int linelength)
 {
 	char *ptr = (string + (linelength - 1));
-	
+
 	while(ptr >= string)
 	{
 		if (*ptr == ' ' || *ptr == TAB)
@@ -197,7 +134,7 @@ int RTrimWhitespace(char *string, int linelength)
 			break;
 		}
 	}
-	
+
 	return (ptr - string) + 1;
 }
 
@@ -208,11 +145,11 @@ void c------------------------------() {}
 
 /*
 	Here's the deal with all the swapping; it's a little confusing.
-	
+
 	Haiku Keymap can swap CTRL and ALT to emulate Windows/Linux.
 	I have mine set to do this, so my idea of an IsCtrlDown() is actually
 	to ask the OS whether ALT is down, and vice versa.
-	
+
 	I would like to add a feature to locally swap them as well so
 	people can use CTRL+HOME shortcuts as CTRL+HOME if they want,
 	instead of ALT+HOME. But this isn't working well yet do the
@@ -257,7 +194,7 @@ int TranslateAltKey(int ch)
 		case 9:  return 'i';
 		case 15: return 'o';
 		case 16: return 'p';
-		
+
 		case 1:  return 'a';
 		case 19: return 's';
 		case 4: return 'd';
@@ -267,7 +204,7 @@ int TranslateAltKey(int ch)
 		case 10: return 'j';
 		case 11: return 'k';
 		case 12: return 'l';
-		
+
 		case 26: return 'z';
 		case 24: return 'x';
 		case 3:  return 'c';
@@ -276,7 +213,7 @@ int TranslateAltKey(int ch)
 		case 14: return 'n';
 		case 13: return 'm';
 	}
-	
+
 	return ch;
 }
 
@@ -291,18 +228,18 @@ bool GetDirectoryContents(const char *folder, const char *filter, BList *files, 
 {
 	if (files) files->MakeEmpty();
 	if (dirs) dirs->MakeEmpty();
-	
+
 	BEntry entry(folder);
 	if (!entry.Exists()) return true;
 	BDirectory dir(&entry);
 	BDirectory dirchecker;
-	
+
 	dir.Rewind();
 	while(dir.GetNextEntry(&entry, false) != B_ENTRY_NOT_FOUND)
 	{
 		BPath path;
 		entry.GetPath(&path);
-		
+
 		// check if this is a file or a directory. to do that, i just pretend it's
 		// a directory and see if that assumption causes an error.
 		dirchecker.SetTo(&entry);
@@ -328,7 +265,7 @@ bool GetDirectoryContents(const char *folder, const char *filter, BList *files, 
 				dirs->AddItem((void *)smal_strdup(path.Path()));
 		}
 	}
-	
+
 	return false;
 }
 
@@ -340,45 +277,45 @@ char *match_what;
 char *ptr;
 
 	//stat("does_filter_match: '%s', '%s'", filespec, filter);
-	
+
 	rept
 	{
 		filter_char = *(filter++);
-		
+
 		switch(filter_char)
 		{
 			case 0:
 				return true;
-			
+
 			case '?':	// next char is wildcard, and is for free
 				filespec++;
 			break;
-			
+
 			case '*':	// skip chars in filespec
 			{
 				// seek past '*'
 				do
 				{ filter_char = *(filter++); }
 				while(filter_char == '*' || filter_char == '?');
-				
+
 				// the '*' is last char in filter (asdf.*)
 				if (!filter_char) return true;
-				
+
 				// find the pattern which must match
 				match_what = smal_strdup(--filter);
 				ptr = strchr(match_what, '*'); if (ptr) *ptr = 0;
 				ptr = strchr(match_what, '?'); if (ptr) *ptr = 0;
-				
+
 				filespec = strstr(filespec, match_what);
 				if (!filespec) { frees(match_what); return false; }
-				
+
 				int len = strlen(match_what);
 				filespec += len;
 				filter += len;
 				frees(match_what);
 			}
 			break;
-			
+
 			default:	// next char has to match our char
 			{
 				if (*filespec == filter_char)
@@ -400,10 +337,10 @@ void c------------------------------() {}
 */
 
 void OpenFolderInTracker(const char *path)
-{	
+{
 	entry_ref ref;
 	BEntry(path).GetRef(&ref);
-	
+
 	BMessage openmsg(B_REFS_RECEIVED);
 	openmsg.AddRef("refs", &ref);
 
@@ -421,13 +358,13 @@ BString DestName;
 	if (find_directory(B_TRASH_DIRECTORY, 0, true, TrashDirectory, sizeof(TrashDirectory)) != B_OK)
 		return 1;
 	DestName = TrashDirectory;
-	
+
 	int len = strlen(DestName);
 	if (len && DestName[len-1] != '/')
 		DestName.Append("/");
 
 	DestName.Append(GetFileSpec(orgpath));
-	
+
 	// deal with case where file already exists in Trash
 	while(file_exists(DestName.String()))
 		DestName.Append(" copy");
@@ -438,7 +375,7 @@ BString DestName;
 		staterr("could not move to trash: 'rename' failed");
 		return 1;
 	}
-	
+
 	// save original path for "restore" operation
 	BNode node(DestName.String());
 	if (node.InitCheck() == B_OK)
@@ -454,46 +391,6 @@ BString DestName;
 void c------------------------------() {}
 */
 
-// read data from a file until CR
-void fgetline(FILE *fp, char *str, int maxlen)
-{
-int k;
-	str[0] = 0;
-	fgets(str, maxlen - 1, fp);
-	
-	// trim the CRLF that fgets appends
-	for(k=strlen(str)-1;k>=0;k--)
-	{
-		if (str[k] != 13 && str[k] != 10) break;
-		str[k] = 0;
-	}
-}
-
-unsigned short fgeti(FILE *fp)
-{
-unsigned short value;
-	fread(&value, 2, 1, fp);
-	return value;
-}
-
-unsigned int fgetl(FILE *fp)
-{
-unsigned int value;
-	fread(&value, 4, 1, fp);
-	return value;
-}
-
-void fputi(unsigned short word, FILE *fp)
-{
-	fwrite(&word, 2, 1, fp);
-}
-
-void fputl(unsigned int word, FILE *fp)
-{
-	fwrite(&word, 4, 1, fp);
-}
-
-
 void errorblip()
 {
 	staterr("errorblip!");
@@ -506,7 +403,7 @@ void Unimplemented()
 								   " but the features are missing\n"
 								   "      wait for next version", "Oh, ok", NULL, NULL,
 									B_WIDTH_AS_USUAL, B_WARNING_ALERT);
-	
+
 	alert->SetShortcut(0, B_ESCAPE);
 	BFont fi;
 	alert->TextView()->GetFontAndColor(0, &fi);
@@ -544,19 +441,19 @@ uint32 flags;
 int i, j;
 
 	for(i=0;i<numFamilies;i++)
-	{		
+	{
 		if (get_font_family(i, &ff, &flags) == B_OK)
 		{
 			if (!strcasecmp(ff, desired_face))
 			{
 				int numStyles = count_font_styles(ff);
-				
+
 				for(j=0;j<numStyles;j++)
 				{
 					if (get_font_style(ff, j, &fs, &flags) == B_OK)
 					{
 						stat("%s:%s", ff, fs);
-						
+
 						if (!strcasecmp(fs, desired_style))
 						{
 							font->SetFamilyAndStyle(ff, fs);
@@ -566,8 +463,8 @@ int i, j;
 				}
 			}
 		}
-	} 
-	
+	}
+
 	return false;
 }
 

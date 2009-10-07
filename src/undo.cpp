@@ -13,7 +13,7 @@ void undo_close(EditView *ev)
 {
 	ev->undo.ub.stack->free();
 	ev->undo.ub.groups->free();
-	
+
 	ev->undo.rb.stack->free();
 	ev->undo.rb.groups->free();
 
@@ -38,7 +38,7 @@ static void FreeUndoRecord(UndoRecord *rec)
 		delete rec->deldata;
 		rec->deldata = NULL;
 	}
-	
+
 	frees(rec);
 }
 
@@ -61,17 +61,17 @@ UndoGroupRecord *grec;
 		staterr("BeginUndoGroup assert fail: group already open");
 		errorblip();
 	}
-	
+
 	grec = (UndoGroupRecord *)smalz(sizeof(UndoGroupRecord));
-	
+
 	grec->BeforeCursorX = ev->cursor.x;
 	grec->BeforeCursorY = ev->cursor.y;
 	grec->RecordCount = ev->undo.ub.stack->CountItems();
 	grec->options = options;
-	
+
 	ev->undo.ub.groups->AddItem(grec);
 	ev->undo.GroupOpen = true;
-	
+
 	// clear redo stack
 	ev->undo.rb.stack->free();
 	ev->undo.rb.groups->free();
@@ -91,13 +91,13 @@ UndoGroupRecord *grec;
 		errorblip();
 		return NULL;
 	}
-	
+
 	grec->AfterCursorX = ev->cursor.x;
 	grec->AfterCursorY = ev->cursor.y;
-	
+
 	grec->RecordCount = (ev->undo.ub.stack->CountItems() - grec->RecordCount);
 	ev->undo.GroupOpen = false;
-	
+
 	//stat("undo group end: [%d,%d] - [%d,%d]", grec->BeforeCursorX, grec->BeforeCursorY, grec->AfterCursorX, grec->AfterCursorY);
 	return grec;
 }
@@ -126,7 +126,7 @@ UndoGroupRecord *grec;
 		errorblip();
 		return;
 	}
-	
+
 	grec->AfterCursorX = ev->cursor.x;
 	grec->AfterCursorY = ev->cursor.y;
 }
@@ -168,7 +168,7 @@ BList *stack;
 	if (!ev->undo.save_to_redo)
 	{
 		stack = ev->undo.ub.stack;
-		
+
 		if (!ev->undo.GroupOpen && !ev->undo.MergeToPrior)
 			staterr("undo_add: egads, no undo group open! Use BeginUndoGroup()/EndUndoGroup()");
 	}
@@ -176,29 +176,29 @@ BList *stack;
 	{
 		stack = ev->undo.rb.stack;
 	}
-	
+
 	if (ev->undo.MergeToPrior)
 	{
 		rec = (UndoRecord *)stack->LastItem();
-		
+
 		switch(ev->undo.MergeMode)
 		{
 			case MERGE_TYPING:
 				rec->length += length;
 			break;
-			
+
 			case MERGE_DEL:
 				rec->length += length;
-				
+
 				rec->deldata->Append(*deldata);
 				delete deldata;
 			break;
-			
+
 			case MERGE_BKSP:
 				rec->x = x;
 				rec->y = y;
 				rec->length += length;
-				
+
 				deldata->Append(*rec->deldata);
 				delete rec->deldata;
 				rec->deldata = deldata;
@@ -208,19 +208,19 @@ BList *stack;
 	else
 	{
 		rec = (UndoRecord *)smalz(sizeof(*rec));
-		
+
 		rec->x = x;
 		rec->y = y;
 		rec->length = length;
 		rec->deldata = deldata;
 		rec->mergetype = ev->undo.MergeMode;
-		
+
 		stack->AddItem(rec);
 	}
-	
+
 	ev->undo.MergeMode = MERGE_NONE;
 	ev->undo.MergeToPrior = 0;
-	
+
 	//stat("added %sdo record at [%d,%d]; %s", ev->undo.save_to_redo ? "re":"un", x, y, deldata ? "deletion" : "insertion");
 	//if (deldata) stat("deleted text: '%s'", deldata->String());
 }
@@ -243,38 +243,38 @@ UndoRecord *lastrec;
 
 	lastrec = (UndoRecord *)ev->undo.ub.stack->LastItem();
 	if (!lastrec) return 0;				// no undo records present
-	
+
 	switch(key)
 	{
 		default:		// typing insertions
 			if (lastrec->mergetype != MERGE_TYPING) return 0;
-			
+
 			if (lastrec->y != y) return 0;		// not on same line
 			if (lastrec->x != (x - lastrec->length)) return 0;	// not just prior to the new insertion
-			
+
 			return 1;							// yes, is ok
 		break;
-		
+
 		case B_DELETE:	// each char is inserted at same position
 			if (lastrec->mergetype != MERGE_DEL &&
 				lastrec->mergetype != MERGE_BKSP) return 0;
-			
+
 			if (lastrec->y != y) return 0;
 			if (lastrec->x != x) return 0;
-			
+
 			return 1;
 		break;
-		
+
 		case B_BACKSPACE:	// each char is inserted from the previous position
 			if (lastrec->mergetype != MERGE_BKSP &&
 				lastrec->mergetype != MERGE_DEL) return 0;
-			
+
 			// for BKSP, the X position is one less each time. however, because the
 			// cursor-left is done after this function is called, they will appear
 			// to be the same coordinate.
 			if (lastrec->y != y) return 0;
 			if (lastrec->x != x) return 0;
-			
+
 			return 1;
 		break;
 	}
@@ -289,6 +289,10 @@ void undo_undo(EditView *ev)
 	ev->undo.save_to_redo = true;
 	RevertAction(ev, &ev->undo.ub, &ev->undo.rb);
 	ev->undo.save_to_redo = false;
+
+	// if they undid all the way to the beginning, clear the dirty bit
+	if (ev->undo.ub.groups->CountItems() == 0)
+		ev->ClearDirty();
 }
 
 void undo_redo(EditView *ev)
@@ -314,8 +318,8 @@ int RecordCount;
 
 	// undo all actions in the group
 	RecordCount = grec->RecordCount;
-	ev->undo.GroupOpen = true;	// so the assert will quit complaining
-	
+	ev->undo.GroupOpen = true;	// so the assert in undo_add won't complain
+
 	while(RecordCount > 0)
 	{
 		rec = (UndoRecord *)ub->stack->pop();
@@ -323,10 +327,10 @@ int RecordCount;
 		{
 			BAlert *error = new BAlert("", "SERIOUS ERROR: Undo Group Record Count larger than actual number of records!\r\nSave your work immediately and restart!", "Oh No!");
 			error->Go();
-			
+
 			return;
 		}
-		
+
 		if (rec->deldata)
 		{
 			ev->action_insert_string(rec->x, rec->y, (char *)rec->deldata->String(), NULL, NULL);
@@ -335,15 +339,15 @@ int RecordCount;
 		{
 			ev->action_delete_right(rec->x, rec->y, rec->length);
 		}
-		
+
 		FreeUndoRecord(rec);
 		RecordCount--;
 	}
-	
+
 	// jump cursor to the "Before" position
 	if (!(grec->options & UG_NO_AFFECT_CURSOR))
 		ev->cursor.move(grec->BeforeCursorX, grec->BeforeCursorY);
-	
+
 	// switch the before and after positions and push the group record back onto
 	// the opposing stack.
 	SWAP(grec->BeforeCursorX, grec->AfterCursorX);
@@ -369,29 +373,29 @@ int grpcount = 0;
 
 	gotoxy(0, y);
 	stat("\F14 { %d records; %d groups }\n", ub->stack=>length, ub->groups=>length);
-	
+
 	ub->stack => to_end();
 	ub->groups => to_end();
-	
+
 	gcount = 0;
 	while(rec = (ub->stack => prev))
-	{		
+	{
 		while(!gcount)
 		{
 			grec = ub->groups=>prev;
 			grpcount++;
 			if (!grec) break;
-			
+
 			DumpUndoGroupRecord(grec, color2);
 			gcount = grec->RecordCount;
 			if (++count >= maxrecords) break 2;
 			color2 = "\F4";
 		}
 		gcount--;
-		
+
 		if (grpcount >= 2) color = "\F3";
-		stat("%s%s", color, DescribeUndoRecord(rec));		
-		
+		stat("%s%s", color, DescribeUndoRecord(rec));
+
 		if (++count >= maxrecords) break;
 	}
 }
@@ -428,12 +432,12 @@ char data[20000];
 	{
 		data[0] = 0;
 	}
-	
+
 	char *mt = "";
 	if (rec->mergetype == MERGE_TYPING) mt = ", MERGE_TYPING";
 	if (rec->mergetype == MERGE_DEL) mt = ", MERGE_DEL";
 	if (rec->mergetype == MERGE_BKSP) mt = ", MERGE_BKSP";
-	
+
 	return stprintf(" [%d,%d]; length %d; %s%s; [%s]", \
 					rec->x, rec->y, \
 					rec->length, \

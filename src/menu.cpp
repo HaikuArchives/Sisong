@@ -90,7 +90,7 @@ BMenu *menu;
 	menu->AddItem(new BMenuItem("Execute Build Script", new BMessage(M_RUN_RUN), 'R', B_COMMAND_KEY));
 	menu->AddItem(new BMenuItem("Build but Don't Run", new BMessage(M_RUN_BUILD_NO_RUN), 'R', B_COMMAND_KEY | B_CONTROL_KEY));
 	menu->AddSeparatorItem();
-	ShowConsoleItem = new BMenuItem("Show Console", new BMessage(M_RUN_SHOW_CONSOLE));
+	ShowConsoleItem = new BMenuItem("Always Show Console", new BMessage(M_RUN_SHOW_CONSOLE));
 	menu->AddItem(ShowConsoleItem);
 	menu->AddItem(new BMenuItem("Abort Compile", new BMessage(M_RUN_ABORT), 'A', B_COMMAND_KEY | B_CONTROL_KEY));
 	bar->AddItem(menu);
@@ -638,6 +638,7 @@ void DismissFilePanel()
 	{
 		delete FilePanel;
 		FilePanel = NULL;
+		stat("FP dismissed");
 	}
 }
 
@@ -646,7 +647,7 @@ void FileOpen()
 	DismissFilePanel();
 
 	FilePanel = new BFilePanel(B_OPEN_PANEL);
-	FilePanel->SetTarget(be_app);
+	FilePanel->SetTarget(MainWindow);
 
 	char *dir = NULL;
 	if (editor.curev->IsUntitled)
@@ -707,8 +708,8 @@ void FileSaveAs(bool as_copy, bool shutdown_afterwards)
 	msg.AddBool("shutdown_afterwards", shutdown_afterwards);
 
 	DismissFilePanel();
-
 	FilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL, 0, false, &msg);
+	FilePanel->SetTarget(MainWindow);
 
 	BString title;
 	title << "Save " << GetFileSpec(editor.curev->filename);

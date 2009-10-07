@@ -30,12 +30,6 @@ void load_builtin_keywords(const char *array[], int color);
 char load_keywords(char *fname, int color);
 
 
-/* located in misc.cpp */
-
-//---------------------[referenced from lexer.cpp]-------------------//
-void fgetline(FILE *fp, char *str, int maxlen);
-
-
 /* located in ../common/smal.cpp */
 
 //---------------------[referenced from lexer.cpp]-------------------//
@@ -43,4 +37,10 @@ void *smal(int size);
 void frees(void *ptr);
 void *resmal(void *ptr, int size);
 void *smalz(int size);
+
+
+/* located in ../common/misc.cpp */
+
+//---------------------[referenced from lexer.cpp]-------------------//
+void fgetline(FILE *fp, char *str, int maxlen);
 
