@@ -132,6 +132,9 @@ static void DeactivateBrace(EditView *ev)
 	if (ev->bmatch.active)
 	{
 		//staterr("deactivating brace set");
+		//staterr("matched=%d", ev->bmatch.matched);
+		//staterr("y:      %d-%d", ev->bmatch.y1, ev->bmatch.y2);
+		//staterr("dirty:  %d %d", rd_is_absline_dirty(ev,ev->bmatch.y1), rd_is_line_dirty(ev->bmatch.y2));
 
 		if (ev->bmatch.matched)
 		{
@@ -140,7 +143,7 @@ static void DeactivateBrace(EditView *ev)
 			//	A. the lexer has just been re-ran on the line, so our coloring
 			//	   is gone anyway, and
 			//  B. the line might have changed, so our X coordinate could be wrong.
-			if (!rd_is_line_dirty(ev->bmatch.y1))
+			if (!rd_is_absline_dirty(ev, ev->bmatch.y1))
 			{
 				rd_invalidate_line(ev, ev->bmatch.y1);
 				SetBraceColor(ev->GetLineHandle(ev->bmatch.y1), ev->bmatch.x1, COLOR_BRACE);
@@ -152,7 +155,7 @@ static void DeactivateBrace(EditView *ev)
 				}
 			}
 
-			if (!rd_is_line_dirty(ev->bmatch.y2))
+			if (!rd_is_absline_dirty(ev, ev->bmatch.y2))
 			{
 				rd_invalidate_line(ev, ev->bmatch.y2);
 clearSecondBrace:
@@ -168,7 +171,7 @@ clearSecondBrace:
 		}
 		else
 		{	// brace was unmatched/broken, so there is only one char that was highlighted
-			if (!rd_is_line_dirty(ev->bmatch.match_y))
+			if (!rd_is_absline_dirty(ev, ev->bmatch.match_y))
 			{
 				SetBraceColor(ev->GetLineHandle(ev->bmatch.match_y), ev->bmatch.match_x, COLOR_BRACE);
 				rd_invalidate_line(ev, ev->bmatch.match_y);

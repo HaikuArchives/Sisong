@@ -100,8 +100,10 @@ int32 textlength = 0;
 				if (text && textlength >= 0)
 				{
 					buffer = (char *)smal(textlength + 1);
-					if (textlength)
+
+					if (textlength > 0)
 						memcpy(buffer, text, textlength);
+
 					buffer[textlength] = 0;
 				}
 			}

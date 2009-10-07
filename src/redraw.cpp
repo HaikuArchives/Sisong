@@ -105,11 +105,26 @@ int y1, y2;
 
 
 // returns true if a given Y position on screen is dirty
-char rd_is_line_dirty(int y)
+bool rd_is_line_dirty(int y)
 {
 	if (fullredraw) return 1;
 	return dirty_bits[y];
 }
+
+// like rd_is_line_dirty, but "y" is a line relative to start
+// of document, not top of screen.
+bool rd_is_absline_dirty(EditView *ev, int y)
+{
+	if (fullredraw) return 1;
+
+	y -= ev->scroll.y;
+
+	if (y < 0) return false;
+	if (y >= editor.height) return false;
+
+	return dirty_bits[y];
+}
+
 
 // returns true if the current redraw is a "full" redraw
 char rd_fullredraw()
