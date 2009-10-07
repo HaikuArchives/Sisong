@@ -638,7 +638,7 @@ void DismissFilePanel()
 	{
 		delete FilePanel;
 		FilePanel = NULL;
-		stat("FP dismissed");
+		//stat("FP dismissed");
 	}
 }
 
