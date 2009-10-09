@@ -20,18 +20,6 @@ void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false)
 	child->MoveTo(x, y);
 }
 
-// iterates over every entry in a BList, and passes each to frees().
-// then clears the list.
-void FreeBList(BList *list)
-{
-int i, count = list->CountItems();
-
-	for(i=0;i<count;i++)
-		frees(list->ItemAt(i));
-
-	list->MakeEmpty();
-}
-
 /*
 void c------------------------------() {}
 */
@@ -467,23 +455,6 @@ int i, j;
 
 	return false;
 }
-
-
-bool strbegin(const char *bigstr, const char *smallstr)
-{
-int i;
-	for(i=0;smallstr[i];i++)
-		if (bigstr[i] != smallstr[i]) return false;
-	return true;
-}
-
-
-
-
-
-
-
-
 
 
 

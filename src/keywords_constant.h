@@ -1126,6 +1126,13 @@ static const char *keywords_constant[] = {
 	"B_WOULD_BLOCK",
 	"B_NO_SERVER_SIDE_WINDOW_MODIFIERS",
 	"B_CLOSE_ON_ESCAPE",
+	"B_STRING_TYPE",
+	"B_INT32_TYPE",
+	"B_UINT32_TYPE",
+	"B_FLOAT_TYPE",
+	"B_DOUBLE_TYPE",
+	"B_INT64_TYPE",
+	"B_UINT64_TYPE",
 NULL
 };
 

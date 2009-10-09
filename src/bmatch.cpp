@@ -170,7 +170,7 @@ clearSecondBrace:
 			}
 		}
 		else
-		{	// brace was unmatched/broken, so there is only one char that was highlighted
+		{	// brace was unmatched/broken, so only one char needs to be unhighlighted
 			if (!rd_is_absline_dirty(ev, ev->bmatch.match_y))
 			{
 				SetBraceColor(ev->GetLineHandle(ev->bmatch.match_y), ev->bmatch.match_x, COLOR_BRACE);

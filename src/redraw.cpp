@@ -2,8 +2,9 @@
 #include "editor.h"
 #include "redraw.fdh"
 
-// only needs to be as big as maximum number of lines visible at once
-static char dirty_bits[1000];
+// this array only needs to be as big as the maximum number of lines
+// expected to be on-screen at once
+static bool dirty_bits[2048];
 static char fullredraw;
 static char dirty_bits_present;
 
@@ -104,8 +105,8 @@ int y1, y2;
 }
 
 
-// returns true if a given Y position on screen is dirty
-bool rd_is_line_dirty(int y)
+// returns true if a given row on the screen is dirty
+bool rd_is_screenline_dirty(int y)
 {
 	if (fullredraw) return 1;
 	return dirty_bits[y];

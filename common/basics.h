@@ -18,3 +18,5 @@ typedef unsigned short	ushort;
 
 void stat(const char *fmt, ...);
 void staterr(const char *fmt, ...);
+
+#include "smal.h"

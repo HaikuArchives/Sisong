@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
+#include <List.h>
 
 #include "basics.h"
 #include "misc.fdh"
@@ -166,7 +167,7 @@ int cp, sz;
 // reads an entire file into memory.
 // returns an allocated buffer to it's contents, and optionally the length of the file.
 // the buffer will be null-terminated.
-char *read_file(char *fname, int *size_out)
+char *read_file(const char *fname, int *size_out)
 {
 FILE *fp;
 char *data;
@@ -313,7 +314,7 @@ FILE *fp;
 
 // works like QBasic's string$() command.
 // returns a string consisting of ch, repeated num times.
-char *string(char *buffer, int num, char ch)
+char *fillstr(char *buffer, int num, char ch)
 {
 	memset(buffer, ch, num);
 	buffer[num] = 0;
@@ -321,6 +322,19 @@ char *string(char *buffer, int num, char ch)
 	return buffer;
 }
 
+// iterates over every entry in a BList, and passes each to frees().
+// then clears the list.
+void FreeBList(BList *list)
+{
+int i, count = list->CountItems();
+
+	for(i=0;i<count;i++)
+		frees(list->ItemAt(i));
+
+	list->MakeEmpty();
+}
+
+/*
 char *GetStaticStr(void)
 {
 static int counter = 0;
@@ -331,7 +345,7 @@ static struct
 
 	if (++counter >= 24) counter = 0;
 	return bufs[counter].str;
-}
+}*/
 
 // a strncpy that works as you might expect
 void maxcpy(char *dst, const char *src, int maxlen)
@@ -456,6 +470,15 @@ stopit:
 	return result;
 }
 */
+
+
+bool strbegin(const char *bigstr, const char *smallstr)
+{
+int i;
+	for(i=0;smallstr[i];i++)
+		if (bigstr[i] != smallstr[i]) return false;
+	return true;
+}
 
 // pads str with ch so that it is at least len characters long
 void strpad(char *str, uchar ch, int len)

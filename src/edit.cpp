@@ -702,7 +702,7 @@ char redraw_line_numbers = is_fullredraw;
 
 	for(i=0;i<NumVisibleLines;i++)
 	{
-		if (rd_is_line_dirty(i))
+		if (rd_is_screenline_dirty(i))
 		{
 			int OldExitState = line->lexresult.exitstate;
 
@@ -727,7 +727,7 @@ char redraw_line_numbers = is_fullredraw;
 	}
 	else if (CurrentLineY >= 0 && CurrentLineY < NumVisibleLines)
 	{
-		if (rd_is_line_dirty(CurrentLineY))
+		if (rd_is_screenline_dirty(CurrentLineY))
 			bmatch_update(ev);
 	}
 
@@ -737,7 +737,7 @@ char redraw_line_numbers = is_fullredraw;
 	line = ev->scroll.topline;
 	for(i=y=0;i<NumVisibleLines;i++)
 	{
-		if (rd_is_line_dirty(i))
+		if (rd_is_screenline_dirty(i))
 		{
 			if (line != curline)
 			{

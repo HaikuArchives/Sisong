@@ -31,7 +31,7 @@ BMenu *menu;
 	menu->AddItem(new BMenuItem("Save As...", new BMessage(M_FILE_SAVE_AS), 'S', B_COMMAND_KEY | B_SHIFT_KEY));
 	menu->AddItem(new BMenuItem("Save All", new BMessage(M_FILE_SAVE_ALL), 'S', B_COMMAND_KEY | B_CONTROL_KEY));
 	menu->AddItem(new BMenuItem("Save File as Template...", new BMessage(M_FILE_SAVE_TEMPLATE), 'T', B_COMMAND_KEY | B_CONTROL_KEY));
-	menu->AddItem(new BMenuItem("Save As Copy...", new BMessage(M_FILE_SAVE_COPY), 'C', B_COMMAND_KEY | B_SHIFT_KEY));
+	menu->AddItem(new BMenuItem("Save a Copy...", new BMessage(M_FILE_SAVE_COPY), 'C', B_COMMAND_KEY | B_SHIFT_KEY));
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem("Copy File Location", new BMessage(M_FILE_COPY_LOCATION), 0, 0));
 	menu->AddItem(new BMenuItem("Open Containing Folder", new BMessage(M_FILE_OPEN_CONTAINING_FOLDER), 0, 0));
