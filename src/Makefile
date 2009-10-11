@@ -322,7 +322,8 @@ Templates.o:	Templates.cpp Templates.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h
 	gcc -g -c Templates.cpp -o Templates.o
 
-InputBox.o:	InputBox.cpp InputBox.fdh ../common/basics.h InputBox.h
+InputBox.o:	InputBox.cpp InputBox.fdh ../common/basics.h ../common/smal.h \
+		InputBox.h
 	gcc -g -c InputBox.cpp -o InputBox.o
 
 NewProject.o:	NewProject.cpp NewProject.fdh editor.h ../common/basics.h \
@@ -705,10 +706,12 @@ colors.o:	colors.cpp colors.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h
 	gcc -g -c colors.cpp -o colors.o
 
-config.o:	config.cpp config.fdh ../common/basics.h config.h
+config.o:	config.cpp config.fdh ../common/basics.h ../common/smal.h \
+		config.h
 	gcc -g -c config.cpp -o config.o
 
-ViewTimer.o:	ViewTimer.cpp ViewTimer.fdh ViewTimer.h ../common/basics.h
+ViewTimer.o:	ViewTimer.cpp ViewTimer.fdh ViewTimer.h ../common/basics.h \
+		../common/smal.h
 	gcc -g -c ViewTimer.cpp -o ViewTimer.o
 
 FontDrawer.o:	FontDrawer.cpp FontDrawer.fdh editor.h ../common/basics.h \
@@ -898,8 +901,9 @@ Prefs/ColorsPreflet.o:	Prefs/ColorsPreflet.cpp Prefs/ColorsPreflet.fdh Prefs/Pre
 		Walter/Spinner.h
 	gcc -g -c Prefs/ColorsPreflet.cpp -o Prefs/ColorsPreflet.o
 
-Prefs/ColorItem.o:	Prefs/ColorItem.cpp Prefs/ColorItem.fdh ../common/basics.h MessageView.h \
-		colors.h Prefs/ColorItem.h Prefs/ColorView.h
+Prefs/ColorItem.o:	Prefs/ColorItem.cpp Prefs/ColorItem.fdh ../common/basics.h ../common/smal.h \
+		MessageView.h colors.h Prefs/ColorItem.h \
+		Prefs/ColorView.h
 	gcc -g -c Prefs/ColorItem.cpp -o Prefs/ColorItem.o
 
 Prefs/ColorView.o:	Prefs/ColorView.cpp Prefs/ColorView.fdh Prefs/Preflet.h Prefs/Prefs.h \
@@ -965,9 +969,9 @@ FileView/IconCache.o:	FileView/IconCache.cpp FileView/IconCache.fdh FileView/Ico
 FileView/QuickSearch.o:	FileView/QuickSearch.cpp FileView/QuickSearch.fdh FileView/QuickSearch.h
 	gcc -g -c FileView/QuickSearch.cpp -o FileView/QuickSearch.o
 
-FileView/FileView.o:	FileView/FileView.cpp FileView/FileView.fdh ../common/basics.h FileView/FileItem.h \
-		FileView/IconCache.h FileView/QuickSearch.h FileView/FileView.h \
-		FileView/TitleView.h
+FileView/FileView.o:	FileView/FileView.cpp FileView/FileView.fdh ../common/basics.h ../common/smal.h \
+		FileView/FileItem.h FileView/IconCache.h FileView/QuickSearch.h \
+		FileView/FileView.h FileView/TitleView.h
 	gcc -g -c FileView/FileView.cpp -o FileView/FileView.o
 
 FileView/FileItem.o:	FileView/FileItem.cpp FileView/FileItem.fdh FileView/FileItem.h FileView/IconCache.h \
@@ -978,12 +982,13 @@ FileView/TitleView.o:	FileView/TitleView.cpp FileView/TitleView.fdh FileView/Tit
 		FileView/IconCache.h FileView/QuickSearch.h
 	gcc -g -c FileView/TitleView.cpp -o FileView/TitleView.o
 
-DirMenu/DirMenu.o:	DirMenu/DirMenu.cpp DirMenu/DirMenu.fdh ../common/basics.h DirMenu/DirMenuItem.h \
-		DirMenu/DirMenu.h FileView/IconCache.h FileView/QuickSearch.h \
-		FileView/FileView.h FileView/TitleView.h
+DirMenu/DirMenu.o:	DirMenu/DirMenu.cpp DirMenu/DirMenu.fdh ../common/basics.h ../common/smal.h \
+		DirMenu/DirMenuItem.h DirMenu/DirMenu.h FileView/IconCache.h \
+		FileView/QuickSearch.h FileView/FileView.h FileView/TitleView.h
 	gcc -g -c DirMenu/DirMenu.cpp -o DirMenu/DirMenu.o
 
-DirMenu/DirMenuItem.o:	DirMenu/DirMenuItem.cpp DirMenu/DirMenuItem.fdh ../common/basics.h DirMenu/DirMenuItem.h
+DirMenu/DirMenuItem.o:	DirMenu/DirMenuItem.cpp DirMenu/DirMenuItem.fdh ../common/basics.h ../common/smal.h \
+		DirMenu/DirMenuItem.h
 	gcc -g -c DirMenu/DirMenuItem.cpp -o DirMenu/DirMenuItem.o
 
 ColorPicker/ColorPicker.o:	ColorPicker/ColorPicker.cpp ColorPicker/ColorPicker.fdh ColorPicker/ColorPicker.h SubWindow.h
@@ -992,14 +997,14 @@ ColorPicker/ColorPicker.o:	ColorPicker/ColorPicker.cpp ColorPicker/ColorPicker.f
 Walter/Spinner.o:	Walter/Spinner.cpp Walter/Spinner.fdh Walter/Spinner.h
 	gcc -g -c Walter/Spinner.cpp -o Walter/Spinner.o
 
-../common/stat.o:	../common/stat.cpp ../common/stat.fdh ../common/basics.h
+../common/stat.o:	../common/stat.cpp ../common/stat.fdh ../common/basics.h ../common/smal.h
 	gcc -g -c ../common/stat.cpp -o ../common/stat.o
 
-../common/smal.o:	../common/smal.cpp ../common/smal.fdh ../common/basics.h ../common/smal_atree.c \
-		../common/atree.h ../common/smal.h ../common/smal_record.h
+../common/smal.o:	../common/smal.cpp ../common/smal.fdh ../common/basics.h ../common/smal.h \
+		../common/smal_atree.c ../common/atree.h ../common/smal_record.h
 	gcc -g -c ../common/smal.cpp -o ../common/smal.o
 
-../common/misc.o:	../common/misc.cpp ../common/misc.fdh ../common/basics.h
+../common/misc.o:	../common/misc.cpp ../common/misc.fdh ../common/basics.h ../common/smal.h
 	gcc -g -c ../common/misc.cpp -o ../common/misc.o
 
 

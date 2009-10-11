@@ -12,6 +12,9 @@ BRect bo(Bounds());
 BRect rc;
 
 	MainWindow = this;
+	fClosing = false;
+	fDoingInstantQuit = false;
+	fWindowIsForeground = true;
 
 	/* create top area (menu bar and tabs) */
 	rc.Set(0, 0, bo.right, TOPVIEW_HEIGHT-1);
@@ -65,9 +68,7 @@ BRect rc;
 
 	// spawn the thread that notifies if an update is available
 	if (editor.settings.CheckForUpdate)
-	{
 		UpdateCheck::Go(100 * 1000);
-	}
 
 	main.editarea->editpane->MakeFocus();
 
@@ -82,6 +83,7 @@ CMainWindow::~CMainWindow()
 	// this needs to be done here, because once we leave here, our tab bar will
 	// be auto-destroyed, and we don't want to try closing documents with an
 	// invalid tab bar pointer.
+	stat("~CMainWindow: Close_All()");
 	EditView::Close_All();
 
 	// close popup panes
@@ -228,7 +230,7 @@ void CMainWindow::MessageReceived(BMessage *message)
 			if (FunctionList) FunctionList->TimerTick();
 			AutoSaver_Tick();
 
-			Stats_Tick(WindowIsForeground || IsPrefsWindowOpenAndActive());
+			Stats_Tick(fWindowIsForeground || IsPrefsWindowOpenAndActive());
 		}
 		break;
 
@@ -384,22 +386,25 @@ void CMainWindow::WindowActivated(bool active)
 	if (active)
 		ProjectManager.UpdateProjectsMenu();
 
-	WindowIsForeground = active;
+	fWindowIsForeground = active;
 }
 
 bool CMainWindow::QuitRequested()
 {
-	ProjectManager.SaveProject();
+	// if we've already been here, just return true. this prevents a bug
+	// where the layout file was corrupted if SS was quit with the compile
+	// pane running, because in that case we will be called twice for some reason.
+	if (fClosing) return true;
 
-	if (DoingInstantQuit || ConfirmCloseSaveFiles())
+	if (fDoingInstantQuit || ConfirmCloseSaveFiles())
 	{
+		fClosing = true;
+		ProjectManager.SaveProject();
 		be_app->PostMessage(B_QUIT_REQUESTED);
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+
+	return false;
 }
 
 // triggered from QuitRequested, when the user clicks Close on window, selects Exit

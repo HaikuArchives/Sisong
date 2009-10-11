@@ -187,7 +187,7 @@ char MergeToPrior;
 		case B_ESCAPE:
 			if (editor.settings.esc_quits_immediately)	// a testmode
 			{
-				MainWindow->DoingInstantQuit = true;
+				MainWindow->fDoingInstantQuit = true;
 				be_app->PostMessage(B_QUIT_REQUESTED);
 			}
 		break;

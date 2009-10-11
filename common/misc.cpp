@@ -639,14 +639,14 @@ char IsAbsolutePath(char *path)
 }
 
 
-/*
+
 void hexdump(uchar *data, int len)
 {
-	hexdump_internal(data, len, stat);
+	hexdump_fp(data, len, stat);
 }
 
 
-void hexdump_internal(uchar *data, int len, void (*printfunc)(char *fmt, ...))
+void hexdump_fp(uchar *data, int len, void (*printfunc)(char *fmt, ...))
 {
 int i;
 int off = 0;
@@ -688,7 +688,7 @@ char *ptr;
 	}
 	while(off < len);
 }
-*/
+
 
 
 int boolbyte, boolmask_r, boolmask_w;

@@ -94,9 +94,8 @@ BStopWatch *w = new BStopWatch("load_layout");
 		BString message;
 		message << "Warning: (docCount <= 0) in layout file.\n\n"
 			<< "(Your data is fine, just your saved layout might be messed up).\n\n"
-			<< "If you see this, please notify the author and attach the file:\n\n"
-			<< "\"" << filename << "\"\n\n...to your mail. I am attempting to track down this"
-			<< " bug, but cannot reproduce it on my system.";
+			<< "Please notify the author of this error.\n\n"
+			<< filename;
 		(new BAlert("", message.String(), "OK"))->Go();
 	}
 
@@ -172,11 +171,4 @@ char line[500];
 	fgetline(fp, line, sizeof(line)-1);
 	return atoi(line);
 }
-
-
-
-
-
-
-
 

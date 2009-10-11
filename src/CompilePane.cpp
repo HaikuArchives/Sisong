@@ -507,7 +507,7 @@ int exitstat;
 		sprintf(str, "compile thread aborting: killing child PID %d", (int)child);
 		AddLine(str, color_warning, false);
 
-		kill(-child, SIGTERM);
+		kill(-child, SIGKILL);
 		exitstat = -1;
 	}
 	else

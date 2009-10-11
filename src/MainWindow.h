@@ -24,7 +24,7 @@ class CMainWindow : public BWindow
 public:
 	CMainWindow(BRect frame);
 	~CMainWindow();
-	
+
 	// -- controls --
 	struct		// top section
 	{
@@ -32,12 +32,12 @@ public:
 			MainMenuBar *menubar;
 			CTabBar *tabbar;
 	} top;
-	
+
 	struct		// main area
 	{
 		CEditArea *editarea;
 	} main;
-	
+
 	struct		// popup panes
 	{
 		PopupPane *pane;
@@ -45,23 +45,24 @@ public:
 			CompilePane *compile;
 			BuildHelpPane *buildhelp;
 	} popup;
-	
-	
+
+
 	bool IsMenuCommand(unsigned int code);
 	void ProcessMenuCommand(unsigned int code, BMessage *msg=NULL);
 
 	virtual void MessageReceived(BMessage *msg);
 	virtual void DispatchMessage(BMessage *message, BHandler *handler);
 	virtual void ProcessRefs(BMessage *message);
-	
+
 	virtual void WindowActivated(bool active);
 	virtual bool QuitRequested();
-	
+
 	void UpdateWindowTitle();
-	
+
 	CViewTimer *cursor_timer;
-	bool DoingInstantQuit;
-	bool WindowIsForeground;
+	bool fDoingInstantQuit;
+	bool fWindowIsForeground;
+	bool fClosing;
 };
 
 /*

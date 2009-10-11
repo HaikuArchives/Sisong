@@ -291,7 +291,7 @@ void undo_undo(EditView *ev)
 	ev->undo.save_to_redo = false;
 
 	// if they undid all the way to the beginning, clear the dirty bit
-	if (ev->undo.ub.groups->CountItems() == 0)
+	if (ev->IsUntitled && ev->undo.ub.groups->CountItems() == 0)
 		ev->ClearDirty();
 }
 

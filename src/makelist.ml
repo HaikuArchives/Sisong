@@ -2,6 +2,7 @@
 COMPILE=gcc -g -c %SRCFILE% -o %MODULE%.%OBJ_EXT%
 LPREFIX=gcc -o %EXEFILE%
 LSUFFIX=-lbe -ltracker
+
 OUTPUT=../line
 
 >>
@@ -77,3 +78,12 @@ Walter/Spinner.cpp
 ../common/smal.cpp
 ../common/misc.cpp
 <<
+
+XTRAFLAGS=-g
+COMPILE=gcc $XTRAFLAGS -c $SRCFILE -o $MODULE.$OBJ_EXT
+PPONLY=gcc $XTRAFLAGS -E -c $SRCFILE -o $MODULE.$OBJ_EXT
+
+LPREFIX=gcc -o %EXEFILE%
+LSUFFIX=-lbe -ltracker
+
+OUTPUT=../line
