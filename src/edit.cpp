@@ -526,11 +526,12 @@ int oldY2, newY2;
 int common_start, common_btm;
 int delta_px;
 
+	// we don't have to do anything if no scrolling was done
 	if (oldY1 == newY1)
 		return;
 
 	// if data was inserted/removed, don't risk it
-	if (ev->nlines != ev->lastnlines)
+	if (ev->nlines != ev->lastnlines || ev->CannotUseCopybits)
 	{
 		rd_invalidate_all(ev);
 		return;
@@ -811,6 +812,7 @@ char redraw_line_numbers = is_fullredraw;
 	ev->lastnlines = ev->nlines;
 	ev->scroll.lasty = ev->scroll.y;
 	ev->ModifiedSinceRedraw = false;
+	ev->CannotUseCopybits = false;
 	rd_clear_dirty_bits(ev);
 
 	UnlockWindow();

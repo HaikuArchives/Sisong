@@ -173,7 +173,7 @@ BString *clLine::GetLineAsString()
 {
 BString *string = new BString;
 
-	string->Append(this->text, this->gap_start);
+	string->SetTo(this->text, this->gap_start);
 	string->Append(&this->text[this->gap_end+1], (this->length - (this->gap_end + 1)));
 
 	return string;

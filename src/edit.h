@@ -43,6 +43,10 @@ public:
 	bool ModifiedSinceRedraw;	// 1 if document has been modified since last redraw
 	bool CloseAfterSave;
 
+	// set to 1 if something happened during the last refresh that means
+	// fast scrolling via CopyBits() may not yield the correct results.
+	bool CannotUseCopybits;
+
 // -------------------------------------
 
 	// files

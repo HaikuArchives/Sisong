@@ -15,24 +15,25 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <netinet/tcp.h>
 #include <unistd.h>
 
-#include "../common/basics.h"
+#include "basics.h"
+#include "ThreadFlag.h"
 #include "tcpstuff.fdh"
 
 struct sockaddr_in sain;
-bool AbortConnect = false;
 
 
-int senddata(short sock, char *packet, int len)
+int senddata(short sock, const uchar *packet, int len)
 {
 	while(!chkwrite(sock)) { snooze(10); }
 	return send(sock, packet, len, 0);
 }
 
-int sendstr(short sock, char *str)
+int sendstr(short sock, const char *str)
 {
-	return senddata(sock, str, strlen(str));
+	return senddata(sock, (const uchar *)str, strlen(str));
 }
 
 
@@ -40,28 +41,58 @@ int chkread(short sock)
 {
 fd_set readfds;
 struct timeval poll;
-int sr;
 
 	FD_ZERO(&readfds);
 	FD_SET(sock, &readfds);
 
 	memset((char *)&poll, 0, sizeof(poll));
-	sr = select(sock+1, &readfds, (fd_set *)0, (fd_set *)0, &poll);
-	return sr;
+	return select(sock+1, &readfds, (fd_set *)0, (fd_set *)0, &poll);
 }
 
 int chkwrite(short sock)
 {
 fd_set writefds;
 struct timeval poll;
-int sr;
 
 	FD_ZERO(&writefds);
 	FD_SET(sock, &writefds);
 
 	memset((char *)&poll, 0, sizeof(poll));
-	sr = select(sock+1, (fd_set *)0, &writefds, (fd_set *)0, &poll);
-	return sr;
+	return select(sock+1, (fd_set *)0, &writefds, (fd_set *)0, &poll);
+}
+
+/*
+void c------------------------------() {}
+*/
+
+bool net_setnonblock(uint sock, bool enable)
+{
+long fvalue;
+
+	// Set non-blocking
+	if ((fvalue = fcntl(sock, F_GETFL, NULL)) < 0)
+	{
+		staterr("net_setnonblock: Error fcntl(..., F_GETFL) (%s)", strerror(errno));
+		return 1;
+	}
+
+	if (enable)
+		fvalue |= O_NONBLOCK;
+	else
+		fvalue &= ~O_NONBLOCK;
+
+	if (fcntl(sock, F_SETFL, fvalue) < 0)
+	{
+		staterr("net_setnonblock: Error fcntl(..., F_SETFL) (%s)", strerror(errno));
+		return 1;
+	}
+
+	return 0;
+}
+
+bool net_nodelay(uint sock, int flag)
+{
+	setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(flag));
 }
 
 /*
@@ -105,12 +136,13 @@ unsigned long ip;
 void c------------------------------() {}
 */
 
-// attempt to connect to ip:port, and return the socket number if successful (else 0)
-uint connect_tcp(uint ip, ushort port, int timeout_us)
+// attempts to connect to ip:port, and returns the new socket number if successful,
+// else returns 0.
+uint connect_tcp(uint ip, ushort port, int timeout_ms, ThreadFlag *AbortFlag)
 {
-long arg;
-int conn_socket;
+int conn_socket, result;
 bool connected;
+bool use_timeout;
 
 	if (!(conn_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)))
 	{
@@ -118,32 +150,19 @@ bool connected;
 		return 1;
 	}
 
-	// Set non-blocking
-	if((arg = fcntl(conn_socket, F_GETFL, NULL)) < 0)
-	{
-		staterr("connect_tcp: Error fcntl(..., F_GETFL) (%s)", strerror(errno));
-		return 0;
-	}
-	arg |= O_NONBLOCK;
-	if( fcntl(conn_socket, F_SETFL, arg) < 0)
-	{
-		staterr("connect_tcp: Error fcntl(..., F_SETFL) (%s)", strerror(errno));
-		return 0;
-	}
+	net_setnonblock(conn_socket, true);
 
 	sain.sin_addr.s_addr = htonl(ip);
 	sain.sin_port = htons(port);
 	sain.sin_family = AF_INET;
 
-	stat("entering connect loop...");
-
-	#define TICK_BASE	(10 * 1000)
+	#define TICK_BASE		10
 	connected = false;
-	AbortConnect = false;
+	use_timeout = timeout_ms != 0;
 
-	while(!AbortConnect)
+	while(!AbortFlag || !AbortFlag->IsRaised())
 	{
-		int result = connect(conn_socket, (struct sockaddr *)&sain, sizeof(struct sockaddr_in));
+		result = connect(conn_socket, (struct sockaddr *)&sain, sizeof(struct sockaddr_in));
 
 		if (errno == EISCONN || result != -1)
 		{
@@ -153,37 +172,36 @@ bool connected;
 
 		if (errno == EINTR) break;
 
-		if (timeout_us >= 0)
+		if (use_timeout)
 		{
-			usleep(TICK_BASE);
-			timeout_us -= TICK_BASE;
+			if (timeout_ms >= 0)
+			{
+				usleep(TICK_BASE * 1000);
+				timeout_ms -= TICK_BASE;
+			}
+			else break;
 		}
-		else break;
     }
 
-	AbortConnect = false;
+	net_setnonblock(conn_socket, false);
 
     if (connected)
 	{
 		return conn_socket;
 	}
 
-	staterr("connect_tcp: Connect timeout, abort, or failure connecting to %08x:%d\n", ip, port);
+	//staterr("connect_tcp: connect timeout, abort, or failure connecting to %08x:%d\n", ip, port);
 	close(conn_socket);
 	return 0;
 }
 
-void abort_connect()
-{
-	AbortConnect = true;
-}
 
 /*
 void c------------------------------() {}
 */
 
 // create a socket and have it listen on all available interfaces.
-uint GetTCPServerSocket(ushort port)
+uint net_open_and_listen(ushort port)
 {
 int sock;
 
@@ -194,7 +212,7 @@ int sock;
 		return 0;
 	}
 
-	if (net_listen(sock, INADDR_ANY, port))
+	if (net_listen_socket(sock, INADDR_ANY, port))
 	{
 		close(sock);
 		return 0;
@@ -203,8 +221,8 @@ int sock;
 	return sock;
 }
 
-// set to socket to listen on the given IP and port
-char net_listen(uint sock, uint listen_ip, ushort listen_port)
+// set a socket to listen on the given IP and port
+char net_listen_socket(uint sock, uint listen_ip, ushort listen_port)
 {
 sockaddr_in thesock;
 

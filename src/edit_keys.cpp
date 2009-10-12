@@ -700,6 +700,9 @@ EditView *ev = this;
 	if (IsShiftDown())
 	{
 		ev->ExtendSel();
+		// the CopyBits() scroll optimization may not work if we are
+		// scrolling up/down while changing the selection.
+		ev->CannotUseCopybits = true;
 	}
 	else if (ev->selection.present)
 	{	// drop selection (it was canceled due to cursor movement or text editing)
