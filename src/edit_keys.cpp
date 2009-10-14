@@ -180,7 +180,10 @@ char MergeToPrior;
 	}
 
 	if (flags & KF_AFFECTS_SELECTION)	// key can create/remove selection
-		SetSelAnchor(ev);
+	{
+		if (IsShiftDown() && !ev->selection.present)
+			selection_create(ev);
+	}
 
 	switch(key)
 	{
@@ -678,16 +681,6 @@ int old_cy;
 	}
 }
 
-// if SHIFT is down and there is not a selection, creates a selection.
-void SetSelAnchor(EditView *ev)
-{
-	if (IsShiftDown())
-	{
-		if (!ev->selection.present)
-			selection_create(ev);
-	}
-}
-
 // if SHIFT is down, extend the selection to the cursor,
 // creating a selection if none is currently present.
 //
@@ -699,10 +692,22 @@ EditView *ev = this;
 
 	if (IsShiftDown())
 	{
+		int oldy1, oldy2;
+		GetSelectionExtents(ev, NULL, &oldy1, NULL, &oldy2);
+
 		ev->ExtendSel();
+
 		// the CopyBits() scroll optimization may not work if we are
-		// scrolling up/down while changing the selection.
-		ev->CannotUseCopybits = true;
+		// scrolling down while de-extending the selection.
+		if (ev->selection.anchor.y >= ev->cursor.y)
+		{
+			int y1, y2;
+			GetSelectionExtents(ev, NULL, &y1, NULL, &y2);
+			if ((y2 - y1) < (oldy2 - oldy1))
+			{
+				ev->CannotUseCopybits = true;
+			}
+		}
 	}
 	else if (ev->selection.present)
 	{	// drop selection (it was canceled due to cursor movement or text editing)

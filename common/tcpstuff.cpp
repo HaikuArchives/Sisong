@@ -25,19 +25,32 @@
 struct sockaddr_in sain;
 
 
-int senddata(short sock, const uchar *packet, int len)
+int senddata(uint sock, const uchar *packet, int len)
 {
 	while(!chkwrite(sock)) { snooze(10); }
 	return send(sock, packet, len, 0);
 }
 
-int sendstr(short sock, const char *str)
+int sendstr(uint sock, const char *str)
 {
 	return senddata(sock, (const uchar *)str, strlen(str));
 }
 
+int sendnow(uint sock, const uchar *packet, int len)
+{
+	net_nodelay(sock, true);
+	senddata(sock, packet, len);
+	net_nodelay(sock, false);
+}
 
-int chkread(short sock)
+void net_flush(uint sock)
+{
+	net_nodelay(sock, true);
+	net_nodelay(sock, false);
+}
+
+
+int chkread(uint sock)
 {
 fd_set readfds;
 struct timeval poll;
@@ -49,7 +62,7 @@ struct timeval poll;
 	return select(sock+1, &readfds, (fd_set *)0, (fd_set *)0, &poll);
 }
 
-int chkwrite(short sock)
+int chkwrite(uint sock)
 {
 fd_set writefds;
 struct timeval poll;
@@ -101,7 +114,7 @@ void c------------------------------() {}
 
 char *decimalip(unsigned int ip)
 {
-static char buffer[800];
+static char buffer[80];
 	sprintf(buffer, "%d.%d.%d.%d",
 				(ip>>24)&255, (ip>>16)&255, (ip>>8)&255, ip&255);
 	return buffer;

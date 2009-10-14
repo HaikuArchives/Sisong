@@ -54,15 +54,15 @@ bool ThreadFlag::WaitUntilRaised(bigtime_t timeout_ms)
 {
 	if (!IsRaised())
 	{
-		if (timeout_ms == 0)
-			timeout_ms = 1;
-		else
-			timeout_ms *= 1000;
+		uint32 flags = B_DO_NOT_RESCHEDULE;
 
-		int result;
-		result = acquire_sem_etc(fSemaphore, 1, \
-								B_RELATIVE_TIMEOUT | B_DO_NOT_RESCHEDULE, \
-								timeout_ms);
+		if (timeout_ms > 0)
+		{
+			timeout_ms *= 1000;
+			flags |= B_RELATIVE_TIMEOUT;
+		}
+
+		int result = acquire_sem_etc(fSemaphore, 1, flags, timeout_ms);
 
 		if (result == B_TIMED_OUT)
 		{
@@ -92,7 +92,12 @@ struct tft
 	ThreadFlag *Flag1, *Flag2;
 	ThreadFlag *DoneFlag;
 	int statuscode;
+	int32 dontkillme;
 };
+thread_id my_spawn_thread(thread_func func,
+         const char *name,
+         int32 priority,
+         void *data);
 
 // waits until either flag one or flag two is raised, or the timeout expires.
 // return value:
@@ -109,6 +114,7 @@ tft tdata;
 	tdata.Flag2 = flag2;
 	tdata.DoneFlag = &DoneFlag;
 	tdata.statuscode = -1;
+	tdata.dontkillme = 0;
 
 	one = spawn_thread(_tfwt_one, "tf_one", B_NORMAL_PRIORITY, &tdata);
 	two = spawn_thread(_tfwt_two, "tf_two", B_NORMAL_PRIORITY, &tdata);
@@ -127,6 +133,9 @@ tft tdata;
 		timed_out = false;
 	}
 
+	while(tdata.dontkillme != 0)
+		snooze(10);
+
 	kill_thread(one);
 	kill_thread(two);
 
@@ -141,10 +150,12 @@ status_t _tfwt_one(void *a)
 tft *t = (tft *)a;
 
 	t->Flag1->WaitUntilRaised();
-	t->statuscode = TF_ONE;
 
+	atomic_add(&t->dontkillme, 1);
+	t->statuscode = TF_ONE;
 	t->DoneFlag->Raise();
 
+	atomic_add(&t->dontkillme, -1);
 	for(;;) { snooze(10000 * 1000); }
 }
 
@@ -153,10 +164,12 @@ status_t _tfwt_two(void *a)
 tft *t = (tft *)a;
 
 	t->Flag2->WaitUntilRaised();
-	t->statuscode = TF_TWO;
 
+	atomic_add(&t->dontkillme, 1);
+	t->statuscode = TF_TWO;
 	t->DoneFlag->Raise();
 
+	atomic_add(&t->dontkillme, -1);
 	for(;;) { snooze(10000 * 1000); }
 }
 

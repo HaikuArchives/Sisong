@@ -16,7 +16,7 @@
 
 namespace UpdateCheck {
 
-#define CURRENT_VERSION			"5"
+#define CURRENT_VERSION			"12"
 
 
 status_t Thread(void *waittime)

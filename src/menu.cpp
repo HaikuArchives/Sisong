@@ -243,29 +243,33 @@ static bool FileMenu(unsigned int code, BMessage *msg)
 		case M_FILE_CLOSE_ALL:
 		case M_FILE_CLOSE_OTHERS:
 		{
-			CList list = *editor.DocList;
-			int count = list.CountItems();
-
 			EditView *exception;
-			char *message;
 
 			if (code == M_FILE_CLOSE_OTHERS)
 			{
-				if (count <= 1) break;
-
+				if (editor.DocList->CountItems() <= 1) break;
 				exception = editor.curev;
-				message = "Close all tabs but current one?";
+
+				BString message;
+				message << "Close all documents except for \"" << \
+							GetFileSpec(editor.curev->filename) << "\"?";
+
+				BAlert *alert = new BAlert("", message, "No", "Yes", NULL, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
+				alert->SetShortcut(0, B_ESCAPE);
+
+				if (!alert->Go())
+					break;
 			}
 			else
 			{
 				exception = NULL;
-				message = "Close all open documents?";
 			}
-			BAlert *alert = new BAlert("", message, "No", "Yes", NULL, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
-			alert->SetShortcut(0, B_ESCAPE);
-			if (!alert->Go()) break;
 
-			for(int i = 0;i<count;i++)
+			// must copy the list beforehand, as we're going to be removing items from it
+			BList list = *editor.DocList;
+			int i, count = list.CountItems();
+
+			for(i=0;i<count;i++)
 			{
 				EditView *ev = (EditView *)list.ItemAt(i);
 

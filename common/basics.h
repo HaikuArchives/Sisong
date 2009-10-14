@@ -19,4 +19,17 @@ typedef unsigned short	ushort;
 void stat(const char *fmt, ...);
 void staterr(const char *fmt, ...);
 
+#ifndef DEBUG
+	#define ASSERT(x)
+#else
+	#define ASSERT(x) \
+	{ \
+		if (!(x)) \
+		{	\
+			printf("assertion failed: \"%s\" at %s(%d)\n", #x, __FILE__, __LINE__);	\
+			fflush(stdout); \
+		}	\
+	}
+#endif
+
 #include "smal.h"

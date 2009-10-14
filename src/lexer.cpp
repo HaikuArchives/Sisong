@@ -584,6 +584,7 @@ int i;
 	lexeme_add("int", COLOR_IDENTIFIER);
 	lexeme_add("short", COLOR_IDENTIFIER);
 	lexeme_add("char", COLOR_IDENTIFIER);
+	lexeme_add("long", COLOR_IDENTIFIER);
 	lexeme_add("bool", COLOR_IDENTIFIER);
 	lexeme_add("uchar", COLOR_IDENTIFIER);
 	lexeme_add("uint", COLOR_IDENTIFIER);

@@ -533,6 +533,7 @@ int delta_px;
 	// if data was inserted/removed, don't risk it
 	if (ev->nlines != ev->lastnlines || ev->CannotUseCopybits)
 	{
+		//stat("not risking");
 		rd_invalidate_all(ev);
 		return;
 	}

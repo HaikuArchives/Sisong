@@ -14,7 +14,7 @@ public:
 	void MouseDown(BPoint where);
 	void MouseMoved(BPoint where, uint32 code, const BMessage *msg);
 	void MouseUp(BPoint where);
-	
+
 	void redraw(bool recalcPositions=true);
 	void AddTab(EditView *ev);
 	void RemoveTab(EditView *ev);
@@ -23,11 +23,13 @@ public:
 	void SwitchToPrevTab();
 	void SetDirtyState(EditView *ev, bool newState);
 	EditView *GetActiveTab();
+	EditView *GetFirstTab();
+	void GetTabList(BList *outlist);
 	int GetTabCount();
-	
+
 	rgb_color fBackgroundColor;
 	friend class TCTabItem;
-	
+
 private:
 	void RecalcTabPositions();
 	void SwapTabs(TCTabItem *t1, TCTabItem *t2);
@@ -37,7 +39,7 @@ private:
 	bool EnsureCurtabVisible(bool doRedraw=true);
 	TCTabItem *XToTab(int x);
 	TCTabItem *TabFromEV(EditView *ev);
-	
+
 	void SetScrollButtonsVisible(bool enable);
 	BView *fScrollButtonsView;
 	bool fScrollButtonsVisible;
@@ -45,13 +47,13 @@ private:
 	BButton *fScrollRightButton;
 	int fScrollAmt;
 	bool fUserFreeRoam;
-	
+
 	TCTabItem *firsttab, *lasttab;
 	TCTabItem *curtab;
 	TCTabItem *_cantswapto;
 
 	int fNumTabs;
-	
+
 	BFont *fTabFont;
 	int fFontAscent;
 	//stImage *_diskicon;
@@ -64,16 +66,16 @@ class TCTabItem
 {
 public:
 	TCTabItem(CTabBar *tv);
-	
+
 	TCTabItem *next, *prev;
 	EditView *ev;			// the document associated with this tab
 	char isdirty;			// 1 if "dirty" (red) version of icon is shown
 	int leftedge;			// X coordinate of left edge of tab
 	int rightedge;			// X coordinate of right edge
 	int width;				// width of tab
-	
+
 	CTabBar *parent;
-	
+
 	bool IsActive();
 	void setActive();
 	BString *GetCaption();

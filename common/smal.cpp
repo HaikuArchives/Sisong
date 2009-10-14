@@ -31,7 +31,7 @@ void *ptr;
 
 	if (size <= 0)
 	{
-		staterr("smal: Hey! I got size=%d!", size);
+		stat(" ** smal: Hey! I got size=%d!", size);
 		smal_errors++;
 		return NULL;
 	}

@@ -93,8 +93,8 @@ extern CProjectManager ProjectManager;
 struct EditorData
 {
 	// EditViews for each open document
-	EditView *curev;
-	CList *DocList;
+	EditView *curev;				// pointer to current open document
+	BList *DocList;					// list of all open documents
 	int NextUntitledID;				// next number for untitled documents
 	int NextDocID;					// next DocID value (unique ID for each document opened in a session)
 

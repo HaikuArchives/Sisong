@@ -134,8 +134,11 @@ void clLine::delete_right()
 // delete chars between x1 and x2 from line
 void clLine::delete_range(int x1, int x2)
 {
-	set_insertion_point(x1);
-	this->gap_end += (x2 - x1) + 1;
+	if (x2 >= x1)
+	{
+		set_insertion_point(x1);
+		this->gap_end += (x2 - x1) + 1;
+	}
 }
 
 // delete all chars after index from line (trim line at index).

@@ -30,32 +30,32 @@ CTabBar::CTabBar(BRect frame, uint32 resizingMode)
 	fTabFont = new BFont(be_plain_font);
 	fTabFont->SetSize(12);
 	SetFont(fTabFont);
-	
+
 	font_height fh;
 	fTabFont->GetHeight(&fh);
 	fFontAscent = (int)ceilf(fh.ascent);
-	
+
 	SetViewColor(B_TRANSPARENT_COLOR);
-	
-	// create the buttons for scrolling when there are too many tabs to display	
+
+	// create the buttons for scrolling when there are too many tabs to display
 	const int kButtonWidth = 24;
-	
+
 	BRect rc(0, 0, kButtonWidth-1, frame.Height());
 	fScrollLeftButton = new BButton(rc, "", "<", new BMessage(M_SCROLL_LEFT));
 	rc.OffsetBy(kButtonWidth, 0);
 	fScrollRightButton = new BButton(rc, "", ">", new BMessage(M_SCROLL_RIGHT));
-	
+
 	rc.Set(Bounds().right-kButtonWidth*2, Bounds().top, Bounds().right, Bounds().bottom);
 	fScrollButtonsView = new BView(rc, "SBtnView", B_FOLLOW_TOP|B_FOLLOW_RIGHT, 0);
 	fScrollButtonsView->SetViewColor(ViewColor());
-	
+
 	AddChild(fScrollButtonsView);
-	
+
 	fScrollLeftButton->SetTarget(Looper());
 	fScrollRightButton->SetTarget(Looper());
 	fScrollButtonsView->AddChild(fScrollLeftButton);
 	fScrollButtonsView->AddChild(fScrollRightButton);
-	
+
 	// hide the scroll buttons until needed
 	fScrollButtonsVisible = true;
 	SetScrollButtonsVisible(false);
@@ -66,7 +66,7 @@ CTabBar::CTabBar(BRect frame, uint32 resizingMode)
 void CTabBar::SetScrollButtonsVisible(bool enable)
 {
 	if (enable == fScrollButtonsVisible) return;
-	
+
 	if (!enable)
 	{
 		fScrollButtonsView->MoveBy(0, 100);
@@ -83,7 +83,7 @@ void CTabBar::SetScrollButtonsVisible(bool enable)
 CTabBar::~CTabBar()
 {
 	delete fTabFont;
-	
+
 	TCTabItem *tab = firsttab, *next;
 	while(tab)
 	{
@@ -101,12 +101,12 @@ void CTabBar::MessageReceived(BMessage *msg)
 			fUserFreeRoam = true;
 			DoScrollLeft();
 		break;
-		
+
 		case M_SCROLL_RIGHT:
 			fUserFreeRoam = true;
 			DoScrollRight();
 		break;
-		
+
 		default:
 			MessageView::MessageReceived(msg);
 	}
@@ -123,10 +123,10 @@ void CTabBar::redraw(bool recalcPositions = true)
 	if (!app_running) return;
 	if (!curtab || !firsttab) return;
 	LockLooper();
-	
+
 	if (recalcPositions)
 		RecalcTabPositions();
-	
+
 	// if currently scrolled, but some tabs have been closed and now they would fit
 	// within the total width, turn off the scroll buttons.
 	if (fScrollAmt)
@@ -137,33 +137,33 @@ void CTabBar::redraw(bool recalcPositions = true)
 			ScrollTabsBy(-fScrollAmt, false);
 		}
 	}
-	
+
 	// show/hide scroll buttons as needed
 	if (fScrollAmt != 0 || \
 		(lasttab->rightedge >= Bounds().right && fNumTabs > 1))
 	{
 		SetScrollButtonsVisible(true);
 		int buttons_left = (int)fScrollButtonsView->Frame().left;
-		
+
 		// set button(s) disabled if no more scrolling to be done
 		fScrollLeftButton->SetEnabled((firsttab->leftedge < 0));
 		fScrollRightButton->SetEnabled((lasttab->rightedge >= buttons_left));
-		
+
 		EnsureCurtabVisible();
 	}
 	else
 	{
 		SetScrollButtonsVisible(false);
 	}
-	
+
 	// draw all the tabs
 	TCTabItem *tab = firsttab;
 	while(tab)
 	{
 		tab->drawItem();
 		tab = tab->next;
-	}		
-	
+	}
+
 	// clear any empty space unused by tabs
 	SetHighColor(color_tabbar_bg);
 	FillRect(BRect(lasttab->rightedge+1, 0, Bounds().right, TAB_HEIGHT));
@@ -181,7 +181,7 @@ TCTabItem *tab = firsttab;
 		tab->width = tab->GetWidth();
 		tab->leftedge = x;
 		tab->rightedge = (x + (tab->width - 1));
-		
+
 		x += tab->width;
 		tab = tab->next;
 	}
@@ -230,9 +230,9 @@ void CTabBar::ScrollTabsBy(int offs, bool doRedraw=true)
 		tab->leftedge += offs;
 		tab->rightedge += offs;
 	}
-	
+
 	fScrollAmt += offs;
-	
+
 	if (doRedraw)
 		redraw(false);
 }
@@ -244,7 +244,7 @@ bool CTabBar::EnsureCurtabVisible(bool doRedraw)
 {
 	if (!curtab) return false;
 	if (fUserFreeRoam) return false;
-	
+
 	if (curtab->leftedge < 0)
 	{
 		ScrollTabsBy(-curtab->leftedge, doRedraw);
@@ -256,10 +256,10 @@ bool CTabBar::EnsureCurtabVisible(bool doRedraw)
 		{
 			while(curtab->rightedge >= (int)fScrollButtonsView->Frame().left)
 				DoScrollRight(false);
-			
+
 			if (doRedraw)
 				redraw(false);
-			
+
 			return true;
 		}
 	}
@@ -276,7 +276,7 @@ TCTabItem *CTabBar::XToTab(int x)
 		if (x >= tab->leftedge && x <= tab->rightedge)
 			return tab;
 	}
-	
+
 	return NULL;
 }
 
@@ -296,7 +296,7 @@ BPoint pos;
 
 	tab = XToTab(x);
 	if (tab)
-	{		
+	{
 		if (buttons == B_PRIMARY_MOUSE_BUTTON)
 		{	// switch to tab, or rearranging tabs
 			if (tab != curtab)
@@ -306,7 +306,7 @@ BPoint pos;
 				fUserFreeRoam = false;
 				EnsureCurtabVisible();
 			}
-			
+
 			SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS);
 			fDragging = true;
 			_cantswapto = NULL;
@@ -314,36 +314,36 @@ BPoint pos;
 		else if (buttons == B_SECONDARY_MOUSE_BUTTON)
 		{	// right-click; close tab
 			tab->ev->ConfirmClose(false);
-		}		
+		}
 	}
 	else if (buttons == B_SECONDARY_MOUSE_BUTTON)
 	{	// right click in unused tab area
 		SetActiveTab(CreateEditView(NULL));
 	}
-	
+
 	UnlockLooper();
 }
 
 void CTabBar::MouseMoved(BPoint where, uint32 code, const BMessage *msg)
 {
-	if (!fDragging) return;	
+	if (!fDragging) return;
 	if (!curtab) return;
 	LockLooper();
-	
+
 	// allow repositioning of tabs via drag n' drop
 	int x = (int)where.x;
-	TCTabItem *tab = XToTab(x);	
-	
+	TCTabItem *tab = XToTab(x);
+
 	if (tab && tab != _cantswapto)
 	{
 		if (tab != curtab)
 		{
 			// prevents rapid switching back and forth when tabs are different sizes
 			_cantswapto = tab;
-			
+
 			SwapTabs(tab, curtab);
 			RecalcTabPositions();
-			
+
 			if ((tab->next == curtab || tab->prev == curtab) && \
 				EnsureCurtabVisible() == false)
 			{
@@ -375,7 +375,7 @@ void CTabBar::MouseMoved(BPoint where, uint32 code, const BMessage *msg)
 				_cantswapto = NULL;
 		}
 	}
-	
+
 	UnlockLooper();
 }
 
@@ -390,14 +390,14 @@ void CTabBar::MouseUp(BPoint where)
 void CTabBar::SwapTabs(TCTabItem *t1, TCTabItem *t2)
 {
 TCTabItem *temp;
-	
+
 	// first, swap first and last pointers if one or the other is first or last
 	if (firsttab==t1)		firsttab = t2;
-	else if (firsttab==t2) firsttab = t1;
-	
+	else if (firsttab==t2)	firsttab = t1;
+
 	if (lasttab==t1)		lasttab = t2;
 	else if (lasttab==t2)	lasttab = t1;
-	
+
 	// ok, hang on...
 	if (t2->next==t1)
 	{
@@ -405,7 +405,7 @@ TCTabItem *temp;
 		if (t2->prev) t2->prev->next = t1;
 		t2->next = t1->next;
 		t1->next = t2;
-		
+
 		// prev pointers
 		t1->prev = t2->prev;
 		t2->prev = t1;
@@ -417,7 +417,7 @@ TCTabItem *temp;
 		if (t1->prev) t1->prev->next = t2;		// Barnie's previous, Alfred, points next to Charlie
 		t1->next = t2->next;					// Barnie's next is now Dennis, Charlie's old next.
 		t2->next = t1;							// Charlie's next is now Barnie
-		
+
 		// prev pointers
 		t2->prev = t1->prev;					// Charlie points to Alfred, Barnie's prev.
 		t1->prev = t2;							// Barnie points to Charlie.
@@ -428,21 +428,24 @@ TCTabItem *temp;
 		// next pointers
 		if (t1->prev) t1->prev->next = t2;		// Barnie's prev Alfred points to Dennis now
 		if (t2->prev) t2->prev->next = t1;		// Dennis's prev Charlie points to Barnie now.
-		
+
 		temp = t1->next;
 		t1->next = t2->next;
 		t2->next = temp;
-		
+
 		// prev pointers
 		temp = t1->prev;
 		t1->prev = t2->prev;
-		t2->prev = temp;		
-		
+		t2->prev = temp;
+
 		// think t1_next and t2_next...since they're swapped now
 		// t2 is actually t1 and vice versa
 		if (t2->next) t2->next->prev = t2;		// Barnie's old Next Charlie, points at Dennis.
-		if (t1->next) t1->next->prev = t1;		// Dennis's old Next Eager points to Barnie.		
+		if (t1->next) t1->next->prev = t1;		// Dennis's old Next Eager points to Barnie.
 	}
+
+	// update editor.DocList to match the new order of the tabs
+	this->GetTabList(editor.DocList);
 }
 
 
@@ -457,21 +460,21 @@ TCTabItem *tab = new TCTabItem(this);
 
 	tab->ev = ev;
 	tab->isdirty = false;
-	
+
 	tab->prev = lasttab;
 	tab->next = NULL;
 	if (lasttab) lasttab->next = tab; else firsttab = tab;
 	lasttab = tab;
 
 	fNumTabs++;
-	
+
 	if (!curtab)
 	{
 		fUserFreeRoam = false;
 		curtab = tab;
 		MainWindow->UpdateWindowTitle();
 	}
-	
+
 	redraw();	// handles RecalcTabPositions for us
 }
 
@@ -498,27 +501,47 @@ TCTabItem *tab;
 				editor.curev = NULL;
 			}
 		}
-		
+
 		if (tab->next) tab->next->prev = tab->prev;
 		if (tab->prev) tab->prev->next = tab->next;
 		if (tab == firsttab) firsttab = firsttab->next;
 		if (tab == lasttab) lasttab = lasttab->prev;
 		delete tab;
-		
+
 		fNumTabs--;
 		redraw();	// handles RecalcTabPositions implicitly
 	}
 }
 
-// returns the object of the currently active tab
+// returns the document associated with the currently active tab
 EditView *CTabBar::GetActiveTab()
 {
 	return curtab ? curtab->ev : NULL;
 }
 
+// returns the document associated with the left-most tab
+EditView *CTabBar::GetFirstTab()
+{
+	return firsttab ? firsttab->ev : NULL;
+}
+
 int CTabBar::GetTabCount()
 {
 	return fNumTabs;
+}
+
+// fills "outlist" with the ev's associated with each tab
+// (in other words, a list of all open documents)
+void CTabBar::GetTabList(BList *outlist)
+{
+	outlist->MakeEmpty();
+
+	TCTabItem *tab = firsttab;
+	while(tab)
+	{
+		outlist->AddItem(tab->ev);
+		tab = tab->next;
+	}
 }
 
 // sets the active tab to the one which is holding document "ev".
@@ -537,6 +560,7 @@ TCTabItem *tab;
 	}
 }
 
+
 void CTabBar::SwitchToNextTab()
 {
 TCTabItem *tab = curtab;
@@ -545,9 +569,10 @@ TCTabItem *tab = curtab;
 		tab = firsttab;
 	else
 		tab = tab->next;
-	
+
 	tab->setActive();
 }
+
 
 void CTabBar::SwitchToPrevTab()
 {
@@ -557,9 +582,10 @@ TCTabItem *tab = curtab;
 		tab = lasttab;
 	else
 		tab = tab->prev;
-	
+
 	tab->setActive();
 }
+
 
 void CTabBar::SetDirtyState(EditView *ev, bool newState)
 {
@@ -572,6 +598,7 @@ TCTabItem *tab = TabFromEV(ev);
 	}
 }
 
+
 TCTabItem *CTabBar::TabFromEV(EditView *ev)
 {
 TCTabItem *tab = firsttab;
@@ -581,13 +608,15 @@ TCTabItem *tab = firsttab;
 		if (tab->ev == ev) return tab;
 		tab = tab->next;
 	}
-	
+
 	return NULL;
 }
+
 
 /*
 void c------------------------------() {}
 */
+
 
 TCTabItem::TCTabItem(CTabBar *tv)
 {
@@ -616,7 +645,7 @@ int cx;
 
 	cx = (int)parent->fTabFont->StringWidth(caption->String());
 	delete caption;
-	
+
 	return (cx + TEXT_SPACING + ICON_W + 1);
 }
 
@@ -633,14 +662,14 @@ void TCTabItem::setActive()
 	{
 		TCTabItem *oldtab = parent->curtab;
 		parent->curtab = this;
-		
+
 		parent->fUserFreeRoam = false;
 		if (!parent->EnsureCurtabVisible())
 		{
 			oldtab->drawItem();
 			this->drawItem();
 		}
-		
+
 		// refresh the new document
 		editor.curev = this->ev;
 		MainWindow->UpdateWindowTitle();
@@ -657,7 +686,7 @@ const int TabWidth = width;
 
 	if (!app_running) return 0;
 	parent->LockLooper();
-	
+
 	static const rgb_color Active_BG = { 0xf0, 0xf0, 0xf0 };
 	static const rgb_color Active_Text = { 0, 0, 0 };
 	static const rgb_color Inactive_BG = { 0xc0, 0xc0, 0xc0 };
@@ -669,10 +698,10 @@ const int TabWidth = width;
 	static const rgb_color Orange = { 0xfa, 0xaa, 0x3c };
 	static const rgb_color Red = { 0xca, 0x10, 0x10 };
 	static const rgb_color DkRed = { 0xaa, 0x10, 0x10 };
-	
+
 	rgb_color ColorTabBG;
 	rgb_color ColorTabText;
-	
+
 	int TabRight = x + (TabWidth - 1);
 	int TabTop;
 	int x1 = x + 1;
@@ -687,7 +716,7 @@ const int TabWidth = width;
 		TabTop = 2;
 		TextOffset = 4;
 		icon_left = ICON_W;
-		
+
 		QFillRect(x1, 0, x2, 1, White_FF);
 		QFillRect(x1, 2, x2, 2, White_FB);
 		QFillRect(x1, 2, x2, 5, Orange);
@@ -703,7 +732,7 @@ const int TabWidth = width;
 		TabTop = 3;
 		TextOffset = 3;
 		icon_left = 0;
-		
+
 		QFillRect(x1, 0, x2, 1, color_tabbar_bg);
 		QFillRect(x1, 2, x2, 2, White_FF);
 		QFillRect(x1, 3, x2, 3, White_FB);
@@ -713,27 +742,27 @@ const int TabWidth = width;
 		// right side
 		QFillRect(TabRight, TabTop, TabRight, TAB_HEIGHT, White_F0);
 	}
-	
+
 	// draw spacer at top and left side
 	QFillRect(x, 0, x, TabTop-1, color_tabbar_bg);
 	QFillRect(TabRight, 0, TabRight, TabTop-1, color_tabbar_bg);
-	
+
 	QFillRect(x, TabTop, x, TAB_HEIGHT, White_F0);
 
 	// draw icon
 	//int icon_top = tab->isdirty ? ICON_H : 0;
 	//BitBlt(hdc, x+5, TabTop+1, ICON_W, ICON_H, diskicon->hdc, icon_left, icon_top, SRCCOPY);
-	
+
 	// text
 	BString *caption = this->GetCaption();
-	
+
 	parent->SetHighColor(ColorTabText);
 	parent->SetLowColor(ColorTabBG);
-	
+
 	BPoint pt(x+ICON_W+(TEXT_SPACING/2)+TextOffset, TabTop + parent->fFontAscent + 5);
 	parent->DrawString(caption->String(), pt);
 	delete caption;
-	
+
 	parent->UnlockLooper();
 	return TabWidth;
 }

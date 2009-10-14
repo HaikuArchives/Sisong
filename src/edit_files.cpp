@@ -104,32 +104,32 @@ clLine *line;
 // don't use directly, use CreateEditView instead.
 static EditView *InitAsNewDocument()
 {
-EditView *ev = new EditView;
-
-	// if there are no other untitled documents open,
+	// if there aren't currently any untitled documents open,
 	// we can safely reset the "new 1...new 2..." counter
-	int i, count = editor.DocList->CountItems();
-	bool haveUntitled = false;
-	EditView *cv;
-	for(i=0;i<count;i++)
+	for(int i=0;;i++)
 	{
-		cv = (EditView *)editor.DocList->ItemAt(i);
-		if (cv->IsUntitled)
+		EditView *cv = (EditView *)editor.DocList->ItemAt(i);
+		if (!cv)
+		{	// reached end of list without finding an untitled
+			// document, so we can safely reset the counter
+			editor.NextUntitledID = 0;
+			break;
+		}
+		else if (cv->IsUntitled)
 		{
-			haveUntitled = true;
 			break;
 		}
 	}
-	if (!haveUntitled)
-		editor.NextUntitledID = 0;
 
-	// initilize it
+	// initilize the new document
+	EditView *ev = new EditView;
 	ev->firstline = ev->lastline = new clLine;
 	ev->firstline->prev = NULL;
 	ev->lastline->next = NULL;
 	ev->nlines = 1;
 
 	ev->MakeUntitled();
+
 	return ev;
 }
 
@@ -149,7 +149,7 @@ EditView *ev = this;
 
 	// editor will normally crash if all tabs are allowed to be closed;
 	// do sanity check to prevent this if requested.
-	if (DoSanityCheck && editor.DocList->CountItems()==0)
+	if (DoSanityCheck && TabBar->GetTabCount()==0)
 	{
 		TabBar->SetActiveTab(CreateEditView(NULL));
 	}
@@ -239,9 +239,8 @@ void EditView::Close_All(void)
 	editor.curev = NULL;
 
 	// close all documents
-	while(editor.DocList->CountItems())
+	while(EditView *cev = TabBar->GetFirstTab())
 	{
-		EditView *cev = (EditView *)editor.DocList->FirstItem();
 		cev->Close(false);
 	}
 
@@ -311,13 +310,13 @@ FILE *fp;
 
 void EditView::Save_All(void)
 {
+EditView *ev;
 int i;
-int count = editor.DocList->CountItems();
 
-	for(i=0;i<count;i++)
+	for(i=0;
+		ev = (EditView *)editor.DocList->ItemAt(i);
+		i++)
 	{
-		EditView *ev = (EditView *)editor.DocList->ItemAt(i);
-
 		if (ev->IsDirty && !ev->IsUntitled)
 		{
 			ev->Save(ev->filename);
@@ -457,13 +456,15 @@ void c------------------------------() {}
 // searches for an EditView structure given it's document id
 EditView *FindEVByDocID(uint id)
 {
+EditView *ev;
 int i;
-int count = editor.DocList->CountItems();
 
-	for(i=0;i<count;i++)
+	for(i=0;
+		ev = (EditView *)editor.DocList->ItemAt(i);
+		i++)
 	{
-		EditView *ev = (EditView *)editor.DocList->ItemAt(i);
-		if (ev->DocID==id) return ev;
+		if (ev->DocID == id)
+			return ev;
 	}
 
 	return NULL;
@@ -471,17 +472,17 @@ int count = editor.DocList->CountItems();
 
 EditView *FindEVByFilename(const char *filename)
 {
+EditView *ev;
 int i;
-int count = editor.DocList->CountItems();
 
-	for(i=0;i<count;i++)
+	for(i=0;
+		ev = (EditView *)editor.DocList->ItemAt(i);
+		i++)
 	{
-		EditView *ev = (EditView *)editor.DocList->ItemAt(i);
-
-		if (!ev->IsUntitled)
+		if (!ev->IsUntitled && \
+			!strcmp(ev->filename, filename))
 		{
-			if (!strcmp(ev->filename, filename))
-				return ev;
+			return ev;
 		}
 	}
 
