@@ -4,19 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <stdarg.h>
 #include <time.h>
 #include <fcntl.h>
-#include <errno.h>
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <unistd.h>
+#include "tcpheaders.h"
 
 #include "basics.h"
 #include "ThreadFlag.h"
@@ -151,7 +141,7 @@ void c------------------------------() {}
 
 // attempts to connect to ip:port, and returns the new socket number if successful,
 // else returns 0.
-uint connect_tcp(uint ip, ushort port, int timeout_ms, ThreadFlag *AbortFlag)
+uint net_connect(uint ip, ushort port, int timeout_ms, ThreadFlag *AbortFlag)
 {
 int conn_socket, result;
 bool connected;

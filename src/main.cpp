@@ -25,6 +25,19 @@ int main(int argc, char **argv)
 	smal_init();
 	memset(&editor, 0, sizeof(editor));
 
+	char lfn[80];
+	if (argv[0][0] == '/')
+	{
+		sprintf(lfn, "%s.log", argv[0]);
+	}
+	else
+	{
+		const char *myname = strrchr(argv[0], '/');
+		if (!myname) myname = argv[0]; else myname++;
+		sprintf(lfn, "/boot/dev/sisong/%s.log", myname);
+	}
+	SetLogfileName(lfn);
+
 	settings = Config::load();
 	LoadEditorSettings();
 

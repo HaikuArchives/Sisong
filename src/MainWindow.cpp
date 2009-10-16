@@ -4,7 +4,6 @@
 
 namespace UpdateCheck { void Go(uint delay); }
 
-
 CMainWindow::CMainWindow(BRect frame)
 	: BWindow(frame, "Sisong", B_TITLED_WINDOW, 0)
 {

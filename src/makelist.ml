@@ -6,7 +6,6 @@ LSUFFIX=-lbe -ltracker
 OUTPUT=../line
 
 >>
-IComm/IShelf.cpp
 MainWindow.cpp
 EditArea.cpp
 EditPane.cpp
@@ -57,6 +56,7 @@ CList.cpp
 MessageView.cpp
 NotifyUpdate.cpp
 stats.cpp
+IComm/IShelf.cpp
 Prefs/Prefs.cpp
 Prefs/AboutPreflet.cpp
 Prefs/CheckboxPreflet.cpp

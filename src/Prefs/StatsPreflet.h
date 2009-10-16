@@ -1,5 +1,4 @@
 
-
 class StatsPreflet : public Preflet
 {
 public:
@@ -8,11 +7,11 @@ public:
 	virtual void MessageReceived(BMessage *msg);
 	virtual void ReloadSettings();
 	virtual void PrefletClosing();
-	
+
 private:
 	CViewTimer *fTimer;
 	PrefsWindow *prefsWin;
-	
+
 	BStringView *fKeystrokesTyped;
 	BStringView *fMouseClicks;
 	BStringView *fCRsTyped;

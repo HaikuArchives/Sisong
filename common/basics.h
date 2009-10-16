@@ -13,7 +13,7 @@ typedef unsigned short	ushort;
 #endif
 
 #define rept			for(;;)
-#define stop			{ staterr("programmer stop"); exit(1); }
+#define stop			{ smal_bypass_cleanup = 1; staterr("programmer stop"); exit(1); }
 #define here			{ staterr("---- Here ----"); }
 
 void stat(const char *fmt, ...);

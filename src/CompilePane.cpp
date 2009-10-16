@@ -23,8 +23,6 @@ static rgb_color color_header = { 200, 30, 30 };
 
 CompilePane::CompilePane()
 {
-BFont *font;
-
 	// create list
 	BRect lvrect(Bounds());
 	lvrect.InsetBy(2, 2);
@@ -33,9 +31,9 @@ BFont *font;
 	ListView = new BListView(lvrect, "compilelist", B_SINGLE_SELECTION_LIST, B_FOLLOW_ALL);
 	ListView->SetViewColor(color_bg);
 
-	font = new BFont(be_fixed_font);
-	font->SetSize(editor.settings.font_size);
-	ListView->SetFont(font);
+	BFont font(be_fixed_font);
+	font.SetSize(editor.settings.font_size);
+	ListView->SetFont(&font);
 
 	ListView->SetSelectionMessage(new BMessage(M_COMPILEPANE_INVOKE));
 
@@ -59,6 +57,10 @@ CompilePane::~CompilePane()
 {
 	Clear();
 }
+
+/*
+void c------------------------------() {}
+*/
 
 void CompilePane::PopupClosing()
 {
@@ -133,10 +135,10 @@ float smax, oldsmax, oldval;
 
 void CompilePane::Clear()
 {
-BListItem *item;
+ColoredStringItem *item;
 
 	int i = 0;
-	while((item = (BListItem *)ListView->ItemAt(i++)))
+	while((item = (ColoredStringItem *)ListView->ItemAt(i++)))
 		delete item;
 
 	ListView->MakeEmpty();

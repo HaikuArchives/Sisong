@@ -31,11 +31,26 @@ clLine *line, *startline;
 char hit_cr = 0;
 int orgy = y;
 
+	int string_length = strlen(str);
+
+	if (string_length <= 32)
+	{
+		lstat("action_insert_string: [%d,%d] length=%d: '%s'", x, y, string_length, str);
+	}
+	else
+	{
+		lstat("action_insert_string: [%d,%d] length=%d", x, y, string_length);
+	}
+
 	ev->SetDirty();
-	undo_add(ev, x, y, strlen(str), NULL);
+	undo_add(ev, x, y, string_length, NULL);
 
 	line = startline = ev->GetLineHandle(y);
-	if (!line) return;
+	if (!line)
+	{
+		stat("action_insert_string: couldn't get handle for line %d", y);
+		return;
+	}
 
 	line->set_insertion_point(x);
 
@@ -138,6 +153,7 @@ int x2, y2;
 BString *deldata;
 char hit_cr = 0;
 
+	lstat("action_delete_right: [%d,%d] %d", x, y, count);
 	ev->SetDirty();
 
 	line = ev->GetLineHandle(y);
@@ -195,7 +211,7 @@ clLine *line, *line1, *line2;
 int y;
 char not_wrapped = 1;
 
-	//staterr("edit_delete_range: [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+	lstat("action_delete_range: [%d,%d] - [%d,%d]", x1, y1, x2, y2);
 	ev->SetDirty();
 
 	// save the to-be-deleted data to the undo buffer

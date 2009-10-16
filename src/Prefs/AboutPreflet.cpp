@@ -7,15 +7,14 @@ static const char *info_text[] =
 	B_UTF8_COPYRIGHT"2009 Caitlin Shaw",
 	"Released under GNU/GPL version 3",
 	"",
-	"Release Candidate 2+",
-	"<Development Version>",
+	"Release Candidate 2",
+	"Revision 14",
 	"",
 	NULL
 };
 
 static const char *disclaimer[] =
 {
-	"",
 	"This program is distributed in the hope that it will be useful,",
 	"but WITHOUT ANY WARRANTY; without even the implied warranty of",
 	"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the",
@@ -85,7 +84,7 @@ BRect rc;
 	font = be_bold_font;
 	font.SetSize(8);
 	font.SetFace(B_BOLD_FACE | B_ITALIC_FACE);
-	MakeStrings(disclaimer, 200, 16, &font);
+	MakeStrings(disclaimer, 233, 16, &font);
 }
 
 void AboutPreflet::Animate()

@@ -657,7 +657,8 @@ int old_cy;
 		BeginUndoGroup(ev);
 		GetSelectionExtents(ev, &x1, &y1, &x2, &y2);
 
-		//stat(" ** SelDel! [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+		lstat(" ** SelDel from [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+
 		// remember current screen position of cursor
 		old_cy = ev->cursor.screen_y;
 

@@ -402,7 +402,10 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 		case M_EDIT_COPY:
 		{
 			if (editor.curev->selection.present)
+			{
+				lstat("- COPY -");
 				editor.curev->CopySelection();
+			}
 		}
 		break;
 
@@ -410,6 +413,7 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 		{
 			if (editor.curev->selection.present)
 			{
+				lstat("- CUT -");
 				editor.curev->CopySelection();
 				editor.curev->SelDel();
 				editor.curev->MakeCursorVisible();
@@ -419,6 +423,7 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 
 		case M_EDIT_PASTE:
 		{
+			lstat("- PASTE -");
 			editor.curev->SelDel();
 			editor.curev->PasteFromClipboard();
 			editor.curev->MakeCursorVisible();
@@ -559,6 +564,9 @@ static bool ProjectsMenu(unsigned int code, BMessage *msg)
 			BAlert *alert = new BAlert("", str, "Cancel", "Delete", NULL, B_WIDTH_AS_USUAL, B_STOP_ALERT);
 			if (!alert->Go()) break;
 
+			if (!strcmp(projectPath, ProjectManager.GetCurrentProjectPath()))
+				ProjectManager.ExitProjectMode();
+
 			if (MoveToTrash(projectPath))
 				(new BAlert("", "Operation failed.", "OK"))->Go();
 
@@ -671,6 +679,10 @@ void FileOpen()
 		FilePanel->SetPanelDirectory(dir);
 		frees(dir);
 	}
+	else
+	{
+		FilePanel->SetPanelDirectory("~");
+	}
 
 	FilePanel->Show();
 }
@@ -740,6 +752,10 @@ void FileSaveAs(bool as_copy, bool shutdown_afterwards)
 			char *dir = RemoveFileSpec(editor.last_filepath_reference);
 			FilePanel->SetPanelDirectory(dir);
 			frees(dir);
+		}
+		else
+		{
+			FilePanel->SetPanelDirectory("~");
 		}
 	}
 

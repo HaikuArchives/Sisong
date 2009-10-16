@@ -530,6 +530,7 @@ int i;
 uchar ch;
 LTree *tree = LTIdent;
 
+//stat("lexeme_add: '%s'", str);
 	for(i=0;;i++)
 	{
 		ch = str[i];
