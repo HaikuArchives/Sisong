@@ -403,7 +403,6 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 		{
 			if (editor.curev->selection.present)
 			{
-				lstat("- COPY -");
 				editor.curev->CopySelection();
 			}
 		}
@@ -413,7 +412,6 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 		{
 			if (editor.curev->selection.present)
 			{
-				lstat("- CUT -");
 				editor.curev->CopySelection();
 				editor.curev->SelDel();
 				editor.curev->MakeCursorVisible();
@@ -423,7 +421,6 @@ static bool EditMenu(unsigned int code, BMessage *msg)
 
 		case M_EDIT_PASTE:
 		{
-			lstat("- PASTE -");
 			editor.curev->SelDel();
 			editor.curev->PasteFromClipboard();
 			editor.curev->MakeCursorVisible();

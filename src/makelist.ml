@@ -56,7 +56,6 @@ CList.cpp
 MessageView.cpp
 NotifyUpdate.cpp
 stats.cpp
-IComm/IShelf.cpp
 Prefs/Prefs.cpp
 Prefs/AboutPreflet.cpp
 Prefs/CheckboxPreflet.cpp
@@ -78,6 +77,8 @@ Walter/Spinner.cpp
 ../common/smal.cpp
 ../common/misc.cpp
 <<
+
+IComm/IShelf.cpp
 
 XTRAFLAGS=-g
 COMPILE=gcc $XTRAFLAGS -c $SRCFILE -o $MODULE.$OBJ_EXT
