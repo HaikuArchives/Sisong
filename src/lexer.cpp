@@ -4,18 +4,18 @@
 
 #include "keywords_constant.h"
 
-LTree *LTIdent;
-char is_seperator[256];
+static LTree *LTIdentifiers;
+static char is_seperator[256];
 
-inline char IsNumeric(char ch)
-	{	return (ch >= '0' && ch <= '9');	}
+static inline bool IsNumeric(char ch)
+	{	return (ch <= '9' && ch >= '0');	}
 
 /*
 void c------------------------------() {}
 */
 
 // return the next char and advance the read cursor
-char next_char(LexInstance *li)
+static inline char next_char(LexInstance *li)
 {
 char ch;
 
@@ -34,7 +34,7 @@ char ch;
 }
 
 // decrement the read cursor
-void back_char(LexInstance *li)
+static inline void back_char(LexInstance *li)
 {
 	li->curchar--;
 
@@ -46,7 +46,7 @@ void back_char(LexInstance *li)
 }
 
 // returns the index of the next character which would be read
-int get_index(LexInstance *li)
+static inline int get_index(LexInstance *li)
 {
 char *i;
 
@@ -58,7 +58,7 @@ char *i;
 }
 
 // sets the index of the next character which will be read
-void set_index(LexInstance *li, int index)
+static inline void set_index(LexInstance *li, int index)
 {
 	li->curchar = (li->line + index);
 
@@ -294,7 +294,7 @@ mark_operator: ;	// jump from "/*" comment detector ("/" operator)
 
 // reads chars from a string literal until it finds the end of a string "quotetype".
 // if the string doesn't end before EOL, returns -1.
-int FindEndOfString(LexInstance *li, char quotetype)
+static int FindEndOfString(LexInstance *li, char quotetype)
 {
 uchar ch;
 
@@ -320,7 +320,7 @@ uchar ch;
 // this is defined as:
 //	- the end of the line,
 //	- or the start of a comment
-int FindEndOfPPDefine(LexInstance *li)
+static int FindEndOfPPDefine(LexInstance *li)
 {
 uchar ch;
 
@@ -352,7 +352,7 @@ uchar ch;
 // entry_nesting is the initial nest level of the block comment.
 // if the end is not found before the end of the line, returns a negative
 // value which is the negation of the nest level.
-int FindEndOfBlockComment(LexInstance *li, int entry_nesting)
+static int FindEndOfBlockComment(LexInstance *li, int entry_nesting)
 {
 int nest_level = entry_nesting;
 
@@ -360,7 +360,7 @@ int nest_level = entry_nesting;
 	{
 		switch(next_char(li))
 		{
-			/*case '/':	// check for another block comment opening
+			/*case '/':	// check for a nested block comment opening
 				if (next_char(li) == '*')
 				{
 					nest_level++;
@@ -398,12 +398,12 @@ int nest_level = entry_nesting;
 
 
 
-int identify_word(char *word)
+static int identify_word(char *word)
 {
 	//stat("identify_word... '%s'", word);
 
 	// check if it is a number
-	if (IsNumeric(*word))
+	if (IsNumeric(word[0]))
 	{
 		return check_number(word);
 	}
@@ -413,9 +413,9 @@ int identify_word(char *word)
 }
 
 
-int check_identifier(char *word)
+static int check_identifier(char *word)
 {
-LTNode *node = LTIdent;
+LTNode *node = LTIdentifiers;
 unsigned char ch;
 
 	rept
@@ -426,10 +426,11 @@ unsigned char ch;
 		{
 			node = node->branches[ch];
 		}
-		else	// there is never a branch for '\0' so this catches end-of-word as well
+		else	// there is never a branch for '\0', so this catches end-of-word as well
 		{
-			// hit end of node tree: are we at a terminator?
-			// if so we have found an identifier
+			// hit end of node tree: are we at the end of the
+			// word and does the current node have a terminator?
+			// if so we have found an identifier!
 			if (!ch && node->terminator_type)
 			{
 				return node->terminator_type;
@@ -441,7 +442,7 @@ unsigned char ch;
 }
 
 
-int check_number(char *word)
+static int check_number(char *word)
 {
 char hex_enable = 0;
 char ch;
@@ -450,27 +451,31 @@ char ch;
 	ch = *(word++);
 
 	if (ch == '0')
-	{	// check for hex
+	{	// check for hexadecimal
 		ch = *word;
-		if (ch == 'x' || ch == 'X')
+		if (!IsNumeric(ch))
 		{
-			hex_enable = 1;
-			word++;
-		}
-		else if (ch && !IsNumeric(ch))
-		{
-			if (ch == 'b')
+			if (ch == 'x' || ch == 'X')
 			{
+				hex_enable = 1;
 				word++;
 			}
-			else
-			{
+			else if (ch == 'f')
+			{	// hack so "100.0f" is colored properly
+				return (*(word+1) == 0) ? COLOR_NUMBER : COLOR_NORMAL;
+			}
+			else if (ch == 'b')
+			{	// binary numbers (supported in some languages, not C)
+				word++;
+			}
+			else if (ch)
+			{	// starts with a zero, but it isn't a recognizable number
 				return COLOR_NORMAL;
 			}
 		}
 	}
 	else if (ch > '9' || ch < '0')
-	{	// first char not numeric
+	{	// first char not numeric, obviously not a number
 		return COLOR_NORMAL;
 	}
 
@@ -503,7 +508,7 @@ char ch;
 void c------------------------------() {}
 */
 
-void AddLexPoint(LexInstance *li, int index, int type)
+static void AddLexPoint(LexInstance *li, int index, int type)
 {
 LexPoint *lp;
 
@@ -524,54 +529,6 @@ LexPoint *lp;
 	//stat("  LexPoint #%d added: type %d at index %d", li->output->npoints-1, type, index);
 }
 
-void lexeme_add(const char *str, int color)
-{
-int i;
-uchar ch;
-LTree *tree = LTIdent;
-
-//stat("lexeme_add: '%s'", str);
-	for(i=0;;i++)
-	{
-		ch = str[i];
-
-		if (!ch)
-		{
-			tree->terminator_type = color;
-			return;
-		}
-
-		if (!tree->branches[ch])
-		{
-			tree->branches[ch] = CreateLTNode();
-			if (ch < tree->minbranch) tree->minbranch = ch;
-			if (ch > tree->maxbranch) tree->maxbranch = ch;
-		}
-
-		tree = tree->branches[ch];
-	}
-}
-
-LTNode *CreateLTNode()
-{
-LTNode *t = (LTNode *)smalz(sizeof(LTNode));
-
-	t->minbranch = 255;
-	return t;
-}
-
-void FreeLTNode(LTNode *t)
-{
-int i;
-
-	for(i=t->minbranch;i<=t->maxbranch;i++)
-	{
-		if (t->branches[i]) FreeLTNode(t->branches[i]);
-	}
-
-	frees(t);
-}
-
 /*
 void c------------------------------() {}
 */
@@ -581,7 +538,7 @@ void lexer_init()
 int i;
 
 	// initilize identifier tables
-	LTIdent = CreateLTNode();
+	LTIdentifiers = CreateLTNode();
 	lexeme_add("int", COLOR_IDENTIFIER);
 	lexeme_add("short", COLOR_IDENTIFIER);
 	lexeme_add("char", COLOR_IDENTIFIER);
@@ -616,12 +573,10 @@ int i;
 	lexeme_add("false", COLOR_IDENTIFIER);
 
 	load_builtin_keywords(keywords_constant, COLOR_SYSTEM_CONSTANT);
-	//load_keywords("keywords_constant", COLOR_SYSTEM_CONSTANT);
+	//load_keywords_from_file("keywords_constant", COLOR_SYSTEM_CONSTANT);
 
-	//lexeme_add(LTIdent, "public");
-	//lexeme_add(LTIdent, "private");
-
-	// initilize word-seperator table
+	// initilize word-seperator table, this tells which
+	// chars end the lexer "words".
 	memset(is_seperator, 1, sizeof(is_seperator));
 	for(i='A';i<='Z';i++) is_seperator[i] = 0;
 	for(i='a';i<='z';i++) is_seperator[i] = 0;
@@ -631,10 +586,10 @@ int i;
 
 void lexer_close()
 {
-	FreeLTNode(LTIdent);
+	FreeLTNode(LTIdentifiers);
 }
 
-void load_builtin_keywords(const char *array[], int color)
+static void load_builtin_keywords(const char *array[], int color)
 {
 int i;
 
@@ -642,7 +597,8 @@ int i;
 		lexeme_add(array[i], color);
 }
 
-char load_keywords(char *fname, int color)
+/*
+static char load_keywords_from_file(char *fname, int color)
 {
 FILE *fp;
 char line[256];
@@ -660,6 +616,56 @@ char line[256];
 
 	fclose(fp);
 	return 0;
+}*/
+
+/*
+void c------------------------------() {}
+*/
+
+static inline LTNode *CreateLTNode()
+{
+	LTNode *t = (LTNode *)smalz(sizeof(LTNode));
+	t->minbranch = 255;
+	return t;
+}
+
+static void FreeLTNode(LTNode *t)
+{
+int i;
+
+	for(i=t->minbranch;i<=t->maxbranch;i++)
+	{
+		if (t->branches[i]) FreeLTNode(t->branches[i]);
+	}
+
+	frees(t);
+}
+
+void lexeme_add(const char *str, int color)
+{
+int i;
+uchar ch;
+LTree *tree = LTIdentifiers;
+
+	for(i=0;;i++)
+	{
+		ch = str[i];
+
+		if (!ch)
+		{
+			tree->terminator_type = color;
+			return;
+		}
+
+		if (!tree->branches[ch])
+		{
+			tree->branches[ch] = CreateLTNode();
+			if (ch < tree->minbranch) tree->minbranch = ch;
+			if (ch > tree->maxbranch) tree->maxbranch = ch;
+		}
+
+		tree = tree->branches[ch];
+	}
 }
 
 /*

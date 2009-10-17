@@ -12,7 +12,7 @@ CProjectManager::CProjectManager()
 // update the projects menu with the list of active projects
 void CProjectManager::UpdateProjectsMenu()
 {
-BMenu *menu, *submenu;
+BMenu *menu;
 BList projects;
 char configdir[MAXPATHLEN];
 int i, count;
@@ -28,6 +28,8 @@ int i, count;
 	// check the filesystem for a list of projects
 	if (!GetConfigDir(configdir)) return;
 	if (GetDirectoryContents(configdir, NULL, NULL, &projects)) return;
+
+	projects.SortItems(sortFunc);
 
 	if ((count = projects.CountItems()))
 	{
@@ -45,11 +47,13 @@ int i, count;
 			// create menu items
 			if (menuText[0] != '.')
 			{
-				submenu = new BMenu(menuText);
-				submenu->AddItem(new BMenuItem("Open", NewMenuMessage(M_PROJECT_SELECT, path)));
-				submenu->AddItem(new BMenuItem("Open Build Script", NewMenuMessage(M_PROJECT_OPEN_SCRIPT, path)));
+				BMenu *submenu = new BMenu(menuText);
+
+				AddMenuItem(submenu, "Open", M_PROJECT_SELECT, path);
+				AddMenuItem(submenu, "Open Build Script", M_PROJECT_OPEN_SCRIPT, path);
 				submenu->AddSeparatorItem();
-				submenu->AddItem(new BMenuItem("Delete...", NewMenuMessage(M_PROJECT_DELETE, path)));
+				AddMenuItem(submenu, "Delete...", M_PROJECT_DELETE, path);
+
 				menu->AddItem(new BMenuItem(submenu, NewMenuMessage(M_PROJECT_SELECT, path)));
 			}
 		}
@@ -66,12 +70,30 @@ int i, count;
 	MainWindow->top.menubar->ChangeMenusLock.Unlock();
 }
 
+static void AddMenuItem(BMenu *submenu, const char *text, uint what, const char *path)
+{
+	BMessage *msg = NewMenuMessage(what, path);
+	submenu->AddItem(new BMenuItem(text, msg));
+}
+
 static BMessage *NewMenuMessage(uint what, const char *path)
 {
 	BMessage *msg = new BMessage(what);
 	msg->AddString("path", path);
 	return msg;
 }
+
+static int sortFunc(const void *a, const void *b)
+{
+char **aitem = (char **)a;
+char **bitem = (char **)b;
+
+	return strcasecmp(*aitem, *bitem);
+}
+
+/*
+void c------------------------------() {}
+*/
 
 // returns the name and path of a project file such as "silayout" given the
 // project base path. the buffer returned is statically allocated and must

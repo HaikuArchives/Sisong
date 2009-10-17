@@ -8,7 +8,7 @@ static const char *info_text[] =
 	"Released under GNU/GPL version 3",
 	"",
 	"Release Candidate 2",
-	"Revision 14",
+	"Revision 16",
 	"",
 	NULL
 };
