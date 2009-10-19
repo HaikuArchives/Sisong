@@ -24,17 +24,17 @@ EditView *ev;
 	{	// create new empty document here
 		ev = InitAsNewDocument();
 	}
-
+	
 	undo_init(ev);
-
+	
 	ev->curline = ev->firstline;
 	ev->scroll.topline = ev->firstline;
-
+	
 	ev->cursor.x = ev->cursor.y = 0;
 	ev->scroll.y = 0;
-
+	
 	ev->ModifiedSinceRedraw = true;
-
+	
 	for(int i=0;i<6;i++)
 	{
 		if (ev->curline->next)
@@ -43,13 +43,13 @@ EditView *ev;
 			ev->cursor.y++;
 		}
 	}
-
+	
 	ev->cursor.xseekmode = CM_FREE;
 	UpdateCursorPos(ev);
-
+	
 	editor.DocList->AddItem(ev);
 	TabBar->AddTab(ev);
-
+	
 	return ev;
 }
 
@@ -68,33 +68,33 @@ clLine *line;
 		staterr("failed to open '%s'", fname);
 		return NULL;
 	}
-
+	
 	ev = new EditView;
-
+	
 	while(!feof(fp))
 	{
 		fgetline(fp, buf, sizeof(buf));
-
+		
 		line = new clLine(buf);
 		line->next = NULL;
 		line->prev = ev->lastline;
-
+		
 		if (ev->lastline)
 			ev->lastline->next = line;
 		else
 			ev->firstline = line;
-
+		
 		ev->lastline = line;
 		lexer_update_line(line);
-
+		
 		ev->nlines++;
 	}
-
+	
 	fclose(fp);
-
+	
 	if (editor.settings.FixIndentationGaps)
 		ev->FixIndentationGaps();
-
+	
 	maxcpy(ev->filename, fname, sizeof(ev->filename) - 1);
 	maxcpy(editor.last_filepath_reference, fname, sizeof(editor.last_filepath_reference) - 1);
 	return ev;
@@ -120,16 +120,16 @@ static EditView *InitAsNewDocument()
 			break;
 		}
 	}
-
+	
 	// initilize the new document
 	EditView *ev = new EditView;
 	ev->firstline = ev->lastline = new clLine;
 	ev->firstline->prev = NULL;
 	ev->lastline->next = NULL;
 	ev->nlines = 1;
-
+	
 	ev->MakeUntitled();
-
+	
 	return ev;
 }
 
@@ -146,16 +146,16 @@ EditView *ev = this;
 
 	TabBar->RemoveTab(ev);
 	editor.DocList->RemoveItem(ev);
-
+	
 	// editor will normally crash if all tabs are allowed to be closed;
 	// do sanity check to prevent this if requested.
 	if (DoSanityCheck && TabBar->GetTabCount()==0)
 	{
 		TabBar->SetActiveTab(CreateEditView(NULL));
 	}
-
+	
 	undo_close(ev);
-
+	
 	clLine *line = ev->firstline, *next;
 	while(line)
 	{
@@ -163,7 +163,7 @@ EditView *ev = this;
 		delete line;
 		line = next;
 	}
-
+	
 	delete ev;
 }
 
@@ -185,9 +185,9 @@ int result;
 		// important so save works properly and nice for UI since
 		// document being saved is visible: switch to document.
 		TabBar->SetActiveTab(ev);
-
+		
 		sprintf(alert_str, "Unsaved changes to \"%s\"; save them now?", GetFileSpec(ev->filename));
-
+		
 		if (OfferCancelButton)
 		{
 			alert = new BAlert("", alert_str, "Cancel", "Don't Save", "Save Now");
@@ -195,7 +195,7 @@ int result;
 			alert->SetShortcut(1, 'n');
 			alert->SetShortcut(2, 'y');
 			result = alert->Go();
-
+			
 			if (result==0) return CEV_CLOSE_CANCELED;
 			if (result==2) need_to_save = true;
 		}
@@ -206,12 +206,12 @@ int result;
 			alert->SetShortcut(1, 'y');
 			if (alert->Go() == 1) need_to_save = true;
 		}
-
+		
 		if (need_to_save)
 		{
 			if (FileSave())
 				return CEV_CLOSE_CANCELED;
-
+			
 			// temphack to work around the fact that the dialog is asynchronous
 			if (editor.curev->IsUntitled)
 			{
@@ -220,7 +220,7 @@ int result;
 			}
 		}
 	}
-
+	
 	// user confirmed it or it wasn't dirty
 	ev->Close();
 	return need_to_save ? CEV_CLOSED_SAVED : CEV_CLOSED_NOT_SAVED;
@@ -237,13 +237,13 @@ void EditView::Close_All(void)
 	// when adding the new documents back in.
 	TabBar->SetActiveTab(NULL);
 	editor.curev = NULL;
-
+	
 	// close all documents
 	while(EditView *cev = TabBar->GetFirstTab())
 	{
 		cev->Close(false);
 	}
-
+	
 	editor.NextUntitledID = 0;
 }
 
@@ -263,7 +263,7 @@ FILE *fp;
 		staterr("EditView::Save(): failed to open file '%s'", filename);
 		return 1;
 	}
-
+	
 	clLine *line = ev->firstline;
 	if (line)
 	{
@@ -271,7 +271,7 @@ FILE *fp;
 		// but it will grow if needed.
 		int buffer_sz = 1024;
 		char *buffer = (char *)smal(buffer_sz);
-
+		
 		rept
 		{
 			// check line length. if we need to grow the buffer, do so now.
@@ -283,26 +283,26 @@ FILE *fp;
 				frees(buffer);
 				buffer = (char *)smal(buffer_sz);
 			}
-
+			
 			// copy line to buffer, and optionally remove unnecessary whitespace
 			line->GetLineToBuffer(buffer);
-
+			
 			if (editor.settings.TrimTrailingOnSave)
-				linelength = RTrimWhitespace(buffer, linelength);
-
+				linelength = RTrimWhitespace(buffer, linelength, editor.settings.TTExceptBlankLines);
+			
 			// write the line
 			fwrite(buffer, linelength, 1, fp);
-
+			
 			// advance to next line
 			line = line->next;
-
+			
 			if (!line) break;
 			fputc('\n', fp);
 		}
-
+		
 		frees(buffer);
 	}
-
+	
 	fclose(fp);
 	return 0;
 }
@@ -337,15 +337,15 @@ EditView *DoFileOpen(const char *filename)
 EditView *ev;
 
 	LockWindow();
-
+	
 	// if document is already open just switch to it
 	ev = FindEVByFilename(filename);
 	if (!ev)
 		ev = CreateEditView(filename);
-
+	
 	if (ev)
 		TabBar->SetActiveTab(ev);
-
+	
 	UnlockWindow();
 	return ev;
 }
@@ -359,7 +359,7 @@ EditView *DoFileOpenAtLine(const char *filename, int lineNo, int x_start, int x_
 EditView *ev;
 
 	LockWindow();
-
+	
 	ev = FindEVByFilename(filename);
 	if (!ev)	// file already open?
 	{
@@ -371,42 +371,42 @@ EditView *ev;
 		else
 		{
 			UnlockWindow();
-
+			
 			(new BAlert("", "Unable to display the relevant line, because that document could not be opened.", "Blast!"))->Go();
 			return NULL;
 		}
 	}
-
+	
 	if (lineNo >= ev->nlines) lineNo = ev->nlines - 1;
 	if (lineNo < 0) lineNo = 0;
-
+	
 	// try to center the relevant line in the view
 	int top_y_line = lineNo;
 	top_y_line -= (editor.height / 2);
 	if (top_y_line < 0) top_y_line = 0;
-
+	
 	ev->SetVerticalScroll(top_y_line);
-
+	
 	// select the hit
 	DocPoint hit_start, hit_end;
 	int line_length;
 	clLine *line;
-
+	
 	line = ev->GetLineHandle(lineNo);
 	line_length = line->GetLength();
-
+	
 	if (x_start < 0) x_start = line->GetIndentationLevel();
 	if (x_end < 0) x_end = line_length-1;
-
+	
 	if (x_start > line_length) x_start = line_length;
 	if (x_end > line_length) x_end = line_length;
 	if (x_start > x_end) SWAP(x_start, x_end);
-
+	
 	hit_start.Set(ev, x_start, lineNo);
 	hit_end.Set(ev, x_end, lineNo);
-
+	
 	selection_select_range(ev, &hit_start, &hit_end);
-
+	
 	ev->cursor.set_mode(CM_FREE);
 	if (x_end >= line_length)
 	{
@@ -417,13 +417,13 @@ EditView *ev;
 		hit_end.Increment();
 		ev->cursor.move(hit_end.x, hit_end.y);
 	}
-
+	
 	// make document active
 	if (ev != editor.curev)
 		TabBar->SetActiveTab(ev);
 	else
 		ev->FullRedrawView();
-
+	
 	UnlockWindow();
 	return ev;
 }
@@ -437,15 +437,15 @@ EditView *newme;
 
 	newme = CreateEditView(ev->filename);
 	if (!newme) return;
-
+	
 	newme->SetVerticalScroll(ev->scroll.y);
 	newme->cursor.move(ev->cursor.x, ev->cursor.y);
-
+	
 	if (ev == editor.curev)
 	{
 		TabBar->SetActiveTab(newme);
 	}
-
+	
 	ev->Close();
 }
 
@@ -466,7 +466,7 @@ int i;
 		if (ev->DocID == id)
 			return ev;
 	}
-
+	
 	return NULL;
 }
 
@@ -485,7 +485,7 @@ int i;
 			return ev;
 		}
 	}
-
+	
 	return NULL;
 }
 
@@ -501,7 +501,7 @@ void EditView::SetDirty()
 		FunctionList->ResetTimer();
 		AutoSaver_StartTimer();
 	}
-
+	
 	if (!IsDirty)
 	{
 		IsDirty = 1;

@@ -74,7 +74,7 @@ class CCloseButton : public BView
 public:
 	CCloseButton(BRect frame, BMessage *msg, BLooper *target, uint32 resizingMode);
 	~CCloseButton();
-
+	
 	virtual void Draw(BRect region);
 	virtual void MouseDown(BPoint where);
 	virtual void MouseUp(BPoint where);

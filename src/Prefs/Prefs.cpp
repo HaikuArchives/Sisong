@@ -31,26 +31,28 @@ static CheckboxPrefletData GeneralPanelData[] =
 	"Use I-Beam cursor", &editor.settings.use_ibeam_cursor, NULL, 0,
 	"Show Build Help", &editor.settings.ShowBuildHelp, NULL, 0,
 	"Notify if update available", &editor.settings.CheckForUpdate, NULL, 0,
-
+	
 	NULL, NULL, NULL, 0
 };
 
 static CheckboxPrefletData MiscPanelData[] =
 {
 	"Fix gaps in indentation when opening", &editor.settings.FixIndentationGaps, NULL, 0,
-	"Remove trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0,
+	"Trim trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0,
+	"... but leave lines which are ONLY whitespace alone", &editor.settings.TTExceptBlankLines, &editor.settings.TrimTrailingOnSave, 0,
 	"Periodically auto-save to /boot/var/tmp/Sisong", &editor.settings.EnableAutoSaver, NULL, 0,
 	//"", NULL, NULL, 0,
 	//"Warn if code doesn't match Haiku Coding Guidelines", &editor.settings.WarnHaikuGuidelines, NULL, 0,
-
+	
 	NULL, NULL, NULL, 0
 };
 
 static CheckboxPrefletData BuildPanelData[] =
 {
 	"Auto-jump to first error/warning", &editor.settings.build.JumpToErrors, NULL, 0,
-	"Don't auto-jump to warnings if errors present", &editor.settings.build.NoJumpToWarning, &editor.settings.build.JumpToErrors, 0,
-
+	"Favor errors over warnings when auto-jumping", &editor.settings.build.NoJumpToWarning, &editor.settings.build.JumpToErrors, 0,
+	"Don't auto-jump to warnings at all", &editor.settings.build.NoJumpToWarningAtAll, &editor.settings.build.JumpToErrors, 0,
+	
 	 NULL, NULL, NULL, 0
 };
 
@@ -62,7 +64,7 @@ PrefsWindow::PrefsWindow()
 	BRect rc(Bounds());
 	rc.InsetBy(1, 1);
 	rc.right = 128;
-
+	
 	// allow only one
 	if (CurrentPrefsWindow)
 	{
@@ -70,18 +72,18 @@ PrefsWindow::PrefsWindow()
 		CurrentPrefsWindow->Quit();
 	}
 	CurrentPrefsWindow = this;
-
+	
 	//SetFeel(B_FLOATING_APP_WINDOW_FEEL);
 	//SetFlags(Flags() | B_WILL_ACCEPT_FIRST_CLICK);
-
+	
 	// create list view
 	fListView = new BListView(rc, "prefslist", B_SINGLE_SELECTION_LIST, B_FOLLOW_ALL);
 	fListView->SetSelectionMessage(new BMessage(M_PREFS_SELECT));
-
+	
 	// create scrollview
 	fScrollView = new BScrollView("scrollview", fListView, B_FOLLOW_ALL, 0, false, true);
 	bgview->AddChild(fScrollView);
-
+	
 	// container view
 	rc = Bounds();
 	rc.left = fScrollView->Bounds().right + 1;
@@ -89,14 +91,14 @@ PrefsWindow::PrefsWindow()
 	fContainer = new BView(rc, "Container", B_FOLLOW_LEFT_RIGHT, 0);
 	fContainer->SetViewColor(bgview->ViewColor());
 	bgview->AddChild(fContainer);
-
+	
 	// buttons
 	rc = Bounds();
 	rc.InsetBy(8, 8);
 	rc.left = rc.right - 100;
 	rc.top = rc.bottom - 24;
 	bgview->AddChild(new BButton(rc, "", "OK", new BMessage(M_OK_CLICKED)));
-
+	
 	rc.OffsetBy(-110, 0);
 	/*rc.left = (fContainer->Bounds().Width() / 2);
 	rc.left += fScrollView->Bounds().right;
@@ -105,12 +107,12 @@ PrefsWindow::PrefsWindow()
 	rc.right += 50;*/
 	cmdRevert = new BButton(rc, "", "Revert", new BMessage(M_REVERT_CLICKED));
 	bgview->AddChild(cmdRevert);
-
+	
 	// initilize "Revert"
 	fRevertBuffer = (char *)smal(sizeof(editor.settings));
 	memcpy(fRevertBuffer, &editor.settings, sizeof(editor.settings));
 	cmdRevert->SetEnabled(false);
-
+	
 	// add all preflets to list
 	AddPreflet(" About", new AboutPreflet(this));
 	AddPreflet(" Editor", new CheckboxPreflet(this, GeneralPanelData));
@@ -119,13 +121,13 @@ PrefsWindow::PrefsWindow()
 	AddPreflet(" Stats", new StatsPreflet(this));
 	AddPreflet(" Build", new CheckboxPreflet(this, BuildPanelData));
 	AddPreflet(" Misc", new CheckboxPreflet(this, MiscPanelData));
-
+	
 	fContainerContents = NULL;
-
+	
 	int index = settings->GetInt("LastSelectedPrefsPanel", 0);
 	if (index < 0 && index > 4) index = 0;
 	fListView->Select(index);
-
+	
 	Show();
 }
 
@@ -142,15 +144,15 @@ void PrefsWindow::AddPreflet(const char *name, BView *preflet)
 void PrefsWindow::SettingsChanged()
 {
 	editor.curev->FullRedrawView();
-
+	
 	int revert_avail = 0;
-
+	
 	if (fContainerContents)
 		revert_avail = fContainerContents->HaveSpecialRevert();
-
+	
 	if (!revert_avail)
 		revert_avail = memcmp(fRevertBuffer, &editor.settings, sizeof(editor.settings));
-
+	
 	cmdRevert->SetEnabled(revert_avail ? B_CONTROL_ON : B_CONTROL_OFF);
 }
 
@@ -160,20 +162,20 @@ PrefsWindow::~PrefsWindow()
 	if (fContainerContents)
 	{
 		fContainerContents->PrefletClosing();
-
+		
 		fContainer->RemoveChild(fContainerContents);
 		fContainerContents = NULL;
 	}
-
+	
 	// clean up all preflet views
 	int i, count = fViewList.CountItems();
 	for(i=0;i<count;i++)
 		delete (BView *)fViewList.ItemAt(i);
 	fViewList.MakeEmpty();
-
+	
 	frees(fRevertBuffer);
 	fRevertBuffer = NULL;
-
+	
 	if (this == CurrentPrefsWindow)
 		CurrentPrefsWindow = NULL;
 }
@@ -196,7 +198,7 @@ void PrefsWindow::MessageReceived(BMessage *message)
 		case M_PREFS_SELECT:
 		{
 			int32 index;
-
+			
 			if (message->FindInt32("index", &index) == B_OK)
 			{
 				if (fContainerContents)
@@ -204,45 +206,45 @@ void PrefsWindow::MessageReceived(BMessage *message)
 					fContainerContents->PrefletClosing();
 					fContainer->RemoveChild(fContainerContents);
 				}
-
+				
 				fContainerContents = (Preflet *)fViewList.ItemAt(index);
-
+				
 				if (fContainerContents)
 				{
 					fContainerContents->ReloadSettings();
 					fContainer->AddChild(fContainerContents);
 				}
-
+				
 				settings->SetInt("LastSelectedPrefsPanel", index);
 			}
 		}
 		break;
-
+		
 		case M_OK_CLICKED:
 		{
 			//Config::save(settings);
 			Quit();
 		}
 		break;
-
+		
 		case M_REVERT_CLICKED:
 		{
 			if (fRevertBuffer)
 			{
 				memcpy(&editor.settings, fRevertBuffer, sizeof(editor.settings));
-
+				
 				if (fContainerContents)
 				{
 					fContainerContents->DoSpecialRevert();
 					fContainerContents->ReloadSettings();
 				}
-
+				
 				cmdRevert->SetEnabled(false);
 				editor.curev->FullRedrawView();
 			}
 		}
 		break;
-
+		
 		default:
 			BWindow::MessageReceived(message);
 		break;

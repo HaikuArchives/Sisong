@@ -33,7 +33,7 @@ void CEditPane::SetFontSize(int new_size)
 {
 	FontDrawer->SetSize(new_size);
 	SetFont(FontDrawer->font);
-
+	
 	editor.font_width = FontDrawer->fontwidth;
 	editor.font_height = FontDrawer->fontheight;
 	
@@ -61,7 +61,7 @@ void CEditPane::FrameResized(float untrustworthy_width, \
 	editor.pxheight = (int)HEIGHTOF(Bounds());
 	if (editor.pxwidth < 1) editor.pxwidth = 1;
 	if (editor.pxheight < 1) editor.pxheight = 1;
-
+	
 	// calc size in chars
 	editor.width = (editor.pxwidth / editor.font_width);
 	editor.height = (editor.pxheight / editor.font_height);
@@ -102,20 +102,20 @@ void CEditPane::MouseDown(BPoint where)
 		editor.curev->MouseDown(where.x, where.y);
 }
 
-void CEditPane::MouseMoved(BPoint where, uint32 code, const BMessage *msg)
+void CEditPane::MouseMoved(BPoint where, uint32 transit, const BMessage *msg)
 {
 	if (editor.settings.use_ibeam_cursor)
 	{
-		if (code == B_ENTERED_VIEW)
+		if (transit == B_ENTERED_VIEW)
 		{
 			be_app->SetCursor(B_CURSOR_I_BEAM);
 		}
-		else if (code == B_EXITED_VIEW)
+		else if (transit == B_EXITED_VIEW)
 		{
 			be_app->SetCursor(B_CURSOR_SYSTEM_DEFAULT);
 		}
 	}
-
+	
 	if (mouse_down && editor.curev)
 	{
 		editor.curev->MouseDrag(where.x, where.y);

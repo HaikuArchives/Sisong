@@ -23,32 +23,32 @@ char line[1024];
 char *equ, *ptr;
 
 	settings = (Config *)(new BMessage(M_SETTINGS));
-
+	
 	filename = GetConfigFileName();
 	if (!filename) return settings;
-
+	
 	fpi = fopen(filename, "rb");
 	if (!fpi) return settings;
-
+	
 	while(!feof(fpi))
 	{
 		fgetline(fpi, line, sizeof(line) - 1);
-
+		
 		equ = strchr(line, '=');
 		if (!equ) continue;
-
+		
 		*equ = 0;
 		ptr = equ-1;
 		while(ptr > line && (*ptr == ' ')) { *ptr = 0; ptr--; }
 		equ++;
 		while(*equ == ' ') equ++;
-
+		
 		switch(line[0])
 		{
 			case '%':
 				settings->AddInt32(line+1, atoi(equ));
 			break;
-
+			
 			case '$':
 				settings->AddString(line+1, equ);
 			break;
@@ -71,10 +71,10 @@ BString line("", 128);
 
 	filename = GetConfigFileName();
 	if (!filename) return;
-
+	
 	fpo = fopen(filename, "wb");
 	if (!fpo) return;
-
+	
 	for(i=0; settings->GetInfo(B_ANY_TYPE, i, &name, &type, &count) == B_OK; i++)
 	{
 		switch(type)
@@ -83,35 +83,35 @@ BString line("", 128);
 			{
 				const char *strData = "";
 				settings->FindString(name, &strData);
-
+				
 				line = "$";
 				line.Append(name);
 				line.Append(" = ");
 				line.Append(strData);
 			}
 			break;
-
+			
 			case B_INT32_TYPE:
 			{
 				int32 num = 0;
 				char strData[64];
-
+				
 				settings->FindInt32(name, &num);
 				sprintf(strData, "%d", num);
-
+				
 				line = "%";
 				line.Append(name);
 				line.Append(" = ");
 				line.Append(strData);
 			}
 			break;
-
+			
 			default: continue;
 		}
-
+		
 		fprintf(fpo, "%s\n", line.String());
 	}
-
+	
 	fclose(fpo);
 }
 
@@ -122,7 +122,7 @@ void c------------------------------() {}
 void Config::SetString(const char *name, const char *value)
 {
 	if (value == NULL) value = "";
-
+	
 	if (HasString(name))
 		ReplaceString(name, value);
 	else
@@ -190,22 +190,17 @@ char *GetConfigDir(char *buffer)
 	{
 		int len = strlen(buffer);
 		if (len && buffer[len-1] != '/') strcat(buffer, "/");
-
+		
 		strcat(buffer, "Sisong/");
-
+		
 		mkdir(buffer, S_IRUSR | S_IWUSR);
 		return buffer;
 	}
-
+	
 	// failure
 	buffer[0] = 0;
 	return NULL;
 }
-
-
-
-
-
 
 
 

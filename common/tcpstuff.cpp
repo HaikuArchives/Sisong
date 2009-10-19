@@ -47,7 +47,7 @@ struct timeval poll;
 
 	FD_ZERO(&readfds);
 	FD_SET(sock, &readfds);
-
+	
 	memset((char *)&poll, 0, sizeof(poll));
 	return select(sock+1, &readfds, (fd_set *)0, (fd_set *)0, &poll);
 }
@@ -59,7 +59,7 @@ struct timeval poll;
 
 	FD_ZERO(&writefds);
 	FD_SET(sock, &writefds);
-
+	
 	memset((char *)&poll, 0, sizeof(poll));
 	return select(sock+1, (fd_set *)0, &writefds, (fd_set *)0, &poll);
 }
@@ -78,18 +78,18 @@ long fvalue;
 		staterr("net_setnonblock: Error fcntl(..., F_GETFL) (%s)", strerror(errno));
 		return 1;
 	}
-
+	
 	if (enable)
 		fvalue |= O_NONBLOCK;
 	else
 		fvalue &= ~O_NONBLOCK;
-
+	
 	if (fcntl(sock, F_SETFL, fvalue) < 0)
 	{
 		staterr("net_setnonblock: Error fcntl(..., F_SETFL) (%s)", strerror(errno));
 		return 1;
 	}
-
+	
 	return 0;
 }
 
@@ -113,14 +113,14 @@ static char buffer[80];
 //uint net_ipfromstring(char *ip)	{ return inet_addr(ip); }
 
 
-unsigned long net_dnslookup(const char *host)
+uint32 net_dnslookup(const char *host)
 {
 struct hostent *hosten;
 unsigned long ip;
 
-	if (host)
-		stat("Resolving '%s' via DNS...", host);
-
+	//if (host)
+		//stat("Resolving '%s' via DNS...", host);
+	
 	// attempt to resolve the hostname via DNS
 	hosten = gethostbyname(host);
 	if (hosten == NULL)
@@ -152,29 +152,29 @@ bool use_timeout;
 		staterr("connect_tcp: Failed to create socket.");
 		return 1;
 	}
-
+	
 	net_setnonblock(conn_socket, true);
-
+	
 	sain.sin_addr.s_addr = htonl(ip);
 	sain.sin_port = htons(port);
 	sain.sin_family = AF_INET;
-
+	
 	#define TICK_BASE		10
 	connected = false;
 	use_timeout = timeout_ms != 0;
-
+	
 	while(!AbortFlag || !AbortFlag->IsRaised())
 	{
 		result = connect(conn_socket, (struct sockaddr *)&sain, sizeof(struct sockaddr_in));
-
+		
 		if (errno == EISCONN || result != -1)
 		{
 			connected = true;
 			break;
 		}
-
+		
 		if (errno == EINTR) break;
-
+		
 		if (use_timeout)
 		{
 			if (timeout_ms >= 0)
@@ -192,7 +192,7 @@ bool use_timeout;
 	{
 		return conn_socket;
 	}
-
+	
 	//staterr("connect_tcp: connect timeout, abort, or failure connecting to %08x:%d\n", ip, port);
 	close(conn_socket);
 	return 0;
@@ -214,13 +214,13 @@ int sock;
 		staterr("GetTCPServerSocket: failed to create socket!");
 		return 0;
 	}
-
+	
 	if (net_listen_socket(sock, INADDR_ANY, port))
 	{
 		close(sock);
 		return 0;
 	}
-
+	
 	return sock;
 }
 
@@ -232,19 +232,19 @@ sockaddr_in thesock;
 	thesock.sin_addr.s_addr = htonl(listen_ip);
 	thesock.sin_port = htons(listen_port);
 	thesock.sin_family = AF_INET;
-
+	
 	if (bind(sock, (struct sockaddr *)&thesock, sizeof(sockaddr_in)))
 	{
 		staterr("bind failed to %s:%d!", decimalip(listen_ip), listen_port);
 		return 1;
 	}
-
+	
 	if (listen(sock, 50))
 	{
 		staterr("listen failed!");
 		return 1;
 	}
-
+	
 	stat("bind success to %s:%d", decimalip(listen_ip), listen_port);
 	return 0;
 }
@@ -258,7 +258,7 @@ struct sockaddr_in sockinfo;
 socklen_t sz = sizeof(sockinfo);
 
 	newsocket = accept(s, (struct sockaddr *)&sockinfo, &sz);
-
+	
 	if (connected_ip)
 	{
 		if (newsocket)
@@ -270,7 +270,7 @@ socklen_t sz = sizeof(sockinfo);
 			*connected_ip = 0;
 		}
 	}
-
+	
 	return newsocket;
 }
 
