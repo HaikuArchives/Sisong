@@ -41,7 +41,8 @@ static CheckboxPrefletData MiscPanelData[] =
 	"Trim trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0,
 	"... but leave lines which are ONLY whitespace alone", &editor.settings.TTExceptBlankLines, &editor.settings.TrimTrailingOnSave, 0,
 	"Periodically auto-save to /boot/var/tmp/Sisong", &editor.settings.EnableAutoSaver, NULL, 0,
-	//"", NULL, NULL, 0,
+	"", NULL, NULL, 0,
+	"Show guideline at 80 chars", &editor.settings.ShowCol80Guideline, NULL, 0,
 	//"Warn if code doesn't match Haiku Coding Guidelines", &editor.settings.WarnHaikuGuidelines, NULL, 0,
 	
 	NULL, NULL, NULL, 0

@@ -220,6 +220,7 @@ bool firsttime;
 	editor.settings.TTExceptBlankLines = settings->GetInt("TTExceptBlankLines", 1);
 	editor.settings.WarnHaikuGuidelines = settings->GetInt("WarnHaikuGuidelines", 0);
 	editor.settings.EnableAutoSaver = settings->GetInt("EnableAutoSaver", 1);
+	editor.settings.ShowCol80Guideline = settings->GetInt("ShowCol80Guideline", 0);
 	
 	editor.settings.build.JumpToErrors = settings->GetInt("JumpToErrors", 1);
 	editor.settings.build.NoJumpToWarning = settings->GetInt("NoJumpToWarning", 0);
@@ -275,7 +276,8 @@ void SaveEditorSettings()
 	settings->SetInt("TTExceptBlankLines", editor.settings.TTExceptBlankLines);
 	settings->SetInt("WarnHaikuGuidelines", editor.settings.WarnHaikuGuidelines);
 	settings->SetInt("EnableAutoSaver", editor.settings.EnableAutoSaver);
-	
+	settings->SetInt("ShowCol80Guideline", editor.settings.ShowCol80Guideline);
+
 	settings->SetInt("JumpToErrors", editor.settings.build.JumpToErrors);
 	settings->SetInt("NoJumpToWarning", editor.settings.build.NoJumpToWarning);
 	settings->SetInt("NoJumpToWarningAtAll", editor.settings.build.NoJumpToWarningAtAll);

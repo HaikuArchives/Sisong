@@ -599,7 +599,11 @@ CompilePane *pane = (CompilePane *)userparam;
 		// handle auto-jumping in case of errors
 		if (info.errorType != ET_NONE)
 		{
-			pane->fHasErrors = true;
+			if (info.errorType == ET_ERROR || \
+				(info.errorType == ET_WARNING && !editor.settings.build.NoJumpToWarningAtAll))
+			{
+				pane->fHasErrors = true;
+			}
 			
 			bool error_precedence = (editor.settings.build.NoJumpToWarning && \
 									 pane->fAutoScrollLineType != ET_ERROR && \

@@ -147,6 +147,7 @@ struct EditorData
 		bool TTExceptBlankLines;
 		bool WarnHaikuGuidelines;
 		bool EnableAutoSaver;
+		bool ShowCol80Guideline;
 		
 		struct
 		{
@@ -174,7 +175,7 @@ struct EditorData
 		unsigned int us_used;
 		bigtime_t LastUsageUpdateTime;
 	} stats;
-
+	
 	char testmode;
 };
 

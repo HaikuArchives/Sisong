@@ -31,11 +31,11 @@ void CFlashingCursor::tick()
 {
 	if (!fActive)
 		return;
-
+	
 	if (++timer >= fFlashRate)
 	{
 		timer = 0;
-
+		
 		if (!flashstate)
 		{
 			flashstate = 1;
@@ -56,7 +56,7 @@ void CFlashingCursor::EnableFlashing(bool newActive)
 	if (fActive != newActive)
 	{
 		fActive = newActive;
-
+		
 		if (!newActive)
 		{
 			if (flashstate)
@@ -79,10 +79,10 @@ bool fWasVisible;
 	{
 		fWasVisible = visible;
 		if (visible) erase();
-
+		
 		fThick = enabled;
 		fFlashRate = enabled ? THICKFLASHRATE : THINFLASHRATE;
-
+		
 		if (fWasVisible) draw();
 	}
 }
@@ -94,24 +94,24 @@ int x, y;
 
 	if (!fActive) return;
 	if (_cy < 0 || _cy >= editor.height || !editor.curev) return;
-
+	
 	visible = 1;
-
+	
 	//stat("draw[%d, %d]", _cx, _cy);
-
+	
 	x = GET_CURSOR_PX(_cx);
 	y = GET_CURSOR_PY(_cy);
-
+	
 	// draw the cursor
 	LockWindow();
-
+	
 	MainView->SetHighColor(GetEditColor(COLOR_CURSOR));
-
+	
 	if (fThick)
 		MainView->StrokeRect(BRect(x, y, x + (CURSOR_W - 1), y + (CURSOR_H - 1)));
 	else
 		MainView->StrokeLine(BPoint(x, y), BPoint(x, y + (CURSOR_H - 1)));
-
+	
 	UnlockWindow();
 }
 
@@ -129,14 +129,14 @@ EditView *ev = editor.curev;
 	visible = 0;
 	if (cy < 0 || cy >= editor.height || !ev) return;
 	//stat("erase[%d, %d]", cx, cy);
-
+	
 	x = GET_CURSOR_PX(cx);
 	y = GET_CURSOR_PY(cy);
-
+	
 	// restore the image behind the cursor
 	LockWindow();
 	line_number = (ev->scroll.y + cy);
-
+	
 	if (line_number >= ev->nlines)
 	{
 		MainView->SetLowColor(GetEditBGColor(COLOR_TEXT));
@@ -145,14 +145,14 @@ EditView *ev = editor.curev;
 	else
 	{
 		editor.curline_bb->Lock();
-
+		
 		if (line_number != editor.bbed_line)
 		{
 			clLine *line = ev->GetLineHandle(line_number);
 			if (line)
 			{
 				if (!line->lexresult.points) lexer_update_line(line);
-				UpdateLine(editor.curline_bb, ev, line, 0, line_number);
+				UpdateLine(ev, editor.curline_bb, line, 0, line_number);
 				editor.bbed_line = line_number;
 			}
 			else
@@ -160,14 +160,14 @@ EditView *ev = editor.curev;
 				staterr("CFlashingCursor::erase: could not obtain line handle to update BB");
 			}
 		}
-
+		
 		BRect source(x, 0, x + (CURSOR_W - 1), CURSOR_H-1);
 		BRect dest(x, y, x + (CURSOR_W - 1), y + (CURSOR_H-1));
-
+		
 		editor.curline_bb->BlitTo(view, source, dest);
 		editor.curline_bb->Unlock();
 	}
-
+	
 	UnlockWindow();
 }
 
