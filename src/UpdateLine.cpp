@@ -195,7 +195,7 @@ int line_bottom = y + (editor.font_height-1);
 		lastch = ch;
 	}
 	
-	// dump anything still in the buffer
+	// dump anything still left in the buffer
 	if (buffer_length)
 		DUMP_BUFFER;
 	
@@ -226,7 +226,7 @@ int line_bottom = y + (editor.font_height-1);
 	}
 	
 	// if we left the line while still in selection,
-	// draw 1 extra char worth of selection
+	// draw 1 extra char worth of selection to denote that
 	if (in_selection)
 	{
 		int x = CX_TO_X(cx);
@@ -236,7 +236,7 @@ int line_bottom = y + (editor.font_height-1);
 		view->FillRect(BRect(x, y, x+(editor.font_width-1), line_bottom), B_SOLID_LOW);
 	}
 	
-	// clear the unused rest of the line
+	// clear the unused (blank) remaining portion of the line
 	int line_width = CX_TO_X(cx);
 	
 	view->SetLowColor(GetEditBGColor(COLOR_TEXT));
@@ -244,13 +244,18 @@ int line_bottom = y + (editor.font_height-1);
 	
 	// draw the "max width" guideline
 	if (editor.settings.ShowCol80Guideline)
-		DrawMaxWidthGuideline(ev, view, y);
+		DrawMaxWidthGuideline(ev, view, y, y+(editor.font_height-1));
 	
 	return (line_width + editor.curev->xscroll);
 }
 
-// performs identically to UpdateLine, except that it draws the line via the
+// performs identically to UpdateLine, except that it draws the line into the
 // "curline_bb" backbuffer and updates "editor.bbed_line".
+//
+// (the current line is backbuffered to avoid flickering and to give the
+// cursor a backbuffer to erase itself with. Backbuffering the whole screen
+// causes slowdown, so this is a compromise).
+//
 // just like UpdateLine, it's return value is the width of the line in pixels
 int UpdateLineBB(EditView *ev, BView *view, clLine *line, int y, int line_number)
 {
@@ -266,13 +271,13 @@ int line_width;
 	
 	editor.curline_bb->BlitTo(view, source, dest);
 	
-	// fill in the unused area to the right of the line
+	// fill in the blank area to the right of the line
 	view->SetLowColor(GetEditBGColor(COLOR_TEXT));
 	view->FillRect(BRect(line_width, y, editor.pxwidth-1, y+(editor.font_height-1)), B_SOLID_LOW);
 	
 	if (editor.settings.ShowCol80Guideline)
-		DrawMaxWidthGuideline(ev, view, y);
-
+		DrawMaxWidthGuideline(ev, view, y, y+(editor.font_height-1));
+	
 	editor.curline_bb->Unlock();
 	editor.bbed_line = line_number;
 	
@@ -284,11 +289,11 @@ void c------------------------------() {}
 */
 
 // draws the "tab lines" showing indentation
-void DrawTabLine(BView *view, int x, int y, int UsingColorIndex)
+void DrawTabLine(BView *view, int x, int y, int TabLineColor)
 {
 static const pattern pAlternating = { 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55 };
 
-	view->SetHighColor(GetEditColor(UsingColorIndex));
+	view->SetHighColor(GetEditColor(TabLineColor));
 	view->SetLowColor(GetEditBGColor(COLOR_TEXT));
 	
 	view->FillRect(BRect(x, y, x, y + (editor.font_height - 1)), pAlternating);
@@ -296,24 +301,27 @@ static const pattern pAlternating = { 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 
 
 
 // draw the "max width" guideline for a given line
-void DrawMaxWidthGuideline(EditView *ev, BView *view, int y)
+void DrawMaxWidthGuideline(EditView *ev, BView *view, int y1, int y2)
 {
 	int mx_x = CX_TO_X(80);
 	if (mx_x >= 0 && mx_x < editor.pxwidth)
 	{
 		view->SetHighColor(GetEditColor(COLOR_NUMBER));
-		view->StrokeLine(BPoint(mx_x, y), BPoint(mx_x, y+(editor.pxheight-1)));
+		view->StrokeLine(BPoint(mx_x, y1), BPoint(mx_x, y2));
 	}	
 }
 
 
-// clears all lines below line Y
-void CEditPane::ClearBelow(int lineNo)
+// clears all lines below the given row (relative to top of screen)
+void CEditPane::ClearBelow(EditView *ev, int lineNo)
 {
 	int y = lineNo * editor.font_height;
 	
 	SetHighColor(GetEditBGColor(COLOR_TEXT));
 	FillRect(BRect(0, y, editor.pxwidth-1, editor.pxheight-1));
+	
+	if (editor.settings.ShowCol80Guideline)
+		DrawMaxWidthGuideline(ev, this, y, editor.pxheight-1);
 }
 
 

@@ -13,7 +13,7 @@ public:
 	virtual void MouseMoved(BPoint where, uint32 transit, const BMessage *msg);
 	virtual void MouseUp(BPoint where);
 	
-	void ClearBelow(int y);
+	void ClearBelow(EditView *ev, int lineNo);
 	void SetFontSize(int newsize);
 	
 	CFlashingCursor cursor;

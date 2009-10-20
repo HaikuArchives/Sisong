@@ -771,7 +771,7 @@ char redraw_line_numbers = is_fullredraw;
 	{
 		if (ev->nlines < ev->lastnlines || is_fullredraw)
 		{
-			MainView->ClearBelow(NumVisibleLines);
+			MainView->ClearBelow(ev, NumVisibleLines);
 		}
 	}
 	
