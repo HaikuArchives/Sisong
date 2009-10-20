@@ -325,24 +325,22 @@ bool scriptEmpty = true;
 			if (editor.settings.build.JumpToErrors && \
 				MainWindow->popup.pane->IsOpen())
 			{
-				if (fAutoJumpLine != -1)
+				// scroll pane up so first error is visible
+				int y = (fAutoScrollLine - 1);
+				if (y < 0) y = 0;
+				
+				if (LockLooper())
 				{
-					// scroll pane up so first error is visible
-					int y = (fAutoScrollLine - 1);
-					if (y < 0) y = 0;
+					BListItem *item = ListView->ItemAt(0);
+					y *= (int)item->Height();
 					
-					if (LockLooper())
-					{
-						BListItem *item = ListView->ItemAt(0);
-						y *= (int)item->Height();
-						
-						ScrollView->ScrollBar(B_VERTICAL)->SetValue(y);
-						UnlockLooper();
-					}
-					
-					// now simulate a click on the first clickable line--take them right to it
-					ListView->Select(fAutoJumpLine);
+					ScrollView->ScrollBar(B_VERTICAL)->SetValue(y);
+					UnlockLooper();
 				}
+				
+				// now simulate a click on the first clickable line--take them right to it
+				if (fAutoJumpLine != -1)
+					ListView->Select(fAutoJumpLine);
 			}
 		}
 		else if (exitcode == 0 && !scriptEmpty)
@@ -549,9 +547,127 @@ static void CloseRFContext(rfContext *rf)
 	frees(rf->line);
 }
 
+static int RunRFContext(CompilePane *pane, rfContext *rf, bool from_stderr)
+{
+char ch;
+
+	int status = read(rf->fd, &ch, 1);
+	
+	if (status < 0) return 0;	// no data avail
+	if (status == 0) return 1;	// EOF
+	
+	if (ch == '\n')
+	{
+		rf->line[rf->line_len] = 0;
+		rf->line_len = 0;
+		
+		_cp_gotline(rf->line, from_stderr, pane);
+	}
+	else if (ch == TAB)
+	{
+		for(int i=0;i<4;i++)
+		{
+			if (rf->line_len >= rf->max_line_len)
+				break;
+			
+			rf->line[rf->line_len++] = ' ';
+		}
+	}
+	else if (ch != '\r')
+	{
+		if (rf->line_len < rf->max_line_len)
+			rf->line[rf->line_len++] = ch;
+	}
+	
+	return 0;
+}
+
+/*
+void c------------------------------() {}
+*/
+
+
+void _cp_gotline(const char *line, bool from_stderr, void *userparam)
+{
+CompilePane *pane = (CompilePane *)userparam;
+
+	if (from_stderr)
+	{
+		stLineInfo info;
+		ParseLineInfo(line, &info);
+		
+		// handle auto-jumping in case of errors
+		if (info.errorType != ET_NONE)
+		{
+			pane->fHasErrors = true;
+			
+			bool error_precedence = (editor.settings.build.NoJumpToWarning && \
+									 pane->fAutoScrollLineType != ET_ERROR && \
+									 info.errorType == ET_ERROR);
+			
+			// will scroll the pane up to the first line which is not "normal".
+			// errors take precedence over warnings in NoJumpToWarning mode.
+			if (pane->fAutoScrollLine == -1 || error_precedence)
+			{
+				pane->fAutoScrollLine = pane->fLineCount;
+				pane->fAutoScrollLineType = info.errorType;
+			}
+			
+			// will jump to the first non-normal line for which a line number is available.
+			// again, errors take precedence over warnings in NoJumpToWarning mode.
+			if (info.lineNo != -1)
+			{
+				bool error_precedence = (editor.settings.build.NoJumpToWarning && \
+										 pane->fAutoJumpLineType != ET_ERROR && \
+										 info.errorType == ET_ERROR);
+				
+				if (pane->fAutoJumpLine == -1 || error_precedence)
+					pane->fAutoJumpLine = pane->fLineCount;
+				
+				if (pane->fAutoJumpLine == pane->fLineCount - 1)
+				{
+					if (strstr(line, "at this point in file") || \
+						strstr(line, "within this context"))
+					{
+						pane->fAutoJumpLine = pane->fLineCount;
+						pane->fAutoJumpLineType = info.errorType;
+					}
+				}
+			}
+		}
+		
+		switch(info.errorType)
+		{
+			case ET_INFO:
+			break;
+			
+			case ET_ERROR:
+				pane->AddLine(line, color_error, (info.lineNo != -1));
+			break;
+			
+			case ET_WARNING:
+				pane->AddLine(line, color_warning, (info.lineNo != -1));
+			break;
+			
+			case ET_HEADER:
+				pane->AddLine(line, color_header, false);
+			break;
+			
+			default:
+				pane->AddLine(line, color_error, false);
+			break;
+		}
+	}
+	else
+	{
+		pane->AddLine(line, color_text, false);
+	}
+}
+
+
 // parses a line, and attempts to detect if it is a compiler error message,
 // and if so, extracts information on the error into "info".
-void ParseLineInfo(const char *line, stLineInfo *info)
+static void ParseLineInfo(const char *line, stLineInfo *info)
 {
 char *ptr;
 int length;
@@ -596,120 +712,6 @@ int length;
 			info->errorType = ET_INFO;
 		}
 	}
-}
-
-static int RunRFContext(CompilePane *pane, rfContext *rf, bool from_stderr)
-{
-char ch;
-
-	int status = read(rf->fd, &ch, 1);
-	
-	if (status < 0) return 0;	// no data avail
-	if (status == 0) return 1;	// EOF
-	
-	if (ch == '\n')
-	{
-		rf->line[rf->line_len] = 0;
-		rf->line_len = 0;
-		
-		if (from_stderr)
-		{
-			stLineInfo info;
-			ParseLineInfo(rf->line, &info);
-			
-			// handle auto-jumping in case of errors
-			if (info.errorType != ET_NONE && \
-				(info.errorType != ET_WARNING || !editor.settings.build.NoJumpToWarningAtAll))
-			{
-				if (info.errorType == ET_ERROR || info.errorType == ET_WARNING)
-				{				
-					bool error_precedence = (editor.settings.build.NoJumpToWarning && \
-											 pane->fAutoScrollLineType != ET_ERROR && \
-											 info.errorType == ET_ERROR);
-					
-					// will scroll the pane up to the first line which is not "normal".
-					// errors take precedence over warnings in NoJumpToWarning mode.
-					if (pane->fAutoScrollLine == -1 || error_precedence)
-					{
-						// subtract some to make room for ET_HEADER's
-						pane->fAutoScrollLine = pane->fLineCount - 2;
-						pane->fAutoScrollLineType = info.errorType;
-					}
-				}
-				
-				// will jump to the first non-normal line for which a line number is available.
-				// again, errors take precedence over warnings in NoJumpToWarning mode.
-				if (info.lineNo != -1)
-				{
-					bool error_precedence = (editor.settings.build.NoJumpToWarning && \
-											 pane->fAutoJumpLineType != ET_ERROR && \
-											 info.errorType == ET_ERROR);
-					
-					if (pane->fAutoJumpLine == -1 || error_precedence)
-						pane->fAutoJumpLine = pane->fLineCount;
-					
-					if (pane->fAutoJumpLine == pane->fLineCount - 1)
-					{
-						if (strstr(rf->line, "at this point in file") ||
-							strstr(rf->line, "within this context"))
-						{
-							pane->fAutoJumpLine = pane->fLineCount;
-							pane->fAutoJumpLineType = info.errorType;
-							
-							if (pane->fAutoScrollLine == -1)
-							{
-								pane->fAutoScrollLine = pane->fLineCount;
-								pane->fAutoScrollLineType = info.errorType;
-							}
-						}
-					}
-				}
-			}
-			
-			switch(info.errorType)
-			{
-				case ET_INFO:
-				break;
-				
-				case ET_ERROR:
-					pane->AddLine(rf->line, color_error, (info.lineNo != -1));
-				break;
-				
-				case ET_WARNING:
-					pane->AddLine(rf->line, color_warning, (info.lineNo != -1));
-				break;
-				
-				case ET_HEADER:
-					pane->AddLine(rf->line, color_header, false);
-				break;
-				
-				default:
-					pane->AddLine(rf->line, color_error, false);
-				break;
-			}
-		}
-		else
-		{
-			pane->AddLine(rf->line, color_text, false);
-		}
-	}
-	else if (ch == TAB)
-	{
-		for(int i=0;i<4;i++)
-		{
-			if (rf->line_len >= rf->max_line_len)
-				break;
-			
-			rf->line[rf->line_len++] = ' ';
-		}
-	}
-	else if (ch != '\r')
-	{
-		if (rf->line_len < rf->max_line_len)
-			rf->line[rf->line_len++] = ch;
-	}
-	
-	return 0;
 }
 
 void CompilePane::ItemClicked(int index)

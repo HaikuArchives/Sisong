@@ -222,7 +222,7 @@ FLResult *result;
 	if (!strcmp(funcname, "//")) goto not_a_match;
 	if (!strcmp(funcname, "/*")) goto not_a_match;
 	if (!strcmp(funcname, "catch")) goto not_a_match;
-	if (!isalnum(funcname[0])) goto not_a_match;
+	if (!isalnum(funcname[0]) && funcname[0] != '_') goto not_a_match;
 	
 	// filter out lines that are commented out with a line-comment
 	ptr = strstr(line_str, "//");
