@@ -8,7 +8,6 @@
 #include "spacer.h"
 #include "ViewTimer.h"
 #include "EditPane.h"
-#include "OffscreenBuffer.h"
 
 #define M_CURSOR_TIMER			'Tcrs'
 

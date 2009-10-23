@@ -6,6 +6,7 @@ public:
 	DBuffer();
 	~DBuffer();
 	
+	void SetTo(const uchar *data, int length);
 	void AppendData(const uchar *data, int length);
 	
 	void AppendString(const char *str);
@@ -15,6 +16,8 @@ public:
 	void AppendChar(uchar ch);
 	void Append16(ushort value);
 	void Append32(uint value);
+	
+	bool DBuffer::ReadTo(DBuffer *line, uchar ch, bool add_null=true);
 	
 	// ---------------------------------------
 	

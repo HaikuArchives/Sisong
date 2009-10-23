@@ -97,6 +97,7 @@ clLine *line;
 	
 	maxcpy(ev->filename, fname, sizeof(ev->filename) - 1);
 	maxcpy(editor.last_filepath_reference, fname, sizeof(editor.last_filepath_reference) - 1);
+	stat("loaded %d lines", ev->nlines);
 	return ev;
 }
 
@@ -157,13 +158,16 @@ EditView *ev = this;
 	undo_close(ev);
 	
 	clLine *line = ev->firstline, *next;
+	int count=0;
 	while(line)
 	{
 		next = line->next;
 		delete line;
+		count++;
 		line = next;
 	}
 	
+	stat("freed %d lines", count);
 	delete ev;
 }
 
@@ -221,7 +225,7 @@ int result;
 		}
 	}
 	
-	// user confirmed it or it wasn't dirty
+	// user confirmed it, or it wasn't dirty
 	ev->Close();
 	return need_to_save ? CEV_CLOSED_SAVED : CEV_CLOSED_NOT_SAVED;
 }

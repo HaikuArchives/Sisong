@@ -46,7 +46,12 @@ bool smal_bypass_cleanup = false;
 
 #define SMAL_TRACE	stat
 
-smalInitilizer smalInstance;
+void smal_forceinit()
+{
+	smalInitilizer *i = new smalInitilizer;
+}
+
+smalInitilizer smali;
 smalInitilizer::smalInitilizer()
 {
 	tls_file = tls_allocate();

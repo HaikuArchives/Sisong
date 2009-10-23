@@ -48,7 +48,6 @@ ViewTimer.cpp
 FontDrawer.cpp
 SubWindow.cpp
 ColoredStringItem.cpp
-OffscreenBuffer.cpp
 FunctionList.cpp
 AutoSaver.cpp
 testview.cpp
@@ -76,6 +75,7 @@ Walter/Spinner.cpp
 ../common/stat.cpp
 ../common/smal.cpp
 ../common/misc.cpp
+../common/OffscreenBuffer.cpp
 <<
 
 IComm/IShelf.cpp

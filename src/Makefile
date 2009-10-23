@@ -9,13 +9,13 @@ all: ../line
 	 draw_cursor.o LNPanel.o spacer.o cmdseq.o FindBox.o \
 	 DocPoint.o edit_mouse.o undo.o bmatch.o tabs.o \
 	 misc.o clipboard.o colors.o config.o ViewTimer.o \
-	 FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o FunctionList.o \
-	 AutoSaver.o testview.o CList.o MessageView.o NotifyUpdate.o \
-	 stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/CheckboxPreflet.o Prefs/ColorsPreflet.o \
-	 Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o \
-	 FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o \
-	 DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o \
-	 ../common/misc.o
+	 FontDrawer.o SubWindow.o ColoredStringItem.o FunctionList.o AutoSaver.o \
+	 testview.o CList.o MessageView.o NotifyUpdate.o stats.o \
+	 Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/CheckboxPreflet.o Prefs/ColorsPreflet.o Prefs/ColorItem.o \
+	 Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o FileView/QuickSearch.o \
+	 FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o DirMenu/DirMenuItem.o \
+	 ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o ../common/misc.o \
+	 ../common/OffscreenBuffer.o
 	gcc -o ../line \
 	 MainWindow.o EditArea.o EditPane.o main.o \
 	 edit.o edit_files.o edit_keys.o edit_cursor.o UpdateLine.o \
@@ -25,26 +25,26 @@ all: ../line
 	 draw_cursor.o LNPanel.o spacer.o cmdseq.o FindBox.o \
 	 DocPoint.o edit_mouse.o undo.o bmatch.o tabs.o \
 	 misc.o clipboard.o colors.o config.o ViewTimer.o \
-	 FontDrawer.o SubWindow.o ColoredStringItem.o OffscreenBuffer.o FunctionList.o \
-	 AutoSaver.o testview.o CList.o MessageView.o NotifyUpdate.o \
-	 stats.o Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/CheckboxPreflet.o Prefs/ColorsPreflet.o \
-	 Prefs/ColorItem.o Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o \
-	 FileView/QuickSearch.o FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o \
-	 DirMenu/DirMenuItem.o ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o \
-	 ../common/misc.o \
+	 FontDrawer.o SubWindow.o ColoredStringItem.o FunctionList.o AutoSaver.o \
+	 testview.o CList.o MessageView.o NotifyUpdate.o stats.o \
+	 Prefs/Prefs.o Prefs/AboutPreflet.o Prefs/CheckboxPreflet.o Prefs/ColorsPreflet.o Prefs/ColorItem.o \
+	 Prefs/ColorView.o Prefs/ShortcutsPreflet.o Prefs/StatsPreflet.o FileView/IconCache.o FileView/QuickSearch.o \
+	 FileView/FileView.o FileView/FileItem.o FileView/TitleView.o DirMenu/DirMenu.o DirMenu/DirMenuItem.o \
+	 ColorPicker/ColorPicker.o Walter/Spinner.o ../common/stat.o ../common/smal.o ../common/misc.o \
+	 ../common/OffscreenBuffer.o \
 	 -lbe -ltracker
 
 MainWindow.o:	MainWindow.cpp MainWindow.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -53,16 +53,16 @@ MainWindow.o:	MainWindow.cpp MainWindow.fdh editor.h ../common/basics.h \
 	gcc -g -c MainWindow.cpp -o MainWindow.o
 
 EditArea.o:	EditArea.cpp EditArea.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -71,16 +71,16 @@ EditArea.o:	EditArea.cpp EditArea.fdh editor.h ../common/basics.h \
 	gcc -g -c EditArea.cpp -o EditArea.o
 
 EditPane.o:	EditPane.cpp EditPane.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -89,16 +89,16 @@ EditPane.o:	EditPane.cpp EditPane.fdh editor.h ../common/basics.h \
 	gcc -g -c EditPane.cpp -o EditPane.o
 
 main.o:	main.cpp main.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -107,16 +107,16 @@ main.o:	main.cpp main.fdh editor.h ../common/basics.h \
 	gcc -g -c main.cpp -o main.o
 
 edit.o:	edit.cpp edit.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -125,16 +125,16 @@ edit.o:	edit.cpp edit.fdh editor.h ../common/basics.h \
 	gcc -g -c edit.cpp -o edit.o
 
 edit_files.o:	edit_files.cpp edit_files.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -143,16 +143,16 @@ edit_files.o:	edit_files.cpp edit_files.fdh editor.h ../common/basics.h \
 	gcc -g -c edit_files.cpp -o edit_files.o
 
 edit_keys.o:	edit_keys.cpp edit_keys.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -161,16 +161,16 @@ edit_keys.o:	edit_keys.cpp edit_keys.fdh editor.h ../common/basics.h \
 	gcc -g -c edit_keys.cpp -o edit_keys.o
 
 edit_cursor.o:	edit_cursor.cpp edit_cursor.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -179,16 +179,16 @@ edit_cursor.o:	edit_cursor.cpp edit_cursor.fdh editor.h ../common/basics.h \
 	gcc -g -c edit_cursor.cpp -o edit_cursor.o
 
 UpdateLine.o:	UpdateLine.cpp UpdateLine.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -197,16 +197,16 @@ UpdateLine.o:	UpdateLine.cpp UpdateLine.fdh editor.h ../common/basics.h \
 	gcc -g -c UpdateLine.cpp -o UpdateLine.o
 
 selection.o:	selection.cpp selection.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -215,16 +215,16 @@ selection.o:	selection.cpp selection.fdh editor.h ../common/basics.h \
 	gcc -g -c selection.cpp -o selection.o
 
 edit_actions.o:	edit_actions.cpp edit_actions.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -233,16 +233,16 @@ edit_actions.o:	edit_actions.cpp edit_actions.fdh editor.h ../common/basics.h \
 	gcc -g -c edit_actions.cpp -o edit_actions.o
 
 line.o:	line.cpp line.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -251,16 +251,16 @@ line.o:	line.cpp line.fdh editor.h ../common/basics.h \
 	gcc -g -c line.cpp -o line.o
 
 lexer.o:	lexer.cpp lexer.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -269,16 +269,16 @@ lexer.o:	lexer.cpp lexer.fdh editor.h ../common/basics.h \
 	gcc -g -c lexer.cpp -o lexer.o
 
 redraw.o:	redraw.cpp redraw.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -287,16 +287,16 @@ redraw.o:	redraw.cpp redraw.fdh editor.h ../common/basics.h \
 	gcc -g -c redraw.cpp -o redraw.o
 
 Templates.o:	Templates.cpp Templates.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -304,21 +304,20 @@ Templates.o:	Templates.cpp Templates.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h
 	gcc -g -c Templates.cpp -o Templates.o
 
-InputBox.o:	InputBox.cpp InputBox.fdh ../common/basics.h ../common/smal.h \
-		InputBox.h
+InputBox.o:	InputBox.cpp InputBox.fdh ../common/basics.h InputBox.h
 	gcc -g -c InputBox.cpp -o InputBox.o
 
 NewProject.o:	NewProject.cpp NewProject.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -329,16 +328,16 @@ NewProject.o:	NewProject.cpp NewProject.fdh editor.h ../common/basics.h \
 	gcc -g -c NewProject.cpp -o NewProject.o
 
 projects.o:	projects.cpp projects.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -347,16 +346,16 @@ projects.o:	projects.cpp projects.fdh editor.h ../common/basics.h \
 	gcc -g -c projects.cpp -o projects.o
 
 layout.o:	layout.cpp layout.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -365,16 +364,16 @@ layout.o:	layout.cpp layout.fdh editor.h ../common/basics.h \
 	gcc -g -c layout.cpp -o layout.o
 
 PopupPane.o:	PopupPane.cpp PopupPane.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -383,16 +382,16 @@ PopupPane.o:	PopupPane.cpp PopupPane.fdh editor.h ../common/basics.h \
 	gcc -g -c PopupPane.cpp -o PopupPane.o
 
 CompilePane.o:	CompilePane.cpp CompilePane.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -401,16 +400,16 @@ CompilePane.o:	CompilePane.cpp CompilePane.fdh editor.h ../common/basics.h \
 	gcc -g -c CompilePane.cpp -o CompilePane.o
 
 SearchResults.o:	SearchResults.cpp SearchResults.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -419,16 +418,16 @@ SearchResults.o:	SearchResults.cpp SearchResults.fdh editor.h ../common/basics.h
 	gcc -g -c SearchResults.cpp -o SearchResults.o
 
 BuildHelpPane.o:	BuildHelpPane.cpp BuildHelpPane.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -437,16 +436,16 @@ BuildHelpPane.o:	BuildHelpPane.cpp BuildHelpPane.fdh editor.h ../common/basics.h
 	gcc -g -c BuildHelpPane.cpp -o BuildHelpPane.o
 
 menu.o:	menu.cpp menu.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -455,16 +454,16 @@ menu.o:	menu.cpp menu.fdh editor.h ../common/basics.h \
 	gcc -g -c menu.cpp -o menu.o
 
 draw_cursor.o:	draw_cursor.cpp draw_cursor.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -473,16 +472,16 @@ draw_cursor.o:	draw_cursor.cpp draw_cursor.fdh editor.h ../common/basics.h \
 	gcc -g -c draw_cursor.cpp -o draw_cursor.o
 
 LNPanel.o:	LNPanel.cpp LNPanel.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -491,16 +490,16 @@ LNPanel.o:	LNPanel.cpp LNPanel.fdh editor.h ../common/basics.h \
 	gcc -g -c LNPanel.cpp -o LNPanel.o
 
 spacer.o:	spacer.cpp spacer.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -509,16 +508,16 @@ spacer.o:	spacer.cpp spacer.fdh editor.h ../common/basics.h \
 	gcc -g -c spacer.cpp -o spacer.o
 
 cmdseq.o:	cmdseq.cpp cmdseq.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -527,16 +526,16 @@ cmdseq.o:	cmdseq.cpp cmdseq.fdh editor.h ../common/basics.h \
 	gcc -g -c cmdseq.cpp -o cmdseq.o
 
 FindBox.o:	FindBox.cpp FindBox.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -545,16 +544,16 @@ FindBox.o:	FindBox.cpp FindBox.fdh editor.h ../common/basics.h \
 	gcc -g -c FindBox.cpp -o FindBox.o
 
 DocPoint.o:	DocPoint.cpp DocPoint.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -563,16 +562,16 @@ DocPoint.o:	DocPoint.cpp DocPoint.fdh editor.h ../common/basics.h \
 	gcc -g -c DocPoint.cpp -o DocPoint.o
 
 edit_mouse.o:	edit_mouse.cpp edit_mouse.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -581,16 +580,16 @@ edit_mouse.o:	edit_mouse.cpp edit_mouse.fdh editor.h ../common/basics.h \
 	gcc -g -c edit_mouse.cpp -o edit_mouse.o
 
 undo.o:	undo.cpp undo.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -599,16 +598,16 @@ undo.o:	undo.cpp undo.fdh editor.h ../common/basics.h \
 	gcc -g -c undo.cpp -o undo.o
 
 bmatch.o:	bmatch.cpp bmatch.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -617,16 +616,16 @@ bmatch.o:	bmatch.cpp bmatch.fdh editor.h ../common/basics.h \
 	gcc -g -c bmatch.cpp -o bmatch.o
 
 tabs.o:	tabs.cpp tabs.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -635,16 +634,16 @@ tabs.o:	tabs.cpp tabs.fdh editor.h ../common/basics.h \
 	gcc -g -c tabs.cpp -o tabs.o
 
 misc.o:	misc.cpp misc.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -653,16 +652,16 @@ misc.o:	misc.cpp misc.fdh editor.h ../common/basics.h \
 	gcc -g -c misc.cpp -o misc.o
 
 clipboard.o:	clipboard.cpp clipboard.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -671,16 +670,16 @@ clipboard.o:	clipboard.cpp clipboard.fdh editor.h ../common/basics.h \
 	gcc -g -c clipboard.cpp -o clipboard.o
 
 colors.o:	colors.cpp colors.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -688,25 +687,23 @@ colors.o:	colors.cpp colors.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h
 	gcc -g -c colors.cpp -o colors.o
 
-config.o:	config.cpp config.fdh ../common/basics.h ../common/smal.h \
-		config.h
+config.o:	config.cpp config.fdh ../common/basics.h config.h
 	gcc -g -c config.cpp -o config.o
 
-ViewTimer.o:	ViewTimer.cpp ViewTimer.fdh ViewTimer.h ../common/basics.h \
-		../common/smal.h
+ViewTimer.o:	ViewTimer.cpp ViewTimer.fdh ViewTimer.h ../common/basics.h
 	gcc -g -c ViewTimer.cpp -o ViewTimer.o
 
 FontDrawer.o:	FontDrawer.cpp FontDrawer.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -720,20 +717,17 @@ SubWindow.o:	SubWindow.cpp SubWindow.fdh SubWindow.h
 ColoredStringItem.o:	ColoredStringItem.cpp ColoredStringItem.fdh ColoredStringItem.h colors.h
 	gcc -g -c ColoredStringItem.cpp -o ColoredStringItem.o
 
-OffscreenBuffer.o:	OffscreenBuffer.cpp OffscreenBuffer.fdh OffscreenBuffer.h
-	gcc -g -c OffscreenBuffer.cpp -o OffscreenBuffer.o
-
 FunctionList.o:	FunctionList.cpp FunctionList.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -742,16 +736,16 @@ FunctionList.o:	FunctionList.cpp FunctionList.fdh editor.h ../common/basics.h \
 	gcc -g -c FunctionList.cpp -o FunctionList.o
 
 AutoSaver.o:	AutoSaver.cpp AutoSaver.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -769,16 +763,16 @@ MessageView.o:	MessageView.cpp MessageView.fdh MessageView.h
 	gcc -g -c MessageView.cpp -o MessageView.o
 
 NotifyUpdate.o:	NotifyUpdate.cpp NotifyUpdate.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -787,16 +781,16 @@ NotifyUpdate.o:	NotifyUpdate.cpp NotifyUpdate.fdh editor.h ../common/basics.h \
 	gcc -g -c NotifyUpdate.cpp -o NotifyUpdate.o
 
 stats.o:	stats.cpp stats.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -805,16 +799,16 @@ stats.o:	stats.cpp stats.fdh editor.h ../common/basics.h \
 	gcc -g -c stats.cpp -o stats.o
 
 Prefs/Prefs.o:	Prefs/Prefs.cpp Prefs/Prefs.fdh editor.h ../common/basics.h \
-		../common/smal.h SubWindow.h QListView.h \
-		MessageView.h testview.h CList.h \
-		config.h colors.h messages.h \
-		lexer.h line.h DocPoint.h \
-		FindBox.h selection.h undo.h \
-		bmatch.h clipboard.h cmdseq.h \
-		edit_cursor.h edit_mouse.h edit.h \
-		tabs.h draw.h FontDrawer.h \
-		draw_cursor.h LNPanel.h spacer.h \
-		ViewTimer.h EditPane.h OffscreenBuffer.h \
+		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
+		QListView.h MessageView.h testview.h \
+		CList.h config.h colors.h \
+		messages.h lexer.h line.h \
+		DocPoint.h FindBox.h selection.h \
+		undo.h bmatch.h clipboard.h \
+		cmdseq.h edit_cursor.h edit_mouse.h \
+		edit.h tabs.h draw.h \
+		FontDrawer.h draw_cursor.h LNPanel.h \
+		spacer.h ViewTimer.h EditPane.h \
 		menu.h main.h projects.h \
 		InputBox.h PopupPane.h SearchResults.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
@@ -827,16 +821,16 @@ Prefs/Prefs.o:	Prefs/Prefs.cpp Prefs/Prefs.fdh editor.h ../common/basics.h \
 
 Prefs/AboutPreflet.o:	Prefs/AboutPreflet.cpp Prefs/AboutPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -846,16 +840,16 @@ Prefs/AboutPreflet.o:	Prefs/AboutPreflet.cpp Prefs/AboutPreflet.fdh Prefs/Prefle
 
 Prefs/CheckboxPreflet.o:	Prefs/CheckboxPreflet.cpp Prefs/CheckboxPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -865,16 +859,16 @@ Prefs/CheckboxPreflet.o:	Prefs/CheckboxPreflet.cpp Prefs/CheckboxPreflet.fdh Pre
 
 Prefs/ColorsPreflet.o:	Prefs/ColorsPreflet.cpp Prefs/ColorsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -883,23 +877,22 @@ Prefs/ColorsPreflet.o:	Prefs/ColorsPreflet.cpp Prefs/ColorsPreflet.fdh Prefs/Pre
 		Walter/Spinner.h
 	gcc -g -c Prefs/ColorsPreflet.cpp -o Prefs/ColorsPreflet.o
 
-Prefs/ColorItem.o:	Prefs/ColorItem.cpp Prefs/ColorItem.fdh ../common/basics.h ../common/smal.h \
-		MessageView.h colors.h Prefs/ColorItem.h \
-		Prefs/ColorView.h
+Prefs/ColorItem.o:	Prefs/ColorItem.cpp Prefs/ColorItem.fdh ../common/basics.h MessageView.h \
+		colors.h Prefs/ColorItem.h Prefs/ColorView.h
 	gcc -g -c Prefs/ColorItem.cpp -o Prefs/ColorItem.o
 
 Prefs/ColorView.o:	Prefs/ColorView.cpp Prefs/ColorView.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -909,16 +902,16 @@ Prefs/ColorView.o:	Prefs/ColorView.cpp Prefs/ColorView.fdh Prefs/Preflet.h Prefs
 
 Prefs/ShortcutsPreflet.o:	Prefs/ShortcutsPreflet.cpp Prefs/ShortcutsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -928,16 +921,16 @@ Prefs/ShortcutsPreflet.o:	Prefs/ShortcutsPreflet.cpp Prefs/ShortcutsPreflet.fdh 
 
 Prefs/StatsPreflet.o:	Prefs/StatsPreflet.cpp Prefs/StatsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
-		../common/basics.h ../common/smal.h QListView.h \
-		testview.h CList.h config.h \
-		colors.h messages.h lexer.h \
-		line.h DocPoint.h FindBox.h \
-		selection.h undo.h bmatch.h \
-		clipboard.h cmdseq.h edit_cursor.h \
-		edit_mouse.h edit.h tabs.h \
-		draw.h FontDrawer.h draw_cursor.h \
-		LNPanel.h spacer.h ViewTimer.h \
-		EditPane.h OffscreenBuffer.h menu.h \
+		../common/basics.h ../common/smal.h ../common/OffscreenBuffer.h \
+		QListView.h testview.h CList.h \
+		config.h colors.h messages.h \
+		lexer.h line.h DocPoint.h \
+		FindBox.h selection.h undo.h \
+		bmatch.h clipboard.h cmdseq.h \
+		edit_cursor.h edit_mouse.h edit.h \
+		tabs.h draw.h FontDrawer.h \
+		draw_cursor.h LNPanel.h spacer.h \
+		ViewTimer.h EditPane.h menu.h \
 		main.h projects.h InputBox.h \
 		PopupPane.h SearchResults.h CompilePane.h \
 		BuildHelpPane.h FunctionList.h EditArea.h \
@@ -951,9 +944,9 @@ FileView/IconCache.o:	FileView/IconCache.cpp FileView/IconCache.fdh FileView/Ico
 FileView/QuickSearch.o:	FileView/QuickSearch.cpp FileView/QuickSearch.fdh FileView/QuickSearch.h
 	gcc -g -c FileView/QuickSearch.cpp -o FileView/QuickSearch.o
 
-FileView/FileView.o:	FileView/FileView.cpp FileView/FileView.fdh ../common/basics.h ../common/smal.h \
-		FileView/FileItem.h FileView/IconCache.h FileView/QuickSearch.h \
-		FileView/FileView.h FileView/TitleView.h
+FileView/FileView.o:	FileView/FileView.cpp FileView/FileView.fdh ../common/basics.h FileView/FileItem.h \
+		FileView/IconCache.h FileView/QuickSearch.h FileView/FileView.h \
+		FileView/TitleView.h
 	gcc -g -c FileView/FileView.cpp -o FileView/FileView.o
 
 FileView/FileItem.o:	FileView/FileItem.cpp FileView/FileItem.fdh FileView/FileItem.h FileView/IconCache.h \
@@ -964,13 +957,12 @@ FileView/TitleView.o:	FileView/TitleView.cpp FileView/TitleView.fdh FileView/Tit
 		FileView/IconCache.h FileView/QuickSearch.h
 	gcc -g -c FileView/TitleView.cpp -o FileView/TitleView.o
 
-DirMenu/DirMenu.o:	DirMenu/DirMenu.cpp DirMenu/DirMenu.fdh ../common/basics.h ../common/smal.h \
-		DirMenu/DirMenuItem.h DirMenu/DirMenu.h FileView/IconCache.h \
-		FileView/QuickSearch.h FileView/FileView.h FileView/TitleView.h
+DirMenu/DirMenu.o:	DirMenu/DirMenu.cpp DirMenu/DirMenu.fdh ../common/basics.h DirMenu/DirMenuItem.h \
+		DirMenu/DirMenu.h FileView/IconCache.h FileView/QuickSearch.h \
+		FileView/FileView.h FileView/TitleView.h
 	gcc -g -c DirMenu/DirMenu.cpp -o DirMenu/DirMenu.o
 
-DirMenu/DirMenuItem.o:	DirMenu/DirMenuItem.cpp DirMenu/DirMenuItem.fdh ../common/basics.h ../common/smal.h \
-		DirMenu/DirMenuItem.h
+DirMenu/DirMenuItem.o:	DirMenu/DirMenuItem.cpp DirMenu/DirMenuItem.fdh ../common/basics.h DirMenu/DirMenuItem.h
 	gcc -g -c DirMenu/DirMenuItem.cpp -o DirMenu/DirMenuItem.o
 
 ColorPicker/ColorPicker.o:	ColorPicker/ColorPicker.cpp ColorPicker/ColorPicker.fdh ColorPicker/ColorPicker.h SubWindow.h
@@ -979,7 +971,7 @@ ColorPicker/ColorPicker.o:	ColorPicker/ColorPicker.cpp ColorPicker/ColorPicker.f
 Walter/Spinner.o:	Walter/Spinner.cpp Walter/Spinner.fdh Walter/Spinner.h
 	gcc -g -c Walter/Spinner.cpp -o Walter/Spinner.o
 
-../common/stat.o:	../common/stat.cpp ../common/stat.fdh ../common/basics.h ../common/smal.h
+../common/stat.o:	../common/stat.cpp ../common/stat.fdh ../common/basics.h
 	gcc -g -c ../common/stat.cpp -o ../common/stat.o
 
 ../common/smal.o:	../common/smal.cpp ../common/smal.fdh ../common/smal_atree.cpp ../common/smal_atree.h \
@@ -988,6 +980,9 @@ Walter/Spinner.o:	Walter/Spinner.cpp Walter/Spinner.fdh Walter/Spinner.h
 
 ../common/misc.o:	../common/misc.cpp ../common/misc.fdh ../common/basics.h ../common/smal.h
 	gcc -g -c ../common/misc.cpp -o ../common/misc.o
+
+../common/OffscreenBuffer.o:	../common/OffscreenBuffer.cpp ../common/OffscreenBuffer.fdh ../common/OffscreenBuffer.h
+	gcc -g -c ../common/OffscreenBuffer.cpp -o ../common/OffscreenBuffer.o
 
 
 clean:
@@ -1033,7 +1028,6 @@ clean:
 	rm -f FontDrawer.o
 	rm -f SubWindow.o
 	rm -f ColoredStringItem.o
-	rm -f OffscreenBuffer.o
 	rm -f FunctionList.o
 	rm -f AutoSaver.o
 	rm -f testview.o
@@ -1061,6 +1055,7 @@ clean:
 	rm -f ../common/stat.o
 	rm -f ../common/smal.o
 	rm -f ../common/misc.o
+	rm -f ../common/OffscreenBuffer.o
 
 cleanfdh:
 	rm -f MainWindow.fdh
@@ -1105,7 +1100,6 @@ cleanfdh:
 	rm -f FontDrawer.fdh
 	rm -f SubWindow.fdh
 	rm -f ColoredStringItem.fdh
-	rm -f OffscreenBuffer.fdh
 	rm -f FunctionList.fdh
 	rm -f AutoSaver.fdh
 	rm -f testview.fdh
@@ -1133,6 +1127,7 @@ cleanfdh:
 	rm -f ../common/stat.fdh
 	rm -f ../common/smal.fdh
 	rm -f ../common/misc.fdh
+	rm -f ../common/OffscreenBuffer.fdh
 
 cleanall: clean cleanfdh
 

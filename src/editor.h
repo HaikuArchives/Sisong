@@ -34,6 +34,7 @@
 
 #include "../common/basics.h"
 #include "../common/smal.h"
+#include "../common/OffscreenBuffer.h"
 int min(int a, int b);
 int max(int a, int b);
 void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false);

@@ -19,7 +19,6 @@ CTabBar *TabBar = NULL;
 
 bool app_running = false;
 
-
 int main(int argc, char **argv)
 {
 	smal_init();
@@ -174,16 +173,6 @@ void EApp::RefsReceived(BMessage *message)
 	MainWindow->PostMessage(message);
 }
 
-void EApp::MessageReceived(BMessage *msg)
-{
-	switch(msg->what)
-	{
-		default:
-			BApplication::MessageReceived(msg);
-		break;
-	}
-}
-
 /*
 void c------------------------------() {}
 */
@@ -277,7 +266,7 @@ void SaveEditorSettings()
 	settings->SetInt("WarnHaikuGuidelines", editor.settings.WarnHaikuGuidelines);
 	settings->SetInt("EnableAutoSaver", editor.settings.EnableAutoSaver);
 	settings->SetInt("ShowCol80Guideline", editor.settings.ShowCol80Guideline);
-
+	
 	settings->SetInt("JumpToErrors", editor.settings.build.JumpToErrors);
 	settings->SetInt("NoJumpToWarning", editor.settings.build.NoJumpToWarning);
 	settings->SetInt("NoJumpToWarningAtAll", editor.settings.build.NoJumpToWarningAtAll);

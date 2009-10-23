@@ -13,6 +13,8 @@ void *resmal(void *ptr, size_t newsize);
 char *smal_strdup(const char *str);
 char *smal_strdup(const char *str, int extra);
 
+void smal_forceinit(void);
+
 extern bool smal_bypass_cleanup;
 
 
