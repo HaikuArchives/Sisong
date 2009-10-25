@@ -1,0 +1,13 @@
+
+resource app_signature "application/x-vnd.KT-Sisong";
+resource app_flags B_MULTIPLE_LAUNCH;
+
+resource app_version {
+	major  = 2,
+	middle = 16,
+	minor  = 0,
+	
+	short_info = "Sisong",
+	long_info = "Sisong IDE\n©2009 Caitlin Shaw"
+};
+

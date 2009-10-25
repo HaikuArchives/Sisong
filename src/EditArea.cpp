@@ -36,7 +36,7 @@ BRect rc;
 	rc.right = rc.left + (SPACER_WIDTH - 1);
 	spacer = new CSpacerView(rc, B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(spacer);
-
+	
 	// Command Preview panel
 	rc.left = 0;
 	rc.top = rc.bottom + 1;
@@ -59,7 +59,7 @@ BRect rc;
 	rc.top = 0;
 	VScrollbar = new DocScrollBar(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM, B_VERTICAL);
 	AddChild(VScrollbar);
-
+	
 	// Main Edit Area
 	rc.right = rc.left - 1;
 	rc.left = (SPACER_WIDTH + LN_WIDTH);
@@ -81,7 +81,7 @@ BRect rc;
 	AddChild(functionlist);
 	//shelf = new IShelfView(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM);
 	//AddChild(shelf);
-
+	
 	editpane->MakeFocus();
 }
 
@@ -99,13 +99,13 @@ void CEditArea::SetFontSize(int newsize)
 	
 	if (MainWindow->popup.searchresults)
 		MainWindow->popup.searchresults->ChangeFontSize(newsize);
-
+	
 	if (MainWindow->popup.compile)
 		MainWindow->popup.compile->ChangeFontSize(newsize);
 	
 	if (editor.curev)
 		editor.curev->FullRedrawView();
-
+	
 	editor.settings.font_size = newsize;
 	UnlockWindow();
 }
