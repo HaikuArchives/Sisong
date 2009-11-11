@@ -27,7 +27,7 @@ void c------------------------------() {}
 
 void DBuffer::AppendData(const uchar *data, int length)
 {
-	int required_size = fLength + (length - 1);
+	int required_size = fLength + length;
 	if (required_size > fAllocSize)
 	{
 		fAllocSize = (required_size * 2);
