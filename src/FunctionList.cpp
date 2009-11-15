@@ -18,7 +18,7 @@ CFunctionList::CFunctionList(BRect frame, uint32 resizingMode)
 	rc.bottom -= 1;
 	rc.right -= 1;
 	list = new BListView(rc, "functionlist_listview");
-	//list->SetResizingMode(B_FOLLOW_ALL);
+	list->SetResizingMode(B_FOLLOW_ALL);
 	
 	BFont fnt(be_plain_font);
 	fnt.SetSize(11);
