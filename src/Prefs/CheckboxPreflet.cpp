@@ -39,9 +39,15 @@ int i;
 	}
 }
 
+void CheckboxPreflet::PrefletOpening()
+{
+	fHaveAlertedAboutRestart = false;
+}
+
 void CheckboxPreflet::ReloadSettings()
 {
 int i;
+
 	for(i=0;i<fNumCheckBoxes;i++)
 	{
 		if (fCheckBox[i])
@@ -58,6 +64,7 @@ int i;
 }
 
 
+
 void CheckboxPreflet::MessageReceived(BMessage *msg)
 {
 	if (msg->what == M_CHECKBOX_CLICKED)
@@ -67,6 +74,15 @@ void CheckboxPreflet::MessageReceived(BMessage *msg)
 		{
 			bool value = fCheckBox[which]->Value();
 			*fData[which].target = value;
+			
+			if (fData[which].flags & CPF_REQUIRES_RESTART)
+			{
+				if (!fHaveAlertedAboutRestart)
+				{
+					fHaveAlertedAboutRestart = true;
+					(new BAlert("", "Please restart Sisong to apply this setting.", "OK"))->Go();
+				}
+			}
 			
 			fParent->SettingsChanged();
 			ReloadSettings();

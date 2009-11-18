@@ -30,6 +30,7 @@ public:
 	}
 	
 	virtual void ReloadSettings() { }
+	virtual void PrefletOpening() { }
 	virtual void PrefletClosing() { }
 	
 	virtual bool HaveSpecialRevert() { return false; }

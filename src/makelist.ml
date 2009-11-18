@@ -1,5 +1,5 @@
 <DEFAULT
-COMPILE=gcc -O2 -c %SRCFILE% -o %MODULE%.%OBJ_EXT%
+COMPILE=gcc -g -c %SRCFILE% -o %MODULE%.%OBJ_EXT%
 LPREFIX=gcc -o %EXEFILE%
 LSUFFIX=-lbe -ltracker
 

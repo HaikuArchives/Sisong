@@ -150,6 +150,10 @@ struct EditorData
 		bool EnableAutoSaver;
 		bool ShowCol80Guideline;
 		
+		bool ShowSpacer;
+		bool ShowLineNumbers;
+		bool FunctionListOnLeft;
+		
 		struct
 		{
 			bool JumpToErrors;

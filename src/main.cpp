@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	
 	EApp *app = new(EApp);
 	app->Run();
-
+	
     lexer_close();
 
 	SaveEditorSettings();
@@ -215,6 +215,10 @@ bool firsttime;
 	editor.settings.build.NoJumpToWarning = settings->GetInt("NoJumpToWarning", 0);
 	editor.settings.build.NoJumpToWarningAtAll = settings->GetInt("NoJumpToWarningAtAll", 0);
 	
+	editor.settings.ShowLineNumbers = settings->GetInt("ShowLineNumbers", 1);
+	editor.settings.ShowSpacer = settings->GetInt("ShowSpacer", 1);
+	editor.settings.FunctionListOnLeft = settings->GetInt("FunctionListOnLeft", 0);
+	
 	editor.stats.keystrokes_typed = settings->GetInt("keystrokes_typed", 0);
 	editor.stats.mouse_clicks = settings->GetInt("mouse_clicks", 0);
 	editor.stats.CRs_typed = settings->GetInt("CRs_typed", 0);
@@ -270,6 +274,10 @@ void SaveEditorSettings()
 	settings->SetInt("JumpToErrors", editor.settings.build.JumpToErrors);
 	settings->SetInt("NoJumpToWarning", editor.settings.build.NoJumpToWarning);
 	settings->SetInt("NoJumpToWarningAtAll", editor.settings.build.NoJumpToWarningAtAll);
+	
+	settings->SetInt("ShowLineNumbers", editor.settings.ShowLineNumbers);
+	settings->SetInt("ShowSpacer", editor.settings.ShowSpacer);
+	settings->SetInt("FunctionListOnLeft", editor.settings.FunctionListOnLeft);
 	
 	settings->SetInt("keystrokes_typed", editor.stats.keystrokes_typed);
 	settings->SetInt("mouse_clicks", editor.stats.mouse_clicks);

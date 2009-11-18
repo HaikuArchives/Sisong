@@ -50,7 +50,7 @@ MainWindow.o:	MainWindow.cpp MainWindow.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c MainWindow.cpp -o MainWindow.o
+	gcc -g -c MainWindow.cpp -o MainWindow.o
 
 EditArea.o:	EditArea.cpp EditArea.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -68,7 +68,7 @@ EditArea.o:	EditArea.cpp EditArea.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c EditArea.cpp -o EditArea.o
+	gcc -g -c EditArea.cpp -o EditArea.o
 
 EditPane.o:	EditPane.cpp EditPane.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -86,7 +86,7 @@ EditPane.o:	EditPane.cpp EditPane.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c EditPane.cpp -o EditPane.o
+	gcc -g -c EditPane.cpp -o EditPane.o
 
 main.o:	main.cpp main.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -104,7 +104,7 @@ main.o:	main.cpp main.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c main.cpp -o main.o
+	gcc -g -c main.cpp -o main.o
 
 edit.o:	edit.cpp edit.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -122,7 +122,7 @@ edit.o:	edit.cpp edit.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit.cpp -o edit.o
+	gcc -g -c edit.cpp -o edit.o
 
 edit_files.o:	edit_files.cpp edit_files.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -140,7 +140,7 @@ edit_files.o:	edit_files.cpp edit_files.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit_files.cpp -o edit_files.o
+	gcc -g -c edit_files.cpp -o edit_files.o
 
 edit_keys.o:	edit_keys.cpp edit_keys.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -158,7 +158,7 @@ edit_keys.o:	edit_keys.cpp edit_keys.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit_keys.cpp -o edit_keys.o
+	gcc -g -c edit_keys.cpp -o edit_keys.o
 
 edit_cursor.o:	edit_cursor.cpp edit_cursor.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -176,7 +176,7 @@ edit_cursor.o:	edit_cursor.cpp edit_cursor.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit_cursor.cpp -o edit_cursor.o
+	gcc -g -c edit_cursor.cpp -o edit_cursor.o
 
 UpdateLine.o:	UpdateLine.cpp UpdateLine.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -194,7 +194,7 @@ UpdateLine.o:	UpdateLine.cpp UpdateLine.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c UpdateLine.cpp -o UpdateLine.o
+	gcc -g -c UpdateLine.cpp -o UpdateLine.o
 
 selection.o:	selection.cpp selection.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -212,7 +212,7 @@ selection.o:	selection.cpp selection.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c selection.cpp -o selection.o
+	gcc -g -c selection.cpp -o selection.o
 
 edit_actions.o:	edit_actions.cpp edit_actions.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -230,7 +230,7 @@ edit_actions.o:	edit_actions.cpp edit_actions.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit_actions.cpp -o edit_actions.o
+	gcc -g -c edit_actions.cpp -o edit_actions.o
 
 line.o:	line.cpp line.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -248,7 +248,7 @@ line.o:	line.cpp line.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c line.cpp -o line.o
+	gcc -g -c line.cpp -o line.o
 
 lexer.o:	lexer.cpp lexer.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -266,7 +266,7 @@ lexer.o:	lexer.cpp lexer.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h keywords_constant.h
-	gcc -O2 -c lexer.cpp -o lexer.o
+	gcc -g -c lexer.cpp -o lexer.o
 
 redraw.o:	redraw.cpp redraw.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -284,7 +284,7 @@ redraw.o:	redraw.cpp redraw.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c redraw.cpp -o redraw.o
+	gcc -g -c redraw.cpp -o redraw.o
 
 Templates.o:	Templates.cpp Templates.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -302,10 +302,10 @@ Templates.o:	Templates.cpp Templates.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c Templates.cpp -o Templates.o
+	gcc -g -c Templates.cpp -o Templates.o
 
 InputBox.o:	InputBox.cpp InputBox.fdh ../common/basics.h InputBox.h
-	gcc -O2 -c InputBox.cpp -o InputBox.o
+	gcc -g -c InputBox.cpp -o InputBox.o
 
 NewProject.o:	NewProject.cpp NewProject.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -325,7 +325,7 @@ NewProject.o:	NewProject.cpp NewProject.fdh editor.h ../common/basics.h \
 		ColoredStringItem.h NewProject.h FileView/FileView.h \
 		FileView/TitleView.h FileView/IconCache.h FileView/QuickSearch.h \
 		DirMenu/DirMenu.h
-	gcc -O2 -c NewProject.cpp -o NewProject.o
+	gcc -g -c NewProject.cpp -o NewProject.o
 
 projects.o:	projects.cpp projects.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -343,7 +343,7 @@ projects.o:	projects.cpp projects.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c projects.cpp -o projects.o
+	gcc -g -c projects.cpp -o projects.o
 
 layout.o:	layout.cpp layout.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -361,7 +361,7 @@ layout.o:	layout.cpp layout.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c layout.cpp -o layout.o
+	gcc -g -c layout.cpp -o layout.o
 
 PopupPane.o:	PopupPane.cpp PopupPane.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -379,7 +379,7 @@ PopupPane.o:	PopupPane.cpp PopupPane.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c PopupPane.cpp -o PopupPane.o
+	gcc -g -c PopupPane.cpp -o PopupPane.o
 
 CompilePane.o:	CompilePane.cpp CompilePane.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -397,7 +397,7 @@ CompilePane.o:	CompilePane.cpp CompilePane.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h CompilePane.lh
-	gcc -O2 -c CompilePane.cpp -o CompilePane.o
+	gcc -g -c CompilePane.cpp -o CompilePane.o
 
 SearchResults.o:	SearchResults.cpp SearchResults.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -415,7 +415,7 @@ SearchResults.o:	SearchResults.cpp SearchResults.fdh editor.h ../common/basics.h
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c SearchResults.cpp -o SearchResults.o
+	gcc -g -c SearchResults.cpp -o SearchResults.o
 
 BuildHelpPane.o:	BuildHelpPane.cpp BuildHelpPane.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -433,7 +433,7 @@ BuildHelpPane.o:	BuildHelpPane.cpp BuildHelpPane.fdh editor.h ../common/basics.h
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c BuildHelpPane.cpp -o BuildHelpPane.o
+	gcc -g -c BuildHelpPane.cpp -o BuildHelpPane.o
 
 menu.o:	menu.cpp menu.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -451,7 +451,7 @@ menu.o:	menu.cpp menu.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h NewProject.h Prefs/Prefs.h
-	gcc -O2 -c menu.cpp -o menu.o
+	gcc -g -c menu.cpp -o menu.o
 
 draw_cursor.o:	draw_cursor.cpp draw_cursor.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -469,7 +469,7 @@ draw_cursor.o:	draw_cursor.cpp draw_cursor.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c draw_cursor.cpp -o draw_cursor.o
+	gcc -g -c draw_cursor.cpp -o draw_cursor.o
 
 LNPanel.o:	LNPanel.cpp LNPanel.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -487,7 +487,7 @@ LNPanel.o:	LNPanel.cpp LNPanel.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c LNPanel.cpp -o LNPanel.o
+	gcc -g -c LNPanel.cpp -o LNPanel.o
 
 spacer.o:	spacer.cpp spacer.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -505,7 +505,7 @@ spacer.o:	spacer.cpp spacer.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c spacer.cpp -o spacer.o
+	gcc -g -c spacer.cpp -o spacer.o
 
 cmdseq.o:	cmdseq.cpp cmdseq.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -523,7 +523,7 @@ cmdseq.o:	cmdseq.cpp cmdseq.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c cmdseq.cpp -o cmdseq.o
+	gcc -g -c cmdseq.cpp -o cmdseq.o
 
 FindBox.o:	FindBox.cpp FindBox.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -541,7 +541,7 @@ FindBox.o:	FindBox.cpp FindBox.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c FindBox.cpp -o FindBox.o
+	gcc -g -c FindBox.cpp -o FindBox.o
 
 DocPoint.o:	DocPoint.cpp DocPoint.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -559,7 +559,7 @@ DocPoint.o:	DocPoint.cpp DocPoint.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c DocPoint.cpp -o DocPoint.o
+	gcc -g -c DocPoint.cpp -o DocPoint.o
 
 edit_mouse.o:	edit_mouse.cpp edit_mouse.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -577,7 +577,7 @@ edit_mouse.o:	edit_mouse.cpp edit_mouse.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c edit_mouse.cpp -o edit_mouse.o
+	gcc -g -c edit_mouse.cpp -o edit_mouse.o
 
 undo.o:	undo.cpp undo.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -595,7 +595,7 @@ undo.o:	undo.cpp undo.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c undo.cpp -o undo.o
+	gcc -g -c undo.cpp -o undo.o
 
 bmatch.o:	bmatch.cpp bmatch.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -613,7 +613,7 @@ bmatch.o:	bmatch.cpp bmatch.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c bmatch.cpp -o bmatch.o
+	gcc -g -c bmatch.cpp -o bmatch.o
 
 tabs.o:	tabs.cpp tabs.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -631,7 +631,7 @@ tabs.o:	tabs.cpp tabs.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c tabs.cpp -o tabs.o
+	gcc -g -c tabs.cpp -o tabs.o
 
 misc.o:	misc.cpp misc.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -649,7 +649,7 @@ misc.o:	misc.cpp misc.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c misc.cpp -o misc.o
+	gcc -g -c misc.cpp -o misc.o
 
 clipboard.o:	clipboard.cpp clipboard.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -667,7 +667,7 @@ clipboard.o:	clipboard.cpp clipboard.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c clipboard.cpp -o clipboard.o
+	gcc -g -c clipboard.cpp -o clipboard.o
 
 colors.o:	colors.cpp colors.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -685,13 +685,13 @@ colors.o:	colors.cpp colors.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c colors.cpp -o colors.o
+	gcc -g -c colors.cpp -o colors.o
 
 config.o:	config.cpp config.fdh ../common/basics.h config.h
-	gcc -O2 -c config.cpp -o config.o
+	gcc -g -c config.cpp -o config.o
 
 ViewTimer.o:	ViewTimer.cpp ViewTimer.fdh ViewTimer.h ../common/basics.h
-	gcc -O2 -c ViewTimer.cpp -o ViewTimer.o
+	gcc -g -c ViewTimer.cpp -o ViewTimer.o
 
 FontDrawer.o:	FontDrawer.cpp FontDrawer.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -709,13 +709,13 @@ FontDrawer.o:	FontDrawer.cpp FontDrawer.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c FontDrawer.cpp -o FontDrawer.o
+	gcc -g -c FontDrawer.cpp -o FontDrawer.o
 
 SubWindow.o:	SubWindow.cpp SubWindow.fdh SubWindow.h
-	gcc -O2 -c SubWindow.cpp -o SubWindow.o
+	gcc -g -c SubWindow.cpp -o SubWindow.o
 
 ColoredStringItem.o:	ColoredStringItem.cpp ColoredStringItem.fdh ColoredStringItem.h colors.h
-	gcc -O2 -c ColoredStringItem.cpp -o ColoredStringItem.o
+	gcc -g -c ColoredStringItem.cpp -o ColoredStringItem.o
 
 FunctionList.o:	FunctionList.cpp FunctionList.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -733,7 +733,7 @@ FunctionList.o:	FunctionList.cpp FunctionList.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c FunctionList.cpp -o FunctionList.o
+	gcc -g -c FunctionList.cpp -o FunctionList.o
 
 AutoSaver.o:	AutoSaver.cpp AutoSaver.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -751,16 +751,16 @@ AutoSaver.o:	AutoSaver.cpp AutoSaver.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c AutoSaver.cpp -o AutoSaver.o
+	gcc -g -c AutoSaver.cpp -o AutoSaver.o
 
 testview.o:	testview.cpp testview.fdh testview.h
-	gcc -O2 -c testview.cpp -o testview.o
+	gcc -g -c testview.cpp -o testview.o
 
 CList.o:	CList.cpp CList.fdh CList.h
-	gcc -O2 -c CList.cpp -o CList.o
+	gcc -g -c CList.cpp -o CList.o
 
 MessageView.o:	MessageView.cpp MessageView.fdh MessageView.h
-	gcc -O2 -c MessageView.cpp -o MessageView.o
+	gcc -g -c MessageView.cpp -o MessageView.o
 
 NotifyUpdate.o:	NotifyUpdate.cpp NotifyUpdate.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -778,7 +778,7 @@ NotifyUpdate.o:	NotifyUpdate.cpp NotifyUpdate.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c NotifyUpdate.cpp -o NotifyUpdate.o
+	gcc -g -c NotifyUpdate.cpp -o NotifyUpdate.o
 
 stats.o:	stats.cpp stats.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -796,7 +796,7 @@ stats.o:	stats.cpp stats.fdh editor.h ../common/basics.h \
 		CompilePane.h BuildHelpPane.h FunctionList.h \
 		EditArea.h IComm/IShelf.h MainWindow.h \
 		ColoredStringItem.h
-	gcc -O2 -c stats.cpp -o stats.o
+	gcc -g -c stats.cpp -o stats.o
 
 Prefs/Prefs.o:	Prefs/Prefs.cpp Prefs/Prefs.fdh editor.h ../common/basics.h \
 		../common/smal.h ../common/OffscreenBuffer.h SubWindow.h \
@@ -817,7 +817,7 @@ Prefs/Prefs.o:	Prefs/Prefs.cpp Prefs/Prefs.fdh editor.h ../common/basics.h \
 		Prefs/AboutPreflet.h Prefs/CheckboxPreflet.h Prefs/ColorsPreflet.h \
 		Prefs/ColorView.h Prefs/ColorItem.h Walter/Spinner.h \
 		Prefs/ShortcutsPreflet.h Prefs/StatsPreflet.h
-	gcc -O2 -c Prefs/Prefs.cpp -o Prefs/Prefs.o
+	gcc -g -c Prefs/Prefs.cpp -o Prefs/Prefs.o
 
 Prefs/AboutPreflet.o:	Prefs/AboutPreflet.cpp Prefs/AboutPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -836,7 +836,7 @@ Prefs/AboutPreflet.o:	Prefs/AboutPreflet.cpp Prefs/AboutPreflet.fdh Prefs/Prefle
 		BuildHelpPane.h FunctionList.h EditArea.h \
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/AboutPreflet.h
-	gcc -O2 -c Prefs/AboutPreflet.cpp -o Prefs/AboutPreflet.o
+	gcc -g -c Prefs/AboutPreflet.cpp -o Prefs/AboutPreflet.o
 
 Prefs/CheckboxPreflet.o:	Prefs/CheckboxPreflet.cpp Prefs/CheckboxPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -855,7 +855,7 @@ Prefs/CheckboxPreflet.o:	Prefs/CheckboxPreflet.cpp Prefs/CheckboxPreflet.fdh Pre
 		BuildHelpPane.h FunctionList.h EditArea.h \
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/CheckboxPreflet.h
-	gcc -O2 -c Prefs/CheckboxPreflet.cpp -o Prefs/CheckboxPreflet.o
+	gcc -g -c Prefs/CheckboxPreflet.cpp -o Prefs/CheckboxPreflet.o
 
 Prefs/ColorsPreflet.o:	Prefs/ColorsPreflet.cpp Prefs/ColorsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -875,11 +875,11 @@ Prefs/ColorsPreflet.o:	Prefs/ColorsPreflet.cpp Prefs/ColorsPreflet.fdh Prefs/Pre
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/ColorsPreflet.h Prefs/ColorView.h Prefs/ColorItem.h \
 		Walter/Spinner.h
-	gcc -O2 -c Prefs/ColorsPreflet.cpp -o Prefs/ColorsPreflet.o
+	gcc -g -c Prefs/ColorsPreflet.cpp -o Prefs/ColorsPreflet.o
 
 Prefs/ColorItem.o:	Prefs/ColorItem.cpp Prefs/ColorItem.fdh ../common/basics.h MessageView.h \
 		colors.h Prefs/ColorItem.h Prefs/ColorView.h
-	gcc -O2 -c Prefs/ColorItem.cpp -o Prefs/ColorItem.o
+	gcc -g -c Prefs/ColorItem.cpp -o Prefs/ColorItem.o
 
 Prefs/ColorView.o:	Prefs/ColorView.cpp Prefs/ColorView.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -898,7 +898,7 @@ Prefs/ColorView.o:	Prefs/ColorView.cpp Prefs/ColorView.fdh Prefs/Preflet.h Prefs
 		BuildHelpPane.h FunctionList.h EditArea.h \
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/ColorItem.h Prefs/ColorView.h ColorPicker/ColorPicker.h
-	gcc -O2 -c Prefs/ColorView.cpp -o Prefs/ColorView.o
+	gcc -g -c Prefs/ColorView.cpp -o Prefs/ColorView.o
 
 Prefs/ShortcutsPreflet.o:	Prefs/ShortcutsPreflet.cpp Prefs/ShortcutsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -917,7 +917,7 @@ Prefs/ShortcutsPreflet.o:	Prefs/ShortcutsPreflet.cpp Prefs/ShortcutsPreflet.fdh 
 		BuildHelpPane.h FunctionList.h EditArea.h \
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/ShortcutsPreflet.h
-	gcc -O2 -c Prefs/ShortcutsPreflet.cpp -o Prefs/ShortcutsPreflet.o
+	gcc -g -c Prefs/ShortcutsPreflet.cpp -o Prefs/ShortcutsPreflet.o
 
 Prefs/StatsPreflet.o:	Prefs/StatsPreflet.cpp Prefs/StatsPreflet.fdh Prefs/Preflet.h Prefs/Prefs.h \
 		SubWindow.h MessageView.h editor.h \
@@ -936,53 +936,53 @@ Prefs/StatsPreflet.o:	Prefs/StatsPreflet.cpp Prefs/StatsPreflet.fdh Prefs/Prefle
 		BuildHelpPane.h FunctionList.h EditArea.h \
 		IComm/IShelf.h MainWindow.h ColoredStringItem.h \
 		Prefs/StatsPreflet.h
-	gcc -O2 -c Prefs/StatsPreflet.cpp -o Prefs/StatsPreflet.o
+	gcc -g -c Prefs/StatsPreflet.cpp -o Prefs/StatsPreflet.o
 
 FileView/IconCache.o:	FileView/IconCache.cpp FileView/IconCache.fdh FileView/IconCache.h FileView/QuickSearch.h
-	gcc -O2 -c FileView/IconCache.cpp -o FileView/IconCache.o
+	gcc -g -c FileView/IconCache.cpp -o FileView/IconCache.o
 
 FileView/QuickSearch.o:	FileView/QuickSearch.cpp FileView/QuickSearch.fdh FileView/QuickSearch.h
-	gcc -O2 -c FileView/QuickSearch.cpp -o FileView/QuickSearch.o
+	gcc -g -c FileView/QuickSearch.cpp -o FileView/QuickSearch.o
 
 FileView/FileView.o:	FileView/FileView.cpp FileView/FileView.fdh ../common/basics.h FileView/FileItem.h \
 		FileView/IconCache.h FileView/QuickSearch.h FileView/FileView.h \
 		FileView/TitleView.h
-	gcc -O2 -c FileView/FileView.cpp -o FileView/FileView.o
+	gcc -g -c FileView/FileView.cpp -o FileView/FileView.o
 
 FileView/FileItem.o:	FileView/FileItem.cpp FileView/FileItem.fdh FileView/FileItem.h FileView/IconCache.h \
 		FileView/QuickSearch.h
-	gcc -O2 -c FileView/FileItem.cpp -o FileView/FileItem.o
+	gcc -g -c FileView/FileItem.cpp -o FileView/FileItem.o
 
 FileView/TitleView.o:	FileView/TitleView.cpp FileView/TitleView.fdh FileView/TitleView.h FileView/FileItem.h \
 		FileView/IconCache.h FileView/QuickSearch.h
-	gcc -O2 -c FileView/TitleView.cpp -o FileView/TitleView.o
+	gcc -g -c FileView/TitleView.cpp -o FileView/TitleView.o
 
 DirMenu/DirMenu.o:	DirMenu/DirMenu.cpp DirMenu/DirMenu.fdh ../common/basics.h DirMenu/DirMenuItem.h \
 		DirMenu/DirMenu.h FileView/IconCache.h FileView/QuickSearch.h \
 		FileView/FileView.h FileView/TitleView.h
-	gcc -O2 -c DirMenu/DirMenu.cpp -o DirMenu/DirMenu.o
+	gcc -g -c DirMenu/DirMenu.cpp -o DirMenu/DirMenu.o
 
 DirMenu/DirMenuItem.o:	DirMenu/DirMenuItem.cpp DirMenu/DirMenuItem.fdh ../common/basics.h DirMenu/DirMenuItem.h
-	gcc -O2 -c DirMenu/DirMenuItem.cpp -o DirMenu/DirMenuItem.o
+	gcc -g -c DirMenu/DirMenuItem.cpp -o DirMenu/DirMenuItem.o
 
 ColorPicker/ColorPicker.o:	ColorPicker/ColorPicker.cpp ColorPicker/ColorPicker.fdh ColorPicker/ColorPicker.h SubWindow.h
-	gcc -O2 -c ColorPicker/ColorPicker.cpp -o ColorPicker/ColorPicker.o
+	gcc -g -c ColorPicker/ColorPicker.cpp -o ColorPicker/ColorPicker.o
 
 Walter/Spinner.o:	Walter/Spinner.cpp Walter/Spinner.fdh Walter/Spinner.h
-	gcc -O2 -c Walter/Spinner.cpp -o Walter/Spinner.o
+	gcc -g -c Walter/Spinner.cpp -o Walter/Spinner.o
 
 ../common/stat.o:	../common/stat.cpp ../common/stat.fdh ../common/basics.h
-	gcc -O2 -c ../common/stat.cpp -o ../common/stat.o
+	gcc -g -c ../common/stat.cpp -o ../common/stat.o
 
 ../common/smal.o:	../common/smal.cpp ../common/smal.fdh ../common/smal_atree.cpp ../common/smal_atree.h \
 		../common/smal.lh
-	gcc -O2 -c ../common/smal.cpp -o ../common/smal.o
+	gcc -g -c ../common/smal.cpp -o ../common/smal.o
 
 ../common/misc.o:	../common/misc.cpp ../common/misc.fdh ../common/basics.h ../common/smal.h
-	gcc -O2 -c ../common/misc.cpp -o ../common/misc.o
+	gcc -g -c ../common/misc.cpp -o ../common/misc.o
 
 ../common/OffscreenBuffer.o:	../common/OffscreenBuffer.cpp ../common/OffscreenBuffer.fdh ../common/OffscreenBuffer.h
-	gcc -O2 -c ../common/OffscreenBuffer.cpp -o ../common/OffscreenBuffer.o
+	gcc -g -c ../common/OffscreenBuffer.cpp -o ../common/OffscreenBuffer.o
 
 
 clean:

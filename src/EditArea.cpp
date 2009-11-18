@@ -23,25 +23,37 @@ BRect rc;
 	mainbo.right -= (SBAR_SIZE + FL_WIDTH);
 	
 	/* create controls */
+	int spacer_width = editor.settings.ShowSpacer ? SPACER_WIDTH : 1;
+	int ln_width = editor.settings.ShowLineNumbers ? LN_WIDTH : 0;
 	
+	int area_lrmode = B_FOLLOW_LEFT;
+	int fl_lrmode = B_FOLLOW_RIGHT;
+	
+	if (editor.settings.FunctionListOnLeft)
+	{
+		mainbo.OffsetBy(FL_WIDTH, 0);
+		SWAP(area_lrmode, fl_lrmode);
+	}
+	
+
 	// Line Numbers view
 	rc = mainbo;
-	rc.right = LN_WIDTH-1;
+	rc.right = rc.left + (ln_width - 1);
 	ln = new LNPanel(rc, B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(ln);
 	
 	// Spacer
 	rc = mainbo;
-	rc.left = LN_WIDTH;
-	rc.right = rc.left + (SPACER_WIDTH - 1);
+	rc.left = mainbo.left + ln_width;
+	rc.right = rc.left + (spacer_width - 1);
 	spacer = new CSpacerView(rc, B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(spacer);
 	
 	// Command Preview panel
-	rc.left = 0;
+	rc.left = mainbo.left;
 	rc.top = rc.bottom + 1;
 	rc.bottom = bo.bottom;
-	rc.right = LN_WIDTH-1;
+	rc.right = rc.left+ln_width-1;
 	cmd_preview = new BStringView(rc, "cmdp", "", B_FOLLOW_LEFT | B_FOLLOW_BOTTOM);
 	cmd_preview->SetAlignment(B_ALIGN_RIGHT);
 	AddChild(cmd_preview);
@@ -49,7 +61,7 @@ BRect rc;
 	// Horizontal Scrollbar
 	rc.left = rc.right + 1;
 	rc.right = mainbo.right;
-	HScrollbar = new DocScrollBar(rc, B_FOLLOW_LEFT_RIGHT | B_FOLLOW_BOTTOM, B_HORIZONTAL);
+	HScrollbar = new DocScrollBar(rc, B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_HORIZONTAL);
 	AddChild(HScrollbar);
 	
 	// Vertical Scrollbar
@@ -62,7 +74,7 @@ BRect rc;
 	
 	// Main Edit Area
 	rc.right = rc.left - 1;
-	rc.left = (SPACER_WIDTH + LN_WIDTH);
+	rc.left = mainbo.left + (spacer_width + ln_width);
 	editpane = new CEditPane(rc, B_FOLLOW_ALL);
 	AddChild(editpane);
 	
@@ -75,13 +87,20 @@ BRect rc;
 	AddChild(ScrollbarCorner);
 	
 	// function list
-	rc = bo;
-	rc.left = mainbo.right + SBAR_SIZE + 1;
-	functionlist = new CFunctionList(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM);
-	AddChild(functionlist);
-	//shelf = new IShelfView(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM);
-	//AddChild(shelf);
+	if (editor.settings.FunctionListOnLeft)
+	{
+		rc = Bounds();
+		rc.right = FL_WIDTH - 1;
+	}
+	else
+	{
+		rc = bo;
+		rc.left = mainbo.right + SBAR_SIZE + 1;
+	}
 	
+	functionlist = new CFunctionList(rc, fl_lrmode | B_FOLLOW_TOP_BOTTOM);
+	AddChild(functionlist);
+
 	editpane->MakeFocus();
 }
 

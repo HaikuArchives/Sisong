@@ -20,41 +20,45 @@ PrefsWindow *CurrentPrefsWindow = NULL;
 // prefs data for checkboxes (move this somewhere else maybe)
 static CheckboxPrefletData GeneralPanelData[] =
 {
-	"Auto-indent on block open", &editor.settings.smart_indent_on_open, NULL, 0,
-	"Auto-outdent on block close", &editor.settings.smart_indent_on_close, NULL, 0,
-	"Do not auto-indent from baselevel", &editor.settings.no_smart_open_at_baselevel, &editor.settings.smart_indent_on_open, 0,
-	"Smart auto-indenting for \"switch\" statement", &editor.settings.language_aware_indent, &editor.settings.smart_indent_on_open, 0,
-	"", NULL, NULL, 0,
-	"Draw Tab Lines", &editor.settings.DrawTabLines, NULL, 0,
-	"Do Brace Matching", &editor.settings.DoBraceMatching, NULL, 0,
-	"Disable Lexer", &editor.settings.DisableLexer, NULL, 0,
-	"Use I-Beam cursor", &editor.settings.use_ibeam_cursor, NULL, 0,
-	"Show Build Help", &editor.settings.ShowBuildHelp, NULL, 0,
-	"Notify if update available", &editor.settings.CheckForUpdate, NULL, 0,
+	"Auto-indent on block open", &editor.settings.smart_indent_on_open, NULL, 0, 0,
+	"Auto-outdent on block close", &editor.settings.smart_indent_on_close, NULL, 0, 0,
+	"Do not auto-indent from baselevel", &editor.settings.no_smart_open_at_baselevel, &editor.settings.smart_indent_on_open, 0, 0,
+	"Smart auto-indenting for \"switch\" statement", &editor.settings.language_aware_indent, &editor.settings.smart_indent_on_open, 0, 0,
+	"", NULL, NULL, 0, 0,
+	"Draw Tab Lines", &editor.settings.DrawTabLines, NULL, 0, 0,
+	"Do Brace Matching", &editor.settings.DoBraceMatching, NULL, 0, 0,
+	"Disable Lexer", &editor.settings.DisableLexer, NULL, 0, 0,
+	"Use I-Beam cursor", &editor.settings.use_ibeam_cursor, NULL, 0, 0,
+	"Show Build Help", &editor.settings.ShowBuildHelp, NULL, 0, 0,
+	"Notify if update available", &editor.settings.CheckForUpdate, NULL, 0, 0,
 	
-	NULL, NULL, NULL, 0
+	NULL, NULL, NULL, 0, 0
 };
 
 static CheckboxPrefletData MiscPanelData[] =
 {
-	"Fix gaps in indentation when opening", &editor.settings.FixIndentationGaps, NULL, 0,
-	"Trim trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0,
-	"... but leave lines which are ONLY whitespace alone", &editor.settings.TTExceptBlankLines, &editor.settings.TrimTrailingOnSave, 0,
-	"Periodically auto-save to /boot/var/tmp/Sisong", &editor.settings.EnableAutoSaver, NULL, 0,
-	"", NULL, NULL, 0,
-	"Show guideline at 80 chars", &editor.settings.ShowCol80Guideline, NULL, 0,
+	"Fix gaps in indentation when opening", &editor.settings.FixIndentationGaps, NULL, 0, 0,
+	"Trim trailing whitespace when saving", &editor.settings.TrimTrailingOnSave, NULL, 0, 0,
+	"... but leave lines which are ONLY whitespace alone", &editor.settings.TTExceptBlankLines, &editor.settings.TrimTrailingOnSave, 0, 0,
+	"Periodically auto-save to /boot/var/tmp/Sisong", &editor.settings.EnableAutoSaver, NULL, 0, 0,
+	"", NULL, NULL, 0, 0,
+	"Show guideline at 80 chars", &editor.settings.ShowCol80Guideline, NULL, 0, 0,
+	
+	"Show line numbers", &editor.settings.ShowLineNumbers, NULL, 0, CPF_REQUIRES_RESTART,
+	"Show Spacer", &editor.settings.ShowSpacer, NULL, 0, CPF_REQUIRES_RESTART,
+	"Function List on left", &editor.settings.FunctionListOnLeft, NULL, 0, CPF_REQUIRES_RESTART,
 	//"Warn if code doesn't match Haiku Coding Guidelines", &editor.settings.WarnHaikuGuidelines, NULL, 0,
 	
-	NULL, NULL, NULL, 0
+	NULL, NULL, NULL, 0, 0
 };
 
 static CheckboxPrefletData BuildPanelData[] =
 {
-	"Auto-jump to first error/warning", &editor.settings.build.JumpToErrors, NULL, 0,
-	"Favor errors over warnings when auto-jumping", &editor.settings.build.NoJumpToWarning, &editor.settings.build.JumpToErrors, 0,
-	"Don't auto-jump to warnings at all", &editor.settings.build.NoJumpToWarningAtAll, &editor.settings.build.JumpToErrors, 0,
+	"Auto-jump to first error/warning", &editor.settings.build.JumpToErrors, NULL, 0, 0,
+	"Favor errors over warnings when auto-jumping", &editor.settings.build.NoJumpToWarning, &editor.settings.build.JumpToErrors, 0, 0,
+	"Don't auto-jump to warnings at all", &editor.settings.build.NoJumpToWarningAtAll, &editor.settings.build.JumpToErrors, 0, 0,
 	
-	 NULL, NULL, NULL, 0
+	 NULL, NULL, NULL, 0, 0
 };
 
 
@@ -212,6 +216,7 @@ void PrefsWindow::MessageReceived(BMessage *message)
 				
 				if (fContainerContents)
 				{
+					fContainerContents->PrefletOpening();
 					fContainerContents->ReloadSettings();
 					fContainer->AddChild(fContainerContents);
 				}
