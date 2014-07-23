@@ -1,3 +1,5 @@
+#ifndef CMDSEQ_H
+#define CMDSEQ_H
 
 typedef struct CmdSeqData
 {
@@ -7,3 +9,7 @@ typedef struct CmdSeqData
 	char *buffer;
 	int nchars;
 };
+
+bool IsCommand(char *command, int *message);
+
+#endif

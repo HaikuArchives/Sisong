@@ -1,6 +1,11 @@
 
 #include "editor.h"
-#include "line.fdh"
+#include "line.h"
+
+#include "misc.h"
+#include "misc2.h"
+#include "smal.h"
+#include "lexer.h"
 
 // initial size of the gap
 #define GAP_SIZE		32

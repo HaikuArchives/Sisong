@@ -2,7 +2,10 @@
 #include "editor.h"
 #include <Path.h>
 #include <Entry.h>
-#include "AutoSaver.fdh"
+#include "AutoSaver.h"
+
+#include "misc.h"
+#include "misc2.h"
 
 static int LastAutoSave = 0;
 static int Timer = 0;
@@ -83,7 +86,7 @@ char str_num[50];
 
 	// get path where autosaved files are stored
 	char dir[MAXPATHLEN];
-	find_directory(B_COMMON_TEMP_DIRECTORY, 0, true, dir, sizeof(dir) - 20);
+	find_directory(B_SYSTEM_TEMP_DIRECTORY, 0, true, dir, sizeof(dir) - 20);
 	AddSuffixIfMissing(dir, '/');
 	strcat(dir, "Sisong/");
 

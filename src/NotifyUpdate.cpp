@@ -11,7 +11,7 @@
 	and if so, pops it up in a BAlert.
 */
 #include "editor.h"
-#include "NotifyUpdate.fdh"
+#include "NotifyUpdate.h"
 #include <sys/wait.h>
 
 namespace UpdateCheck {
@@ -31,7 +31,7 @@ char line[1024];
 	
 	// get temp file name
 	char tmpfilename[MAXPATHLEN];
-	find_directory(B_COMMON_TEMP_DIRECTORY, 0, true, tmpfilename, MAXPATHLEN-32);
+	find_directory(B_SYSTEM_TEMP_DIRECTORY, 0, true, tmpfilename, MAXPATHLEN-32);
 	int len = strlen(tmpfilename);
 	if (len && tmpfilename[len-1] != '/') strcat(tmpfilename, "/");
 	strcat(tmpfilename, "ucheck");

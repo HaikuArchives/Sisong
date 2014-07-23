@@ -35,12 +35,7 @@
 #include "../common/basics.h"
 #include "../common/smal.h"
 #include "../common/OffscreenBuffer.h"
-int min(int a, int b);
-int max(int a, int b);
-void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false);
-const char *GetFileSpec(const char *file_and_path);
-bool strbegin(const char *bigstr, const char *smallstr);
-void Unimplemented(void);
+#include "../common/misc.h"
 
 class EditView;
 extern int ignore_scrollbars;	//weee! i'm crazy edd and i love hacks!!! ba la la la!
@@ -81,6 +76,8 @@ extern int ignore_scrollbars;	//weee! i'm crazy edd and i love hacks!!! ba la la
 #include "EditArea.h"
 #include "MainWindow.h"
 #include "ColoredStringItem.h"
+
+class CMainWindow;
 
 extern CMainWindow *MainWindow;
 extern CEditPane *MainView;

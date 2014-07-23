@@ -1,6 +1,11 @@
 
-#include "editor.h"
-#include "edit.fdh"
+#include "edit.h"
+#include "misc.h"
+#include "misc2.h"
+#include "redraw.h"
+#include "EditArea.h"
+#include "main.h"
+#include "UpdateLine.h"
 
 
 EditView::EditView()

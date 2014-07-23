@@ -1,3 +1,17 @@
+#ifndef FINDBOX_H
+#define FINDBOX_H
+
+#include <View.h>
+#include <Rect.h>
+#include <CheckBox.h>
+#include <TextControl.h>
+#include <Button.h>
+#include <TabView.h>
+#include <Point.h>
+#include <Window.h>
+
+#include "SearchData.h"
+#include "edit.h"
 
 // values for mode parameter of constructor
 #define FINDBOX_FIND		0
@@ -82,10 +96,26 @@ private:
 };
 
 
-typedef struct SearchData
-{
-	char *lastSearch;
-	char *lastReplaceWith;
-	int lastOptions;
-};
+CFindBox *GetCurrentFindBox();
+int DoInteractiveReplace(EditView *ev, const char *search_string, const char *replace_string, int options, bool *canceled);
+static void SetPromptPos(BAlert *prompt, EditView *ev, int y);
+int DoReplaceAll(EditView *ev, const char *search_string, const char *replace_string, int options);
+int DoReplaceAllInAll(const char *search_string, const char *replace_string, int options);
+int DoFindNext(const char *search_string, int options);
+int SelectHit(const char *search_string, DocPoint hit_start, int options);
+int DoFindAllInAll(const char *search_string, int options);
+int DoFindAll(EditView *ev, const char *search_string, int options, bool clear_window_first);
+void AddSearchResult(const char *filename, int x, int y, const char *linestr, const char *search_string);
+int DoFindInFiles(const char *search_string, const char *folder, const char *filter, int options, bool recursive);
+int SearchInFile(const char *filename, const char *search_string, int options);
+DocPoint find_next_hit(EditView *ev, DocPoint start, const char *search_string, uint options);
+DocPoint find_prev_hit(EditView *ev, DocPoint start, const char *search_string, uint options);
+char *(*GetStringScanner(int options))(const char *, const char *, int);
+char *normal_strstr(const char *haystack, const char *needle, int needle_length);
+char *normal_strcasestr(const char *haystack, const char *needle, int needle_length);
+char *wholeword_strstr(const char *haystack, const char *needle, int needle_length);
+char *wholeword_strcasestr(const char *haystack, const char *needle, int needle_length);
+char *wholeword_common(const char *haystack, const char *needle, int needle_length, char *(*StringScanner)(const char *haystack, const char *needle));
 
+
+#endif // FINDBOX_H

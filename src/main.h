@@ -1,4 +1,5 @@
-
+#ifndef MAIN_H
+#define MAIN_H
 
 // the application class
 class EApp : public BApplication
@@ -10,4 +11,9 @@ public:
 	void RefsReceived(BMessage *message);
 };
 
+void LoadEditorSettings();
+void SaveEditorSettings();
+void LockWindow();
+void UnlockWindow();
 
+#endif // MAIN_H

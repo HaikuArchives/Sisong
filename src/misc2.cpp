@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "misc.fdh"
+#include "misc2.h"
 #include <Beep.h>
 
 // centers window "child" within window "parent"

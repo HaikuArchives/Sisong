@@ -1,6 +1,10 @@
 
 #include "editor.h"
-#include "edit_keys.fdh"
+#include "edit_keys.h"
+
+#include "misc.h"
+#include "misc2.h"
+#include "stat.h"
 
 // this key can extend or create a selection if it is pushed with SHIFT down,
 // and removes the selection if it is pressed without SHIFT down.
@@ -657,7 +661,7 @@ int old_cy;
 		BeginUndoGroup(ev);
 		GetSelectionExtents(ev, &x1, &y1, &x2, &y2);
 		
-		lstat(" ** SelDel from [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+		lstat2(" ** SelDel from [%d,%d] - [%d,%d]", x1, y1, x2, y2);
 		
 		// remember current screen position of cursor
 		old_cy = ev->cursor.screen_y;

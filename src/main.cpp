@@ -1,7 +1,8 @@
 
 #include "editor.h"
-#include "main.fdh"
+#include "main.h"
 #include <Screen.h>
+#include "edit_files.h"
 
 EditorData editor;
 CProjectManager ProjectManager;

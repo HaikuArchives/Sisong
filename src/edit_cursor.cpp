@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "edit_cursor.fdh"
+#include "edit_cursor.h"
 
 /*
 	left

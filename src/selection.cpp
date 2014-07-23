@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "selection.fdh"
+#include "selection.h"
 
 // opens a selection anchored at the current cursor position.
 void selection_create(EditView *ev)

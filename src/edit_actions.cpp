@@ -1,6 +1,11 @@
 
 #include "editor.h"
-#include "edit_actions.fdh"
+#include "edit_actions.h"
+
+#include "misc.h"
+#include "misc2.h"
+#include "stat.h"
+#include "redraw.h"
 
 // inserts a character at the given position.
 void EditView::action_insert_char(int x, int y, char ch)
@@ -149,7 +154,7 @@ char hit_cr = 0;
 	if (count == 0)
 		return;
 
-	lstat("action_delete_right: [%d,%d] %d", x, y, count);
+	lstat2("action_delete_right: [%d,%d] %d", x, y, count);
 	ev->SetDirty();
 	
 	line = ev->GetLineHandle(y);
@@ -207,7 +212,7 @@ clLine *line, *line1, *line2;
 int y;
 char not_wrapped = 1;
 
-	lstat("action_delete_range: [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+	lstat2("action_delete_range: [%d,%d] - [%d,%d]", x1, y1, x2, y2);
 	ev->SetDirty();
 	
 	// save the to-be-deleted data to the undo buffer

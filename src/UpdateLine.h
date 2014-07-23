@@ -8,19 +8,3 @@ int UpdateLine(EditView *ev, BView *view, clLine *line, int y, int line_number);
 int UpdateLineBB(EditView *ev, BView *view, clLine *line, int y, int line_number);
 void DrawTabLine(BView *view, int x, int y, int TabLineColor);
 void DrawMaxWidthGuideline(EditView *ev, BView *view, int y1, int y2);
-
-
-/* located in selection.cpp */
-
-//------------------[referenced from UpdateLine.cpp]-----------------//
-char selection_IsPointWithin(EditView *ev, int lineno, int x);
-
-
-/* located in colors.cpp */
-
-//------------------[referenced from UpdateLine.cpp]-----------------//
-rgb_color GetEditFGColor(int colorNum);
-rgb_color GetEditBGColor(int colorNum);
-bool GetColorBoldState(int colorNum);
-rgb_color GetEditColor(int colorNum);
-

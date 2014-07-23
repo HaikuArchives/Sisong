@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "undo.fdh"
+#include "undo.h"
 
 void undo_init(EditView *ev)
 {

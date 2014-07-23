@@ -1,8 +1,13 @@
 
+#include "FindBox.h"
 #include "editor.h"
 #include <cctype>	// "isalnum"
 #include <Screen.h>
-#include "FindBox.fdh"
+#include "undo.h"
+
+#include "misc.h"
+#include "misc2.h"
+
 
 #define BOX_WIDTH	505
 #define BOX_HEIGHT	225

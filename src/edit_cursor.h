@@ -1,3 +1,5 @@
+#ifndef EDIT_CURSOR_H
+#define EDIT_CURSOR_H
 
 // cursor handling
 class EditCursor
@@ -39,4 +41,7 @@ public:
 	void set_mode(int newmode);
 	char *DescribeMode();
 };
-	
+
+void UpdateCursorPos(EditView *ev);
+
+#endif // EDIT_CURSOR_H

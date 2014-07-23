@@ -5,7 +5,7 @@
 */
 
 #include "editor.h"
-#include "EditArea.fdh"
+#include "EditArea.h"
 
 
 CEditArea::CEditArea(BRect frame, uint32 resizingMode)

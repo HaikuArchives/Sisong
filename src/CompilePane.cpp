@@ -1,4 +1,5 @@
 
+#include "MainWindow.h"
 #include "editor.h"
 #include <unistd.h>
 #include <sys/param.h>
@@ -48,7 +49,7 @@ CompilePane::CompilePane()
 	fScriptName[0] = 0;
 	
 	// get temp file used when running scripts (see RunScriptLine)
-	find_directory(B_COMMON_TEMP_DIRECTORY, 0, true, fTempScriptFile, sizeof(fTempScriptFile) - 32);
+	find_directory(B_SYSTEM_TEMP_DIRECTORY, 0, true, fTempScriptFile, sizeof(fTempScriptFile) - 32);
 	AddSuffixIfMissing(fTempScriptFile, '/');
 	strcat(fTempScriptFile, "sicompile");
 }

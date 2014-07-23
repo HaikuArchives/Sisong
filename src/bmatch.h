@@ -1,4 +1,5 @@
-
+#ifndef BMATCH_H
+#define BMATCH_H
 
 /*
 	lexer split out to before drawing is done
@@ -30,3 +31,18 @@ struct BMatchData
 	// if no brace is lighted, this is set to -1.
 	int highlight_tab_level;
 };
+
+void bmatch_update(EditView *ev);
+static void ActivateBrace(EditView *ev, clLine *line1, int x1, int y1, char bracetype);
+static void DeactivateBrace(EditView *ev);
+clLine *find_start_of_pair(clLine *line, int x, int y, char MoreNestedChar, char LessNestedChar, int *xm, int *ym);
+clLine *find_end_of_pair(clLine *line, int x, int y, char MoreNestedChar, char LessNestedChar, int *xm, int *ym);
+static clLine *BraceScan(int direction, clLine *line, int x, int y, char MoreNestedChar, char LessNestedChar, int *xm, int *ym);
+static char IsOpenBrace(char ch);
+static char InvertBrace(char ch);
+static char is_brace(clLine *line, int x);
+static char LexerAgreesIsBrace(clLine *line, int x);
+static void SetBraceColor(clLine *line, int x, int newcolor);
+LexPoint *FindLexPoint(clLine *line, int index);
+
+#endif // BMATCH_H

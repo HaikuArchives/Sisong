@@ -1,6 +1,11 @@
 
 #include "editor.h"
-#include "bmatch.fdh"
+#include "bmatch.h"
+#include "lexer.h"
+
+#include "redraw.h"
+#include "misc.h"
+#include "misc2.h"
 
 
 void bmatch_update(EditView *ev)

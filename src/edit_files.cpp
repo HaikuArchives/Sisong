@@ -4,7 +4,16 @@
 */
 
 #include "editor.h"
-#include "edit_files.fdh"
+#include "AutoSaver.h"
+#include "MainWindow.h"
+#include "edit_files.h"
+#include "main.h"
+#include "edit_cursor.h"
+#include "selection.h"
+#include "lexer.h"
+#include "stat.h"
+#include "misc.h"
+#include "misc2.h"
 
 
 // open a new editor tab.

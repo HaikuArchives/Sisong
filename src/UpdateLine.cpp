@@ -1,6 +1,7 @@
 
 #include "editor.h"
-#include "UpdateLine.fdh"
+#include "UpdateLine.h"
+#include "selection.h"
 
 
 /***********************************************

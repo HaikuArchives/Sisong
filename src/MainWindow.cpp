@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "MainWindow.fdh"
+#include "MainWindow.h"
 
 namespace UpdateCheck { void Go(uint delay); }
 

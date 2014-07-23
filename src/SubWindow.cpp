@@ -4,10 +4,9 @@
 #include <Message.h>
 
 #include "SubWindow.h"
-#include "SubWindow.fdh"
+#include "misc2.h"
 
 extern BWindow *MainWindow;
-void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false);
 
 
 SubWindow::SubWindow(BRect frame, const char *title)

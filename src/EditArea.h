@@ -1,3 +1,5 @@
+#ifndef EDITAREA_H
+#define EDITAREA_H
 
 class DocScrollBar;
 #include "IComm/IShelf.h"
@@ -37,3 +39,4 @@ public:
 	virtual void ValueChanged(float newValue);
 };
 
+#endif // EDITAREA_H
