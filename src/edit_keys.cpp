@@ -1,10 +1,6 @@
 
 #include "editor.h"
-#include "edit_keys.h"
-
-#include "misc.h"
-#include "misc2.h"
-#include "stat.h"
+#include "edit_keys.fdh"
 
 // this key can extend or create a selection if it is pushed with SHIFT down,
 // and removes the selection if it is pressed without SHIFT down.
@@ -33,28 +29,28 @@ uint GetKeyAttr(int ch)
 		case B_HOME:
 		case B_END:
 			return KF_AFFECTS_SELECTION;
-		
+
 		case B_PAGE_UP:
 		case B_PAGE_DOWN:
 			return KF_AFFECTS_SELECTION;
-		
+
 		case KEY_MOUSEWHEEL_DOWN:
 		case KEY_MOUSEWHEEL_UP:
 			return KF_NO_VIEW_TO_CURSOR;
-		
+
 		case B_DELETE:
 		case B_BACKSPACE:
 			return KF_SELDEL | KF_SELDEL_ONLY | KF_UNDOABLE | KF_UNDO_MERGEABLE;
-		
+
 		case B_ENTER:
 			return KF_SELDEL | KF_UNDOABLE;
-		
+
 		case B_TAB:
 			return KF_UNDOABLE;
-		
+
 		default:	// normal char
 			return KF_SELDEL | KF_UNDOABLE | KF_UNDO_MERGEABLE;
-		
+
 		case B_ESCAPE:
 			return 0;
 	}
@@ -71,7 +67,7 @@ void EditView::HandleKey(int ch)
 		ch = TranslateAltKey(ch);
 	}
 	//stat("translated ch: %c", ch);
-	
+
 	// ctrl+tab shortcut
 	if (ch==TAB && IsCtrlDown())
 	{
@@ -79,21 +75,21 @@ void EditView::HandleKey(int ch)
 			TabBar->SwitchToPrevTab();
 		else
 			TabBar->SwitchToNextTab();
-		
+
 		return;
 	}
-	
+
 	// catch command-shortcut sequences
 	if (ProcessCommandSeq(ch))
 		return;
-	
+
 	// ctrl+shift+z (Redo) shortcut
 	if ((ch=='z' || ch=='Z') && IsCtrlDown() && IsShiftDown())
 	{
 		MainWindow->ProcessMenuCommand(M_EDIT_REDO);
 		return;
 	}
-	
+
 	// catch some other shortcuts before passing to main key processor
 	switch(ch)
 	{
@@ -108,7 +104,7 @@ void EditView::HandleKey(int ch)
 				ProcessKey(this, ch);
 			}
 		break;
-		
+
 		case B_INSERT:
 			if (IsShiftDown())	// SHIFT+INS: legacy shortcut for paste
 			{
@@ -121,7 +117,7 @@ void EditView::HandleKey(int ch)
 				MainView->cursor.SetThick(editor.InOverwriteMode);
 			}
 		break;
-		
+
 		default:
 			if (IsCtrlDown() || IsAltDown()) break;
 		case B_TAB: case B_HOME: case B_END:
@@ -129,7 +125,7 @@ void EditView::HandleKey(int ch)
 			ProcessKey(this, ch);
 		break;
 	}
-	
+
 	this->RedrawView();
 }
 
@@ -149,30 +145,30 @@ char MergeToPrior;
 			case B_DOWN_ARROW:
 			case B_PAGE_UP:
 			case B_PAGE_DOWN: break;
-			
+
 			default: ev->cursor.set_mode(CM_FREE);
 		}
 	}
-	
+
 	// commands which delete selection & contents if a selection is present
 	if (flags & KF_SELDEL)
 	{
 		if (ev->selection.present)
 		{
 			ev->SelDel();
-			
+
 			if (flags & KF_SELDEL_ONLY)
 				return;
 		}
 	}
-	
+
 	// create new undo group before executing keys which modify the document
 	if (flags & KF_UNDOABLE)
 	{
 		if (flags & KF_UNDO_MERGEABLE)
 		{
 			MergeToPrior = undo_can_merge(ev, ev->cursor.x, ev->cursor.y, key);
-			
+
 			if (!MergeToPrior)
 				BeginUndoGroup(ev);
 		}
@@ -182,13 +178,13 @@ char MergeToPrior;
 			BeginUndoGroup(ev);
 		}
 	}
-	
+
 	if (flags & KF_AFFECTS_SELECTION)	// key can create/remove selection
 	{
 		if (IsShiftDown() && !ev->selection.present)
 			selection_create(ev);
 	}
-	
+
 	switch(key)
 	{
 		case B_ESCAPE:
@@ -198,27 +194,27 @@ char MergeToPrior;
 				be_app->PostMessage(B_QUIT_REQUESTED);
 			}
 		break;
-		
+
 		case B_LEFT_ARROW: ev->cursor.left(); break;
 		case B_RIGHT_ARROW: ev->cursor.right(); break;
 		case B_UP_ARROW: ev->cursor.up(); break;
 		case B_DOWN_ARROW: ev->cursor.down(); break;
-		
+
 		case B_PAGE_DOWN: ev->cursor.pgdn(); break;
 		case B_PAGE_UP: ev->cursor.pgup(); break;
-		
+
 		case B_HOME: DoHome(ev); break;
 		case B_END: DoEnd(ev); break;
-		
+
 		case KEY_MOUSEWHEEL_DOWN: ev->scroll_down(3); break;
 		case KEY_MOUSEWHEEL_UP: ev->scroll_up(3); break;
-		
+
 		case B_ENTER:
 			DoEnter(ev);
 			editor.stats.CRs_typed++;
 			editor.stats.keystrokes_typed++;
 		break;
-		
+
 		case B_TAB:
 		{
 			if (IsShiftDown())
@@ -226,41 +222,41 @@ char MergeToPrior;
 				DoShiftTab(ev);
 				break;
 			}
-			
+
 			if (DoTabIndent(ev)) break;
-			
+
 			ev->SelDel();
 			ev->action_insert_char(ev->cursor.x, ev->cursor.y, TAB);
 			ev->cursor.x++;
-			
+
 			editor.stats.keystrokes_typed++;
 		}
 		break;
-		
+
 		// BKSP is equivalent to left followed by del
 		case B_BACKSPACE:
 			if (!ev->cursor.y && !ev->cursor.x) break;
-			
+
 			ev->cursor.left();
-			
+
 			undo_SetMergeMode(ev, MERGE_BKSP, MergeToPrior);
 			ev->action_delete_right(ev->cursor.x, ev->cursor.y, 1);
 			editor.stats.keystrokes_typed++;
 		break;
-		
+
 		case B_DELETE:
 			undo_SetMergeMode(ev, MERGE_DEL, MergeToPrior);
 			ev->action_delete_right(ev->cursor.x, ev->cursor.y, 1);
 			editor.stats.keystrokes_typed++;
 		break;
-		
+
 		// typing
 		default:
 		{
 			// ignore non-printable keystrokes
 			if (key > 127 || key < 9)
 				break;
-			
+
 			if (editor.InOverwriteMode && \
 				ev->cursor.x < ev->curline->GetLength())
 			{
@@ -274,28 +270,28 @@ char MergeToPrior;
 					MergeToPrior = false;
 					BeginUndoGroup(ev);
 				}
-				
+
 				ev->action_delete_right(ev->cursor.x, ev->cursor.y, 1);
 			}
 			else
 			{
 				undo_SetMergeMode(ev, MERGE_TYPING, MergeToPrior);
 			}
-			
+
 			ev->action_insert_char(ev->cursor.x, ev->cursor.y, key);
 			ev->cursor.x++;
 			editor.stats.keystrokes_typed++;
 		}
 		break;
 	}
-	
+
 	// smart indent (for close quotes)
 	if (key == '}' && editor.settings.smart_indent_on_close)
 		CloseSmartIndent(ev);
-	
+
 	if (flags & KF_AFFECTS_SELECTION)
 		ev->ExtendOrDropSel(key);
-	
+
 	if (flags & KF_UNDOABLE)
 	{
 		if (MergeToPrior)
@@ -303,7 +299,7 @@ char MergeToPrior;
 		else
 			EndUndoGroup(ev);
 	}
-	
+
 	if (!(flags & KF_NO_VIEW_TO_CURSOR))
 	{
 		ev->MakeCursorVisible();
@@ -330,7 +326,7 @@ int indent_x;
 	else
 	{
 		indent_x = ev->curline->GetIndentationLevel();
-		
+
 		if (ev->cursor.x > indent_x)
 		{
 			ev->cursor.x = indent_x;
@@ -384,7 +380,7 @@ bool extra_indent = false;
 	// if cursor is at or after this level, we will auto-indent the resultant line.
 	ntabs = ev->curline->GetIndentationLevel();
 	if (ev->cursor.x < ntabs) ntabs = 0;
-	
+
 	if (editor.settings.smart_indent_on_open)
 	{
 		// test if current line ends in a "{"
@@ -397,39 +393,39 @@ bool extra_indent = false;
 			}
 		}
 	}
-	
+
 	// language-aware auto-indenting
 	if (editor.settings.language_aware_indent && !extra_indent)
 	{
 		BString *bstr = ev->curline->GetLineAsString();
 		const char *str = bstr->String();
-		
+
 		if (*str==TAB || *str==' ')
 		{
 			do { str++; } while(*str == TAB || *str == ' ');
-			
+
 			if (strbegin(str, "case ") || strbegin(str, "default:"))
 			{
 				ntabs++;
 				extra_indent = true;
 			}
 		}
-		
+
 		delete bstr;
 	}
-	
+
 	ev->action_insert_cr(ev->cursor.x, y);
-	
+
 	if (ntabs)
 	{
 		char *tabs = (char *)smal(ntabs + 1);
 		memset(tabs, TAB, ntabs);
 		tabs[ntabs] = 0;
-		
+
 		ev->action_insert_string(0, y + 1, tabs, NULL, NULL);
 		frees(tabs);
 	}
-	
+
 	ev->cursor.move(ntabs, y + 1);
 }
 
@@ -443,26 +439,26 @@ clLine *pair_line;
 	// check that cursor is at end of the line
 	if (ev->cursor.x != ev->curline->GetLength())
 		return;
-	
+
 	// check that this is the first non-blank char on the line
 	indent_level = ev->curline->GetIndentationLevel();
 	if (ev->cursor.x != indent_level+1)
 		return;
-	
+
 	// get the indent level of the opening '{'
 	pair_line = find_start_of_pair(ev->curline, ev->cursor.x, ev->cursor.y, \
 									'}', '{', &pair_x, &pair_y);
-	
+
 	if (!pair_line)
 		return;
-	
+
 	// in code-style where { is on same line, the { may actually be
 	// to the right of the just-entered }. fix this.
 	if (pair_x >= ev->cursor.x)
 	{
 		pair_x = pair_line->GetIndentationLevel();
 	}
-	
+
 	// if they have already closed the brace, do not mess things up
 	// by trying to close it for them. this is only accurate for certain
 	// coding styles (such as the one this function is written in) which
@@ -471,10 +467,10 @@ clLine *pair_line;
 	{
 		return;
 	}
-	
+
 	// remove indentation to automatically close the brace set
 	int rem_amt = (ev->cursor.x - pair_x) - 1;
-	
+
 	if (indent_level)
 	{
 		ev->action_delete_right(0, ev->cursor.y, rem_amt);
@@ -501,14 +497,14 @@ int y, y1, y2;
 
 	if (!IsWholeLineSelected(ev)) return 0;
 	selection_SelectFullLines(ev);
-	
+
 	GetSelectionExtents(ev, NULL, &y1, NULL, &y2);
-	
+
 	for(y=y1;y<=y2;y++)
 	{
 		ev->action_insert_char(0, y, TAB);
 	}
-	
+
 	TIndent_SetCursorPos(ev, y1, y2);
 	return 1;
 }
@@ -532,17 +528,17 @@ void DoShiftTab(EditView *ev)
 		// the more common "shift+tab" to move a whole block in 1 indent level
 		int y, y1, y2;
 		clLine *line;
-		
+
 		selection_SelectFullLines(ev);
 		GetSelectionExtents(ev, NULL, &y1, NULL, &y2);
-		
+
 		line = ev->GetLineHandle(y1);
 		for(y=y1;y<=y2;y++)
 		{
 			DecreaseIndentation(ev, line, y);
 			line = line->next;
 		}
-		
+
 		TIndent_SetCursorPos(ev, y1, y2);
 	}
 	else
@@ -550,10 +546,10 @@ void DoShiftTab(EditView *ev)
 		// handle shift+tab on a single line or with less than a full line of
 		// text selected.
 		selection_drop(ev);
-		
+
 		int current_x = ev->cursor.x;
 		int ident_x = ev->curline->GetIndentationLevel();
-		
+
 		// if cursor @ or before indentation level, dec indent level by 1
 		if (current_x <= ident_x)
 		{
@@ -564,16 +560,16 @@ void DoShiftTab(EditView *ev)
 		{	// move cursor back to previous tab position
 			int x = ev->cursor.x;
 			int mod;
-			
+
 			x = ev->curline->CharCoordToScreenCoord(x);
 			mod = (x % TAB_WIDTH);
 			if (mod) x -= mod; else x -= TAB_WIDTH;
 			x = ev->curline->ScreenCoordToCharCoord(x);
-			
+
 			ev->cursor.move(x, ev->cursor.y);
 		}
 	}
-	
+
 	if (ev->cursor.x >= ev->curline->GetLength())
 		ev->cursor.x = ev->curline->GetLength();
 }
@@ -594,15 +590,15 @@ char ch = line->GetCharAtIndex(0);
 	else if (ch == ' ')
 	{
 		int i;
-		
+
 		// or up to a full tab's width of spaces
 		for(i=1;i<TAB_WIDTH;i++)
 			if (line->GetCharAtIndex(i) != ' ') break;
-		
+
 		ev->action_delete_right(0, y, i);
 		return i;
 	}
-	
+
 	return 0;
 }
 
@@ -613,13 +609,13 @@ int x1, y1, x2, y2;
 
 	if (!ev->selection.present) return 0;
 	GetSelectionExtents(ev, &x1, &y1, &x2, &y2);
-	
+
 	if (y1 == y2)
 	{
 		if (x1 > 0 || x2 < ev->curline->GetLength())
 			return 0;
 	}
-	
+
 	return 1;
 }
 
@@ -657,31 +653,31 @@ int old_cy;
 	if (ev->selection.present)
 	{
 		int x1, y1, x2, y2;
-		
+
 		BeginUndoGroup(ev);
 		GetSelectionExtents(ev, &x1, &y1, &x2, &y2);
-		
-		lstat2(" ** SelDel from [%d,%d] - [%d,%d]", x1, y1, x2, y2);
-		
+
+		lstat(" ** SelDel from [%d,%d] - [%d,%d]", x1, y1, x2, y2);
+
 		// remember current screen position of cursor
 		old_cy = ev->cursor.screen_y;
-		
+
 		// when undoing a seldel always move cursor to the end of the deleted text
 		DocPoint endpt(ev, x2, y2);
 		endpt.Increment();
-		
+
 		// delete selection and it's contents
 		selection_drop(ev);
 		ev->action_delete_range(x1, y1, x2, y2);
-		
+
 		// move to start of selection
 		ev->cursor.move(x1, y1);
-		
+
 		// ensure cursor is still visible, and try to keep it at the
 		// same screen Y position it was at before (when deleting a large portion of text)
 		ev->BringLineIntoView(ev->cursor.y, BV_SPECIFIC_Y, old_cy);
 		XScrollToCursor();
-		
+
 		EndUndoGroupSetCursor(ev, endpt.x, endpt.y);
 	}
 }
@@ -699,9 +695,9 @@ EditView *ev = this;
 	{
 		int oldy1, oldy2;
 		GetSelectionExtents(ev, NULL, &oldy1, NULL, &oldy2);
-		
+
 		ev->ExtendSel();
-		
+
 		// the CopyBits() scroll optimization may not work if we are
 		// scrolling down while de-extending the selection.
 		if (ev->selection.anchor.y >= ev->cursor.y)
@@ -722,7 +718,7 @@ EditView *ev = this;
 			int x1, y1, x2, y2;
 			GetSelectionExtents(ev, &x1, &y1, &x2, &y2);
 			selection_drop(ev);
-			
+
 			if (key == B_LEFT_ARROW)
 			{
 				ev->cursor.move(x1, y1);
@@ -745,7 +741,7 @@ void EditView::ExtendSel()
 	// required to ensure x is at correct spot if the key was the type
 	// that sets CM_WANT_SCREEN_COORD.
 	UpdateCursorPos(this);
-	
+
 	// extend selection
 	selection_extend(this);
 }

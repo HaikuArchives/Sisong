@@ -559,14 +559,26 @@ int i, lastScheme, numSchemes;
 void c------------------------------() {}
 */
 
-rgb_color GetEditFGColor(int colorNum)	{ return CurrentColorScheme._colors[colorNum].fg; }
-rgb_color GetEditBGColor(int colorNum)	{ return CurrentColorScheme._colors[colorNum].bg; }
-bool GetColorBoldState(int colorNum)	{ return CurrentColorScheme._colors[colorNum].isBold; }
+rgb_color GetEditFGColor(int colorNum)
+{
+	return CurrentColorScheme._colors[colorNum].fg;
+}
+rgb_color GetEditBGColor(int colorNum)
+{
+	return CurrentColorScheme._colors[colorNum].bg;
+}
+bool GetColorBoldState(int colorNum)
+{
+	return CurrentColorScheme._colors[colorNum].isBold;
+}
 
 // identical to GetEditFGColor:
 //	this is a clearer name for those colors such as selection that do not
 //  have both an fg and bg and only have one color.
-rgb_color GetEditColor(int colorNum)	{ return CurrentColorScheme._colors[colorNum].fg; }
+rgb_color GetEditColor(int colorNum)
+{
+	return CurrentColorScheme._colors[colorNum].fg;
+}
 
 // returns true on colors that use both fg and bg,
 // and false on colors that use only the fg.

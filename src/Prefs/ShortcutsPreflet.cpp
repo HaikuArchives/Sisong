@@ -142,7 +142,7 @@ int32 counter = 0;
 	fMenu[fkeyindex]->AddItem(item);
 	
 	// add all items
-	DoForEachMenuItem(do_populate, this, (void *)fkeyindex, &counter);
+	DoForEachMenuItem(do_populate, this, (void *)(size_t)fkeyindex, &counter);
 	
 	// set the current setting active
 	int activeindex = GetIndexForMessage(editor.settings.fkey_mapping[fkeyindex]);
@@ -154,7 +154,7 @@ int32 counter = 0;
 bool do_populate(BMenuItem *item, void *This, void *FKEYIndex, void *Counter)
 {
 ShortcutsPreflet *preflet = (ShortcutsPreflet *)This;
-int fkeyindex = (int)FKEYIndex;
+int fkeyindex = (int)(size_t)FKEYIndex;
 int32 *counter = (int32 *)Counter;
 BPopUpMenu *menu = preflet->fMenu[fkeyindex];
 	
@@ -210,14 +210,14 @@ int Output = 0;
 		return 0;
 	}
 	
-	DoForEachMenuItem(do_msg2index, &Counter, (void *)messageindex, &Output);
+	DoForEachMenuItem(do_msg2index, &Counter, (void *)(size_t)messageindex, &Output);
 	return Output;
 }
 
 bool do_msg2index(BMenuItem *item, void *Counter, void *WantedIndex, void *Output)
 {
 int *counter = (int *)Counter;
-int wanted_index = (int)WantedIndex;
+int wanted_index = (int)(size_t)WantedIndex;
 	
 	if (*counter == wanted_index)
 	{
@@ -248,14 +248,14 @@ int Output = 0;
 		return 0;
 	}
 	
-	DoForEachMenuItem(do_index2msg, &Counter, (void *)what_code, &Output);
+	DoForEachMenuItem(do_index2msg, &Counter, (void *)(size_t)what_code, &Output);
 	return Output;
 }
 
 bool do_index2msg(BMenuItem *item, void *Counter, void *WantedCode, void *Output)
 {
 int *counter = (int *)Counter;
-int what_code = (int)WantedCode;
+int what_code = (int)(size_t)WantedCode;
 	
 	if (item && item->Message() && item->Message()->what == what_code)
 	{

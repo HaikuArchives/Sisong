@@ -118,7 +118,7 @@ void CTabBar::Draw(BRect updateRect)
 }
 
 // redraw the tab bar
-void CTabBar::redraw(bool recalcPositions = true)
+void CTabBar::redraw(bool recalcPositions)
 {
 	if (!app_running) return;
 	if (!curtab || !firsttab) return;
@@ -191,7 +191,7 @@ TCTabItem *tab = firsttab;
 void c------------------------------() {}
 */
 
-void CTabBar::DoScrollRight(bool doRedraw=true)
+void CTabBar::DoScrollRight(bool doRedraw)
 {
 TCTabItem *tab;
 	// find the first tab whose left edge is > 0, and move it so that
@@ -206,7 +206,7 @@ TCTabItem *tab;
 	}
 }
 
-void CTabBar::DoScrollLeft(bool doRedraw=true)
+void CTabBar::DoScrollLeft(bool doRedraw)
 {
 TCTabItem *tab;
 	// going backwards, find the first tab whose left edge < 0, and scroll so that
@@ -223,7 +223,7 @@ TCTabItem *tab;
 }
 
 // adjust X position of all tabs by "offs"
-void CTabBar::ScrollTabsBy(int offs, bool doRedraw=true)
+void CTabBar::ScrollTabsBy(int offs, bool doRedraw)
 {
 	for(TCTabItem *tab=firsttab; tab; tab=tab->next)
 	{

@@ -171,7 +171,7 @@ void c------------------------------() {}
 // not existing yet, the function will exit with NO files open. this is only
 // a good idea during project creation when you KNOW you are about to open more
 // files, else the editor could crash.
-void CProjectManager::OpenProject(const char *path, bool allow_none_open=false)
+void CProjectManager::OpenProject(const char *path, bool allow_none_open)
 {
 bool AProjectOpenPreviously = fCurProject[0] ? true : false;
 

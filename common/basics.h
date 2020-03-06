@@ -13,9 +13,8 @@ typedef unsigned short	ushort;
 #endif
 
 #define rept			for(;;)
-#define stop			{ smal_bypass_cleanup = 1; staterr("programmer stop"); exit(1); }
+#define stop			{ /*smal_bypass_cleanup = 1;*/ staterr("programmer stop"); exit(1); }
 #define here			{ staterr("---- Here ----"); }
-#define TODO			{ stat("-- TODO: %s %d", __FILE__, __LINE__); }
 
 void stat(const char *fmt, ...);
 void staterr(const char *fmt, ...);
@@ -32,3 +31,9 @@ void staterr(const char *fmt, ...);
 		}	\
 	}
 #endif
+
+//#include "smal.h"
+#define smal		malloc
+#define resmal		realloc
+#define frees		free
+#define smal_strdup	strdup

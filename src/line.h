@@ -1,8 +1,6 @@
 
-#ifndef LINE_H
-#define LINE_H
-
-#include "LexResult.h"
+class clLine;
+#include "line.fdh"
 
 // holds a single line of text
 class clLine
@@ -51,9 +49,3 @@ private:
 	void MoveGapRight(int offset);
 	void MoveGapLeft(int offset);
 };
-
-static void grow_gap(clLine *line);
-static char IsWordSeperator(int ch);
-
-#endif // LINE_H
-

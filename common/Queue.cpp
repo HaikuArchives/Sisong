@@ -12,7 +12,7 @@ Queue::Queue(queue_freer_func func)
 Queue::~Queue()
 {
 	fLock.Lock();
-	
+
 	if (fFreeItemFunc)
 	{
 		for(int i=0;
@@ -22,7 +22,7 @@ Queue::~Queue()
 			(*fFreeItemFunc)(item);
 		}
 	}
-	
+
 	fQueue.MakeEmpty();
 }
 
@@ -42,19 +42,8 @@ void *Queue::GetNextItem()
 	fLock.Lock();
 	void *item = fQueue.RemoveItem((long int)0);
 	fLock.Unlock();
-	
+
 	return item;
-}
-
-int Queue::GetItemCount()
-{
-int count;
-
-	fLock.Lock();
-	count = fQueue.CountItems();
-	fLock.Unlock();
-	
-	return count;
 }
 
 

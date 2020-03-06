@@ -5,7 +5,7 @@
 */
 
 #include "editor.h"
-#include "EditArea.h"
+#include "EditArea.fdh"
 
 
 CEditArea::CEditArea(BRect frame, uint32 resizingMode)
@@ -23,37 +23,25 @@ BRect rc;
 	mainbo.right -= (SBAR_SIZE + FL_WIDTH);
 	
 	/* create controls */
-	int spacer_width = editor.settings.ShowSpacer ? SPACER_WIDTH : 1;
-	int ln_width = editor.settings.ShowLineNumbers ? LN_WIDTH : 0;
 	
-	int area_lrmode = B_FOLLOW_LEFT;
-	int fl_lrmode = B_FOLLOW_RIGHT;
-	
-	if (editor.settings.FunctionListOnLeft)
-	{
-		mainbo.OffsetBy(FL_WIDTH, 0);
-		SWAP(area_lrmode, fl_lrmode);
-	}
-	
-
 	// Line Numbers view
 	rc = mainbo;
-	rc.right = rc.left + (ln_width - 1);
+	rc.right = LN_WIDTH-1;
 	ln = new LNPanel(rc, B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(ln);
 	
 	// Spacer
 	rc = mainbo;
-	rc.left = mainbo.left + ln_width;
-	rc.right = rc.left + (spacer_width - 1);
+	rc.left = LN_WIDTH;
+	rc.right = rc.left + (SPACER_WIDTH - 1);
 	spacer = new CSpacerView(rc, B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(spacer);
-	
+
 	// Command Preview panel
-	rc.left = mainbo.left;
+	rc.left = 0;
 	rc.top = rc.bottom + 1;
 	rc.bottom = bo.bottom;
-	rc.right = rc.left+ln_width-1;
+	rc.right = LN_WIDTH-1;
 	cmd_preview = new BStringView(rc, "cmdp", "", B_FOLLOW_LEFT | B_FOLLOW_BOTTOM);
 	cmd_preview->SetAlignment(B_ALIGN_RIGHT);
 	AddChild(cmd_preview);
@@ -61,7 +49,7 @@ BRect rc;
 	// Horizontal Scrollbar
 	rc.left = rc.right + 1;
 	rc.right = mainbo.right;
-	HScrollbar = new DocScrollBar(rc, B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_HORIZONTAL);
+	HScrollbar = new DocScrollBar(rc, B_FOLLOW_LEFT_RIGHT | B_FOLLOW_BOTTOM, B_HORIZONTAL);
 	AddChild(HScrollbar);
 	
 	// Vertical Scrollbar
@@ -71,10 +59,10 @@ BRect rc;
 	rc.top = 0;
 	VScrollbar = new DocScrollBar(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM, B_VERTICAL);
 	AddChild(VScrollbar);
-	
+
 	// Main Edit Area
 	rc.right = rc.left - 1;
-	rc.left = mainbo.left + (spacer_width + ln_width);
+	rc.left = (SPACER_WIDTH + LN_WIDTH);
 	editpane = new CEditPane(rc, B_FOLLOW_ALL);
 	AddChild(editpane);
 	
@@ -87,19 +75,12 @@ BRect rc;
 	AddChild(ScrollbarCorner);
 	
 	// function list
-	if (editor.settings.FunctionListOnLeft)
-	{
-		rc = Bounds();
-		rc.right = FL_WIDTH - 1;
-	}
-	else
-	{
-		rc = bo;
-		rc.left = mainbo.right + SBAR_SIZE + 1;
-	}
-	
-	functionlist = new CFunctionList(rc, fl_lrmode | B_FOLLOW_TOP_BOTTOM);
+	rc = bo;
+	rc.left = mainbo.right + SBAR_SIZE + 1;
+	functionlist = new CFunctionList(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM);
 	AddChild(functionlist);
+	//shelf = new IShelfView(rc, B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM);
+	//AddChild(shelf);
 
 	editpane->MakeFocus();
 }
@@ -118,13 +99,13 @@ void CEditArea::SetFontSize(int newsize)
 	
 	if (MainWindow->popup.searchresults)
 		MainWindow->popup.searchresults->ChangeFontSize(newsize);
-	
+
 	if (MainWindow->popup.compile)
 		MainWindow->popup.compile->ChangeFontSize(newsize);
 	
 	if (editor.curev)
 		editor.curev->FullRedrawView();
-	
+
 	editor.settings.font_size = newsize;
 	UnlockWindow();
 }

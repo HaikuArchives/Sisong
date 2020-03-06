@@ -7,7 +7,6 @@
 #include <List.h>
 
 #include "basics.h"
-#include "smal.h"
 #include "misc.fdh"
 
 void stat(const char *fmt, ...);
@@ -46,7 +45,7 @@ int i;
 
 	for(i=0;i<4;i++) fgetc(fp);
 	for(i=0;i<8;i++) buf[i] = fgetc(fp);
-	
+
 	float_ptr = (double *)&buf[0];
 	return *float_ptr;
 }
@@ -57,10 +56,10 @@ char *float_ptr;
 int i;
 
 	float_ptr = (char *)&q;
-	
+
 	for(i=0;i<4;i++) fputc(0, fp);
 	for(i=0;i<8;i++) fputc(float_ptr[i], fp);
-	
+
 	return;
 }
 
@@ -79,7 +78,7 @@ int i;
 			return;
 		}
 	}
-	
+
 	buf[i] = 0;
 }
 
@@ -103,7 +102,7 @@ void fgetline(FILE *fp, char *str, int maxlen)
 int k;
 	str[0] = 0;
 	fgets(str, maxlen - 1, fp);
-	
+
 	// trim the CRLF that fgets appends
 	for(k=strlen(str)-1;k>=0;k--)
 	{
@@ -122,18 +121,18 @@ char ch;
 	for(i=j=0;i<maxlen;i++)
 	{
 		ch = fgetc(fp);
-		
+
 		if (ch==13 || ch==',' || ch=='}' || ch==-1)
 		{
 			break;
 		}
-		
+
 		if (ch != 10)
 		{
 			str[j++] = ch;
 		}
 	}
-	
+
 	str[j] = 0;
 }
 
@@ -161,7 +160,7 @@ int cp, sz;
 	fseek(fp, 0, SEEK_END);
 	sz = ftell(fp);
 	fseek(fp, cp, SEEK_SET);
-	
+
 	return sz;
 }
 
@@ -177,9 +176,9 @@ int file_len;
 	fp = fopen(fname, "rb");
 	if (!fp)
 		return NULL;
-	
+
 	file_len = getfilesize(fp);
-	
+
 	if (file_len)
 	{
 		data = (char *)smal(file_len + 1);
@@ -190,10 +189,10 @@ int file_len;
 	{
 		data = (char *)smal(1);
 	}
-	
+
 	if (size_out)
 		*size_out = file_len;
-	
+
 	fclose(fp);
 	return data;
 }
@@ -204,7 +203,7 @@ int randrange(int min, int max)
 int range, val;
 
 	range = (max - min);
-	
+
 	if (range < 0)
 	{
 		//error("random(): warning: max < min [%d, %d]\n", min, max);
@@ -213,13 +212,13 @@ int range, val;
 		min ^= max;
 		range = (max - min);
 	}
-	
+
 	if (range >= RAND_MAX)
 	{
 		//error("random(): range > RAND_MAX\n", min, max);
 		return 0;
 	}
-	
+
 	val = rand() % (range + 1);
 	return val + min;
 }
@@ -248,15 +247,15 @@ char *pptr, *sptr, *start;
 			  ;
 		if (!*start)
 			  return 0;
-		
+
 		pptr = (char *)Pattern;
 		sptr = (char *)start;
-		
+
 		while(tolower(*sptr) == tolower(*pptr))
 		{
 			sptr++;
 			pptr++;
-			
+
 			/* if end of pattern then pattern was found */
 			if (!*pptr)
 				return (start);
@@ -275,7 +274,7 @@ FILE *fp;
 		fclose(fp);
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -294,7 +293,7 @@ const char *GetFileSpec(const char *file_and_path)
 // the pointer returned is an allocated area of memory which you need to frees().
 char *RemoveFileSpec(const char *input_file)
 {
-	char *buffer = smal_strdup(input_file);
+	char *buffer = strdup(input_file);
 	char *ptr = strrchr(buffer, '/');
 	if (ptr) *(ptr + 1) = 0;
 	return buffer;
@@ -319,7 +318,7 @@ char *fillstr(char *buffer, int num, char ch)
 {
 	memset(buffer, ch, num);
 	buffer[num] = 0;
-	
+
 	return buffer;
 }
 
@@ -331,7 +330,7 @@ int i, count = list->CountItems();
 
 	for(i=0;i<count;i++)
 		frees(list->ItemAt(i));
-	
+
 	list->MakeEmpty();
 }
 
@@ -411,7 +410,7 @@ void RTrim(char *string)
 char *endofstring;
 
 	endofstring = (strchr(string, 0) - 1);
-	
+
 	_asm
 	{
 		mov		edx, [string]
@@ -420,7 +419,7 @@ char *endofstring;
 striploop:
 		cmp		eax, edx			// have we reached the beginning of the string?
 		je		done				// if so we're done
-		
+
 		// if this char isn't whitespace, exit the loop
 		cmp		byte ptr [eax], 9
 		je		is_whitespace
@@ -452,7 +451,7 @@ cmploop:
 		lodsb
 		mov		bl, [edi]
 		inc		edi
-		
+
 		test	al, al
 		jz		stopit
 		test	bl, bl
@@ -467,7 +466,7 @@ stopit:
 		setz	al
 		mov		[result], al
 	}
-	
+
 	return result;
 }
 */
@@ -505,7 +504,7 @@ char *end;
 	if (str[0]=='\"') str++;
 	end = strchr(str, 0) - 1;
 	if (*end=='\"') *end = 0;
-	
+
 	return str;
 }
 
@@ -517,13 +516,13 @@ void smemset(void *dst, ushort pattern, int numwords)
 		mov		ax, [pattern]
 		mov		edi, [dst]
 		shl		eax, 16
-		
+
 		mov		ecx, [numwords]
 		mov		ax, [pattern]
 		sar		ecx, 1
-		
+
 		rep		stosd
-		
+
 		jnc		notodd
 		mov		[edi], ax
 notodd:
@@ -554,12 +553,12 @@ int ch;
 char sign;
 
 	if (str[0]=='-') { sign = -1; str++; len--; } else sign = 1;
-	
+
 	if (str[0]=='0' && str[1]=='x')
 	{		// hex number
 		int place = 1;
 		int value = 0;
-		
+
 		for(i=2;i<len;i++)
 		{
 			if (str[i] < '0' || str[i] > '9')
@@ -568,16 +567,16 @@ char sign;
 				if (ch < 'A' || ch > 'F') return 1;
 			}
 		}
-		
+
 		for(i=len-1;i>=2;i--)
 		{
 			ch = toupper(str[i]);
-			
+
 			if (ch >= '0' && ch <= '9') ch -= '0'; else ch -= ('A' - 10);
 			value += (ch * place);
 			place *= 16;
 		}
-		
+
 		*out = value * sign;
 		return 0;
 	}
@@ -585,7 +584,7 @@ char sign;
 	{		// decimal number
 		for(i=0;i<len;i++)
 			if (str[i] < '0' || str[i] > '9') return 1;
-		
+
 		*out = atoi(str) * sign;
 		return 0;
 	}
@@ -604,7 +603,7 @@ int stringlength = strlen(str);
 	{
 		if (fgetc(fp) != str[i]) result = 0;
 	}
-	
+
 	return result;
 }
 
@@ -618,10 +617,10 @@ char *strippedfilename;
 
 	strippedfilename = strrchr(filename, '\\');
 	if (!strippedfilename) strippedfilename = strrchr(filename, '/');
-	
+
 	if (strippedfilename) strippedfilename++;
 	else strippedfilename = filename;
-	
+
 	return strippedfilename;
 }
 
@@ -635,13 +634,13 @@ char IsAbsolutePath(char *path)
 {
 	if (path[1]==':' && toupper(path[0]) >= 'A' && toupper(path[0]) <= 'Z') return 1;
 	if (path[0] == '/' || path[0] == '\\') return 1;
-	
+
 	return 0;
 }
 
 
 
-void hexdump(uchar *data, int len)
+/*void hexdump(uchar *data, int len)
 {
 	hexdump_fp(data, len, stat);
 }
@@ -659,7 +658,7 @@ char *ptr;
 	{
 		linedata = &data[off];
 		sprintf(line, "  %02X: ", off);
-		
+
 		// print 16 chars of hex data
 		for(i=0;i<16;i++)
 		{
@@ -667,12 +666,12 @@ char *ptr;
 				sprintf(line, "%s%02x", line, linedata[i]);
 			else
 				strcat(line, "  ");
-			
+
 			if (i & 1) strcat(line, " ");
 		}
-		
+
 		strcat(line, "    ");
-		
+
 		// print the same chars again, as ASCII data
 		ptr = &line[strlen(line)];
 		for(i=0;i<16;i++)
@@ -680,16 +679,16 @@ char *ptr;
 			if (off+i >= len) break;
 			*(ptr++) = ((linedata[i] > 30 && linedata[i] < 129) ? linedata[i] : '.');
 		}
-		
+
 		//*(ptr++) = '\n';
 		*ptr = 0;
-		
+
 		printfunc("%s", line);
 		off += 0x10;
 	}
 	while(off < len);
 }
-
+*/
 
 
 int boolbyte, boolmask_r, boolmask_w;
@@ -712,7 +711,7 @@ char value;
 		boolbyte = fgetc(fp);
 		boolmask_r = 1;
 	}
-	
+
 	value = (boolbyte & boolmask_r) ? 1:0;
 	boolmask_r <<= 1;
 	return value;
@@ -726,12 +725,12 @@ void fbooleanwrite(char bit, FILE *fp)
 		boolmask_w = 1;
 		boolbyte = 0;
 	}
-	
+
 	if (bit)
 	{
 		boolbyte |= boolmask_w;
 	}
-	
+
 	boolmask_w <<= 1;
 }
 

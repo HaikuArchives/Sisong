@@ -3,6 +3,7 @@
 #define _PREFS_H
 
 #include "../SubWindow.h"
+class Preflet;
 
 class PrefsWindow : public SubWindow
 {

@@ -22,7 +22,7 @@
 
 
 DirMenuItem::DirMenuItem(const char *text, BBitmap *icon, BDirectory *dir, \
-					BMessage *msg, char shortcut = 0, uint32 modifiers = 0)
+					BMessage *msg, char shortcut, uint32 modifiers)
 	: BMenuItem(text, msg, shortcut, modifiers),
 	  fIcon(icon),
 	  fHeightDelta(0)

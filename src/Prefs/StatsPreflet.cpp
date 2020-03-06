@@ -11,7 +11,7 @@ StatsPreflet::StatsPreflet(PrefsWindow *parent)
 	  prefsWin(parent),
 	  fTimer(NULL)
 {
-BStringView *sv;
+//BStringView *sv;
 BRect leftrc, rightrc;
 
 	leftrc.Set(16, 16, 200, 38);

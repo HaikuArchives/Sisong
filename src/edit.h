@@ -1,14 +1,3 @@
-#ifndef EDIT_H
-#define EDIT_H
-
-#include "editor.h"
-#include "edit_cursor.h"
-#include "edit_mouse.h"
-#include "selection.h"
-#include "undo.h"
-#include "bmatch.h"
-#include "cmdseq.h"
-#include "SearchData.h"
 
 #define TAB_WIDTH		4
 
@@ -170,6 +159,3 @@ public:
 #define CEV_CLOSED_NOT_SAVED	1
 #define CEV_CLOSE_CANCELED		2
 
-void InvalidateForYScroll(EditView *ev, int oldY1, int newY1);
-
-#endif // EDIT_H

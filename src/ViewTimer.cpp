@@ -5,8 +5,9 @@
 #include "ViewTimer.h"
 #include "../common/basics.h"
 
-int32 ThreadFunc(CViewTimer *timer)
+int ThreadFunc(void *vtimer)
 {
+CViewTimer *timer = (CViewTimer *)vtimer;
 	rept
 	{
 		usleep(timer->_us_delay);

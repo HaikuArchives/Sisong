@@ -1,5 +1,3 @@
-#ifndef UNDO_H
-#define UNDO_H
 
 #define MERGE_NONE		0
 #define MERGE_TYPING	1
@@ -10,6 +8,7 @@
 #define UG_NO_AFFECT_CURSOR		0x01
 void BeginUndoGroup(EditView *ev, int options=0);
 
+	
 struct UndoRecord
 {
 	int y, x;				// position that the edit occurred
@@ -58,19 +57,3 @@ struct UndoData
 	int MergeToPrior;
 };
 
-void undo_init(EditView *ev);
-void undo_close(EditView *ev);
-static void InitStack(UndoBuffer *s);
-static void FreeUndoRecord(UndoRecord *rec);
-static void FreeUndoGroup(UndoGroupRecord *grec);
-UndoGroupRecord *EndUndoGroup(EditView *ev);
-void EndUndoGroupSetCursor(EditView *ev, int cx, int cy);
-void UpdateMergedUndoGroup(EditView *ev);
-void undo_SetMergeMode(EditView *ev, int mode, int MergeToPrior);
-void undo_add(EditView *ev, int x, int y, int length, BString *deldata);
-char undo_can_merge(EditView *ev, int x, int y, int key);
-void undo_undo(EditView *ev);
-void undo_redo(EditView *ev);
-static void RevertAction(EditView *ev, UndoBuffer *ub, UndoBuffer *rb);
-
-#endif // UNDO_H

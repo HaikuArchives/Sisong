@@ -88,14 +88,14 @@ static char *GetClipboardText()
 BMessage *clip;
 const char *text = NULL;
 char *buffer = NULL;
-int32 textlength = 0;
+ssize_t textlength = 0;
 
 	if (be_clipboard->Lock())
 	{
 		if ((clip = be_clipboard->Data()))
 		{
 			if (clip->FindData("text/plain", B_MIME_TYPE,
-							(const void **)&text, &textlength) == B_OK)
+				(const void **)&text, &textlength) == B_OK)
 			{
 				if (text && textlength >= 0)
 				{

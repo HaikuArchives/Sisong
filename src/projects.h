@@ -13,7 +13,7 @@ public:
 	bool SaveProject();
 	void ExitProjectMode();
 
-	static const char *CProjectManager::GetProjectFile(const char *path, const char *filename);
+	static const char *GetProjectFile(const char *path, const char *filename);
 
 	const char *GetCurrentProjectName()
 		{ return fCurProject; }

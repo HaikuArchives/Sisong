@@ -1,10 +1,6 @@
 
 #include "editor.h"
-#include "edit_mouse.h"
-#include "edit_keys.h"
-
-#include "misc.h"
-#include "misc2.h"
+#include "edit_mouse.fdh"
 
 static bool preventSelExtendUntilUp = false;
 static int preventSelExtendY;

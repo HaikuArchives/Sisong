@@ -624,7 +624,8 @@ void c------------------------------() {}
 
 static inline LTNode *CreateLTNode()
 {
-	LTNode *t = (LTNode *)smalz(sizeof(LTNode));
+	LTNode *t = (LTNode *)malloc(sizeof(LTNode));
+	memset(t, 0, sizeof(LTNode));
 	t->minbranch = 255;
 	return t;
 }

@@ -1,5 +1,3 @@
-#ifdef MAINWINDOW_H
-#define MAINWINDOW_H
 
 #define LN_WIDTH			62		// line-numbers bar
 #define SPACER_WIDTH		16		// spacer between line-numbers and document
@@ -71,6 +69,5 @@ public:
 void c------------------------------() {}
 */
 
-bool ConfirmCloseSaveFiles();
-#endif // MAINWINDOW_H
+
 
