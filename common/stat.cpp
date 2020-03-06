@@ -7,7 +7,6 @@
 #include "basics.h"
 
 void stat(const char *str, ...);
-void tstat(const char *str, ...);
 void staterr(const char *str, ...);
 void lstat(const char *str, ...);
 
@@ -19,7 +18,7 @@ static FILE *logfp = NULL;
 void SetLogfileName(const char *nn)
 {
 	strcpy(log_file_name, nn);
-	
+
 	logfp = fopen(log_file_name, "wb");
 	if (logfp)
 	{
@@ -54,37 +53,14 @@ char buf[40000];
 	va_start(ar, str);
 	vsprintf(buf, str, ar);
 	va_end(ar);
-	
+
 	statlock.Lock();
 	{
 		fprintf(stdout, "%s\n", buf);
 		fflush(stdout);
-		
+
 		if (logfp)
 			lstat("%s", buf);
-	}
-	statlock.Unlock();
-}
-
-void tstat(const char *str, ...)
-{
-va_list ar;
-char buf[40000];
-
-	va_start(ar, str);
-	vsprintf(buf, str, ar);
-	va_end(ar);
-	
-	statlock.Lock();
-	{
-		char timestamp[80];
-		time_t t_up = time(NULL);
-		struct tm *ptm;
-		
-		ptm = (struct tm *)localtime(&t_up);
-		strftime(timestamp, sizeof(timestamp), "%m-%d-%y %I:%M:%S%p", ptm);
-		
-		stat("%s   %s", timestamp, buf);
 	}
 	statlock.Unlock();
 }
@@ -97,12 +73,12 @@ char buf[40000];
 	va_start(ar, str);
 	vsprintf(buf, str, ar);
 	va_end(ar);
-	
+
 	statlock.Lock();
 	{
 		fprintf(stderr, "%s\n", buf);
 		fflush(stderr);
-		
+
 		if (logfp)
 			lstat("<< error: '%s' >>", buf);
 	}
@@ -117,13 +93,13 @@ char buf[40000];
 
 	if (!logfp)
 		return;
-	
+
 	statlock.Lock();
 	{
 		va_start(ar, str);
 		vsprintf(buf, str, ar);
 		va_end(ar);
-		
+
 		fprintf(logfp, "%d: %s\n", find_thread(0), buf);
 		fflush(logfp);
 	}
@@ -141,7 +117,7 @@ char *str = GetStaticStr();
 	va_start(ar, fmt);
 	vsprintf(str, fmt, ar);
 	va_end(ar);
-	
+
 	return str;
 }
 */

@@ -93,7 +93,7 @@ stSearchResult *result;
 
 
 void SearchResultsPane::AddResult(stSearchResult *result,
-									bool include_filename = true)
+									bool include_filename)
 {
 BString str;
 char line_no[800];

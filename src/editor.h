@@ -33,9 +33,14 @@
 #include <math.h>		// min/max
 
 #include "../common/basics.h"
-#include "../common/smal.h"
-#include "../common/OffscreenBuffer.h"
-#include "../common/misc.h"
+//#include "../common/smal.h"
+
+int min(int a, int b);
+int max(int a, int b);
+void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false);
+const char *GetFileSpec(const char *file_and_path);
+bool strbegin(const char *bigstr, const char *smallstr);
+void Unimplemented(void);
 
 class EditView;
 extern int ignore_scrollbars;	//weee! i'm crazy edd and i love hacks!!! ba la la la!
@@ -77,8 +82,6 @@ extern int ignore_scrollbars;	//weee! i'm crazy edd and i love hacks!!! ba la la
 #include "MainWindow.h"
 #include "ColoredStringItem.h"
 
-class CMainWindow;
-
 extern CMainWindow *MainWindow;
 extern CEditPane *MainView;
 extern DocScrollBar *scrHorizontal, *scrVertical;
@@ -95,26 +98,26 @@ struct EditorData
 	BList *DocList;					// list of all open documents
 	int NextUntitledID;				// next number for untitled documents
 	int NextDocID;					// next DocID value (unique ID for each document opened in a session)
-	
+
 	// information about the window
 	int width, height;				// width and height in chars
 	int pxwidth, pxheight;			// size of editor pane in pixels
 	int font_width, font_height;	// size of a char in px
 	char PartialLineAtBottom;		// 1 if bottom line is partially cut off
 	char HozBarVisible;				// 1 if horizontal scrollbar is visible
-	
+
 	// backbuffer which attempts to store the contents of the current line (only)
 	OffscreenBuffer *curline_bb;
 	// which line is currently stored in curline_bb, -1 if none
 	int bbed_line;
-	
+
 	// true if the cursor is in Overwrite mode, false if the cursor is in Insert mode
 	bool InOverwriteMode;
-	
+
 	// last filename opened or saved, used for making guesses about
 	// default directory for Open/Save box, when the path isn't known for sure.
 	char last_filepath_reference[MAXPATHLEN];
-	
+
 	/*
 	  NOTE TO SELF:
 	    Don't add anything in here that is not REALLY a user-settable preference
@@ -125,7 +128,7 @@ struct EditorData
 	{
 		int tab_width;
 		int font_size;
-		
+
 		bool smart_indent_on_open;
 		bool smart_indent_on_close;
 		bool no_smart_open_at_baselevel;
@@ -133,43 +136,38 @@ struct EditorData
 		bool use_ibeam_cursor;
 		bool esc_quits_immediately;
 		//bool swap_ctrl_and_alt;
-		
+
+		char testmode;
+
 		bool DrawTabLines;
 		bool DoBraceMatching;
 		bool DisableLexer;
 		bool ShowBuildHelp;
 		bool CheckForUpdate;
-		
+
 		bool FixIndentationGaps;
 		bool TrimTrailingOnSave;
-		bool TTExceptBlankLines;
 		bool WarnHaikuGuidelines;
 		bool EnableAutoSaver;
-		bool ShowCol80Guideline;
-		
-		bool ShowSpacer;
-		bool ShowLineNumbers;
-		bool FunctionListOnLeft;
-		
+
 		struct
 		{
 			bool JumpToErrors;
 			bool NoJumpToWarning;
-			bool NoJumpToWarningAtAll;
 		} build;
-		
+
 		// F-key shortcuts: maps F1-F12 to associated menu commands,
 		// or 0 if nothing set
 		#define NUM_F_KEYS			12
 		unsigned int fkey_mapping[NUM_F_KEYS];
 	} settings;
-	
+
 	struct
 	{
 		unsigned int keystrokes_typed;
 		unsigned int CRs_typed;
 		unsigned int mouse_clicks;
-		
+
 		unsigned int days_used;
 		unsigned int hours_used;
 		unsigned int minutes_used;
@@ -177,8 +175,7 @@ struct EditorData
 		unsigned int us_used;
 		bigtime_t LastUsageUpdateTime;
 	} stats;
-	
-	char testmode;
+
 };
 
 extern EditorData editor;
@@ -189,7 +186,6 @@ extern bool app_running;
 
 #define TAB				9
 #define TAB_WIDTH		4
-
 
 
 #endif

@@ -11,7 +11,9 @@
 #include "../common/basics.h"
 
 #include "InputBox.h"
-#include "misc2.h"
+#include "InputBox.fdh"
+
+void CenterWindow(BWindow *parent, BWindow *child, bool at_bottom=false);
 
 #define M_OK		'MOK!'
 #define M_CANCEL	'MCAN'

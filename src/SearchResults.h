@@ -1,6 +1,6 @@
 
 
-typedef struct stSearchResult
+struct stSearchResult
 {
 	int lineNumber;			// line number hit was found on
 	char *filename;			// file name of document hit was found in

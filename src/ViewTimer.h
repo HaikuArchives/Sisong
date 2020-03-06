@@ -7,7 +7,8 @@ public:
 
 	friend int32 ThreadFunc(CViewTimer *data);
 	
-private:
+//private:
+public:
 	thread_id _thread;
 	uint _us_delay;
 	BLooper *MessageTarget;

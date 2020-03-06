@@ -1,7 +1,4 @@
-#ifndef INPUTBOX_H
-#define INPUTBOX_H
 
-void DispatchMessage(BMessage *msg, BHandler *target);
 
 class InputBox : public BWindow
 {
@@ -20,4 +17,3 @@ private:
 	bool fBoxDone;
 };
 
-#endif // INPUTBOX_H

@@ -1,8 +1,3 @@
-#ifndef LEXER_H
-#define LEXER_H
-
-#include "LexResult.h"
-#include "line.h"
 
 /*
 
@@ -46,6 +41,19 @@
 		  if so, we have found an identifier.
 */
 
+struct LexPoint
+{
+	int index;			// index within line where lexeme begins
+	int type;			// type of lexeme detected
+};
+
+struct LexResult
+{
+	LexPoint *points;
+	int npoints, alloc_size;
+	
+	int exitstate;
+};
 
 // for detecting identifiers
 struct LTNode
@@ -65,28 +73,3 @@ struct LexInstance
 	LexResult *output;
 };
 
-static inline bool IsNumeric(char ch);
-static inline char next_char(LexInstance *li);
-static inline void back_char(LexInstance *li);
-static inline int get_index(LexInstance *li);
-static inline void set_index(LexInstance *li, int index);
-void lexer_update_line(clLine *line);
-void lexer_parse_line(clLine *line, int entry_state);
-void InitLexInstance(LexInstance *li, clLine *line);
-void FreeLexResult(LexResult *lr);
-static int ParseLine(LexInstance *li, int entry_state);
-static int FindEndOfString(LexInstance *li, char quotetype);
-static int FindEndOfPPDefine(LexInstance *li);
-static int FindEndOfBlockComment(LexInstance *li, int entry_nesting);
-static int identify_word(char *word);
-static int check_identifier(char *word);
-static int check_number(char *word);
-static void AddLexPoint(LexInstance *li, int index, int type);
-void lexer_init();
-void lexer_close();
-static void load_builtin_keywords(const char *array[], int color);
-static inline LTNode *CreateLTNode();
-static void FreeLTNode(LTNode *t);
-void lexeme_add(const char *str, int color);
-
-#endif // LEXER_H

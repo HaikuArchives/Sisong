@@ -4,14 +4,10 @@ SVN VERSION
 (c)2009 Caitlin Shaw
 GPL/3; see accompanying LICENSE for details
 
-This is the SVN version, some features may be tantalizingly offered yet not working. Not only that, but this code may contain **SPOILERS** that will ruin your giddy surprise later at the massive party where my new super incredi-features are released for real. Not only that, but it still comes with **NO WARRANTY**. However, if it breaks, I will let you keep every piece you can find. Egads. I guess you takes your chances when you live on the edge!
 
-Note I use SVN as a backup as well. I will try not to commit anything that doesn't actually work. In case I mess that up, I'll commit a patch to fix the problem as soon as possible. Basically what you've got here is the same version as what I'm using. When I upgrade, I copy the test binary over on top of the main binary, then commit.
+TO BUILD:
 
-
-The following is from the README of the latest release:
-
-Go into "line" directory in terminal and execute "make". The executable produced is named "line".
+cd into "src" directory and execute "make". The executable produced will be named "line".
 
 If you are planning to modify the source beyond minor hacks, you should be using "makegen" in your compile procedure. This program generates the "Makefile" from "makelist.ml" and is the way that all the "fdh" files (which handle automatic function prototyping of C-style functions) get generated. Copy the include "makegen" executable to "/bin" or place it in the "line" directory.
 

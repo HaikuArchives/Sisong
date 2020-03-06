@@ -6,7 +6,7 @@ typedef struct SmalRecord
 	char *user_ptr;
 	int size;
 	bool reallocd;	// 1 if has been reallocd
-	
+
 	// file, function and line memory was allocated from
 	char *file;
 	char *function;

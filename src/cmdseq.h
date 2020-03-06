@@ -1,7 +1,5 @@
-#ifndef CMDSEQ_H
-#define CMDSEQ_H
 
-typedef struct CmdSeqData
+struct CmdSeqData
 {
 	bool active;	// command sequence in progress
 	
@@ -9,7 +7,3 @@ typedef struct CmdSeqData
 	char *buffer;
 	int nchars;
 };
-
-bool IsCommand(char *command, int *message);
-
-#endif

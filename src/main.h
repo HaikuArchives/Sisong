@@ -1,19 +1,14 @@
-#ifndef MAIN_H
-#define MAIN_H
+
 
 // the application class
 class EApp : public BApplication
 {
-public:
-	EApp();
-	~EApp();
-	
-	void RefsReceived(BMessage *message);
+    public:
+		EApp();
+		~EApp();
+		
+		virtual void RefsReceived(BMessage *message);
+		virtual void MessageReceived(BMessage *msg);
 };
 
-void LoadEditorSettings();
-void SaveEditorSettings();
-void LockWindow();
-void UnlockWindow();
 
-#endif // MAIN_H

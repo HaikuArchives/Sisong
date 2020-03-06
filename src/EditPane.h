@@ -10,10 +10,10 @@ public:
 	virtual void FrameResized(float width, float height);
 	
 	virtual void MouseDown(BPoint where);
-	virtual void MouseMoved(BPoint where, uint32 transit, const BMessage *msg);
+	virtual void MouseMoved(BPoint where, uint32 code, const BMessage *msg);
 	virtual void MouseUp(BPoint where);
 	
-	void ClearBelow(EditView *ev, int lineNo);
+	void ClearBelow(int y);
 	void SetFontSize(int newsize);
 	
 	CFlashingCursor cursor;

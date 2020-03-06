@@ -2,8 +2,6 @@
 #ifndef _COLORITEM_H
 #define _COLORITEM_H
 
-#include "../MessageView.h"
-
 #define M_CI_BOLD_CLICKED	'C!CK'
 #define M_CI_FG_CLICKED		'C!FG'
 #define M_CI_BG_CLICKED		'C!BG'

@@ -1,6 +1,6 @@
 
 #include "editor.h"
-#include "edit_cursor.h"
+#include "edit_cursor.fdh"
 
 /*
 	left
@@ -165,7 +165,7 @@ void EditCursor::set_mode(int newmode)
 	}
 }
 
-char *EditCursor::DescribeMode()
+const char *EditCursor::DescribeMode()
 {
 	switch(this->xseekmode)
 	{

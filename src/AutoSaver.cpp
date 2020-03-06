@@ -2,10 +2,7 @@
 #include "editor.h"
 #include <Path.h>
 #include <Entry.h>
-#include "AutoSaver.h"
-
-#include "misc.h"
-#include "misc2.h"
+#include "AutoSaver.fdh"
 
 static int LastAutoSave = 0;
 static int Timer = 0;

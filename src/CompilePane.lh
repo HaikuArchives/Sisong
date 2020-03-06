@@ -1,7 +1,7 @@
 
 // local header for the compile pane
 
-typedef struct rfContext
+struct rfContext
 {
 	int fd;
 	
@@ -17,7 +17,7 @@ typedef struct rfContext
 #define ET_WARNING		2		// line is a compiler warning message
 #define ET_HEADER		3		// line is a section header ("In method 'x':")
 #define ET_INFO			4		// is additional info "(Each undeclared identifier..."
-typedef struct stLineInfo
+struct stLineInfo
 {
 	char errorType;
 	char filename[CP_MAX_LINE_LEN];	// file error is in

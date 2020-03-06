@@ -24,17 +24,17 @@ PopupPane::PopupPane()
 {
 	contents = NULL;
 	open = false;
-	
+
 	BRect rc(Bounds());
 	rc.bottom = RESIZE_GRABBER_HEIGHT-1;
 	resizer = new ResizeBar(rc, this, B_FOLLOW_LEFT_RIGHT|B_FOLLOW_TOP);
 	AddChild(resizer);
-	
+
 	rc = Bounds();
 	rc.top = RESIZE_GRABBER_HEIGHT;
 	containerView = new BView(rc, "containerView", B_FOLLOW_ALL, 0);
 	containerView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	
+
 	AddChild(containerView);
 }
 
@@ -50,18 +50,18 @@ CEditArea *editarea = MainWindow->main.editarea;
 
 	if (newCYExtent < RESIZE_GRABBER_HEIGHT + 8)
 		newCYExtent = RESIZE_GRABBER_HEIGHT + 8;
-	
+
 	// keep pane from getting too small
 	int delta = (int)Frame().Height() - newCYExtent;
 	if (delta == 0) return;
-	
+
 	// keep edit area from getting too small
 	int nh = (int)editarea->Bounds().Height() + delta;
 	if (nh < 32)
 	{
 		delta += (32 - nh);
 	}
-	
+
 	editarea->ResizeBy(0, delta);
 	MoveBy(0, delta);
 	ResizeBy(0, -delta);
@@ -76,41 +76,41 @@ void PopupPane::Open()
 {
 	if (open) return;
 	open = true;
-	
+
 	LockWindow();
-	
+
 	CEditArea *editarea = MainWindow->main.editarea;
 	BRect eabounds(editarea->Bounds());
-	
+
 	// get desired height of pane
 	int halfheight = (int)(HEIGHTOF(eabounds) / 2);
 	int defaultheight = (int)(HEIGHTOF(eabounds) / 2.5);
 	int height = settings->GetInt("PopupPaneHeight", defaultheight);
 	if (height > halfheight) height = halfheight;
-	
+
 	// shrink edit area so there's room. note that these functions use
 	// the "creative" concept of width/height (x2-x1 instead of (x2-x1)+1).
 	editarea->ResizeTo(eabounds.Width(), \
 						eabounds.Height() - height);
-	
+
 	// add popup pane as child of MainWindow (seems must do this before resizing,
 	// or our child views won't resize)
 	MainWindow->AddChild(this);
-	
+
 	// add contents to pane
 	if (contents)
 	{
 		contents->PopupOpening();
 		containerView->AddChild(contents);
 	}
-	
+
 	// move popup pane into position and size to fit
 	BRect eaframe(editarea->Frame());
 	BRect rc(0, eaframe.bottom+1, eaframe.right, MainWindow->Bounds().bottom);
-	
+
 	MoveTo(rc.left, rc.top);
 	ResizeTo(rc.Width(), rc.Height());
-	
+
 	// resize contents to match container view. theoretically this would happen
 	// automatically, but if the content view has children, they may not be resized
 	// properly unless we say so explicitly.
@@ -120,7 +120,7 @@ void PopupPane::Open()
 		contents->MoveTo(0, 0);
 		contents->ResizeTo(cvrc.Width(), cvrc.Height());
 	}
-	
+
 	contents->MakeFocus();
 	UnlockWindow();
 }
@@ -145,13 +145,13 @@ void PopupPane::SetContents(const char *title, PopupContents *newContents)
 				contents->PopupClosing();
 				containerView->RemoveChild(contents);
 			}
-			
+
 			if (newContents)
 			{
 				newContents->PopupOpening();
 				containerView->AddChild(newContents);
 			}
-			
+
 			// resize contents to match container view
 			if (newContents)
 			{
@@ -160,11 +160,11 @@ void PopupPane::SetContents(const char *title, PopupContents *newContents)
 				newContents->ResizeTo(cvrc.Width(), cvrc.Height());
 			}
 		}
-		
+
 		// resize contents to fit
 		contents = newContents;
 	}
-	
+
 	// set new title
 	resizer->SetTitle(title);
 }
@@ -184,24 +184,24 @@ CEditArea *editarea = MainWindow->main.editarea;
 	{
 		settings->SetInt("PopupPaneHeight", (int)HEIGHTOF(Bounds()));
 		open = false;
-		
+
 		// orphan our contents
 		if (contents)
 		{
 			contents->PopupClosing();
 			containerView->RemoveChild(contents);
 		}
-		
+
 		// remove ourselves from window
 		MainWindow->RemoveChild(this);
-		
+
 		// reset height of edit pane
 		BRect eabounds(editarea->Frame());
 		eabounds.bottom = MainWindow->Bounds().bottom;
-		
+
 		editarea->ResizeTo(eabounds.Width(), eabounds.Height());
 		MainView->MakeFocus();
-		
+
 		// bit of a hack: since console is closed now make sure the
 		// "Force Show Console" item is unchecked
 		MainWindow->top.menubar->ShowConsoleItem->SetMarked(false);
@@ -219,7 +219,7 @@ void PopupPane::RemoveContents()
 			contents->PopupClosing();
 			containerView->RemoveChild(contents);
 		}
-		
+
 		contents = NULL;
 	}
 }
@@ -238,18 +238,18 @@ ResizeBar::ResizeBar(BRect frame, PopupPane *parent, uint32 resizingMode)
 {
 	dragging = false;
 	this->parent = parent;
-	
+
 	this->title = NULL;
 	SetTitle("Popup Pane");
-	
+
 	int x = (int)Bounds().right - CLOSEBTN_WIDTH - 1;
 	int y = (int)Bounds().bottom - CLOSEBTN_HEIGHT - 4;
 	BRect closebtn_rect(x, y, x+(CLOSEBTN_WIDTH-1), y+(CLOSEBTN_HEIGHT-1));
-	
+
 	AddChild(new CCloseButton(closebtn_rect,
 							new BMessage(M_POPUPPANE_CLOSE), MainWindow, \
 							B_FOLLOW_BOTTOM | B_FOLLOW_RIGHT));
-	
+
 	SetViewColor(lightColor);
 }
 
@@ -262,10 +262,10 @@ ResizeBar::~ResizeBar()
 void ResizeBar::SetTitle(const char *newTitle)
 {
 	if (!newTitle) newTitle = "";
-	
+
 	if (title) frees(title);
 	title = smal_strdup(newTitle);
-	
+
 	if (parent->IsOpen())
 	{
 		LockLooper();
@@ -283,16 +283,16 @@ BFont font;
 
 	x1 = (int)rc.left; x2 = (int)rc.right;
 	y1 = (int)rc.top; y2 = (int)rc.bottom;
-	
+
 	// draw title (caption)
 	SetHighColor(0, 0, 0);
 	SetLowColor(lightColor);
-	
+
 	int text_y = (y2 - 6);
 	int grablines_end = x2 - CLOSEBTN_WIDTH - 4;
-	
+
 	MovePenTo(3, text_y);
-	
+
 	// limit title text width: suboptimal, but this shouldn't happen often
 	drawTitle = strdup(title);
 	GetFont(&font);
@@ -302,12 +302,12 @@ BFont font;
 		if (len == 0) break;
 		drawTitle[len - 1] = 0;
 	}
-	
+
 	DrawString(drawTitle);
 	free(drawTitle);
-	
+
 	int grablines_start = (int)PenLocation().x + 4;
-	
+
 	// draw grabber lines
 	SetHighColor(darkColor);
 	for(int count=0;count<4;count++)
@@ -315,7 +315,7 @@ BFont font;
 		StrokeLine(BPoint(grablines_start, text_y), BPoint(grablines_end, text_y));
 		text_y -= 3;
 	}
-	
+
 	// outline top and bottom with dark color
 	StrokeLine(BPoint(x1, y1), BPoint(x2, y1));
 	StrokeLine(BPoint(x1, y2), BPoint(x2, y2));
@@ -326,7 +326,7 @@ void ResizeBar::MouseDown(BPoint where)
 	GetScreenMouse(&drag_origin);
 	original_height = (int)parent->Frame().Height();
 	dragging = true;
-	
+
 	SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS);
 }
 
@@ -338,10 +338,10 @@ int delta, newHeight;
 	if (dragging)
 	{
 		GetScreenMouse(&pos);
-		
+
 		delta = (int)(drag_origin.y - pos.y);
 		newHeight = (original_height + delta);
-		
+
 		parent->SetHeight(newHeight);
 	}
 }
@@ -357,10 +357,10 @@ void ResizeBar::GetScreenMouse(BPoint *pt)
 uint32 buttons;
 
 	LockLooper();
-	
+
 	GetMouse(pt, &buttons);
 	ConvertToScreen(pt);
-	
+
 	UnlockLooper();
 }
 
@@ -379,7 +379,7 @@ CCloseButton::CCloseButton(BRect frame, BMessage *msg, BLooper *target, uint32 r
 	invokeMsg = msg;
 	invokeTarget = target;
 	pressed = false;
-	
+
 	SetViewColor(btnBody);
 }
 
@@ -396,17 +396,17 @@ void CCloseButton::Draw(BRect region)
 	y1 = (int)Bounds().top;
 	x2 = (int)Bounds().right;
 	y2 = (int)Bounds().bottom;
-	
+
 	if (!pressed)
 	{
 		SetHighColor(btnHilite);
 		StrokeLine(BPoint(x1, y1), BPoint(x2-1, y1));
 		StrokeLine(BPoint(x1, y1+1), BPoint(x1, y2-1));
-		
+
 		SetHighColor(btnShadowDeep);
 		StrokeLine(BPoint(x2, y1), BPoint(x2, y2));
 		StrokeLine(BPoint(x1, y2), BPoint(x2-1, y2));
-		
+
 		SetHighColor(btnShadow);
 		StrokeLine(BPoint(x2-1, y1+1), BPoint(x2-1, y2-1));
 		StrokeLine(BPoint(x1+1, y2-1), BPoint(x2-2, y2-1));
@@ -416,16 +416,16 @@ void CCloseButton::Draw(BRect region)
 		SetHighColor(btnShadowDeep);
 		StrokeLine(BPoint(x1, y1), BPoint(x2-1, y1));
 		StrokeLine(BPoint(x1, y1+1), BPoint(x1, y2-1));
-		
+
 		SetHighColor(btnHilite);
 		StrokeLine(BPoint(x2, y1), BPoint(x2, y2));
 		StrokeLine(BPoint(x1, y2), BPoint(x2-1, y2));
-		
+
 		// recess the "X"
 		y2++;
 		y1++;
 	}
-	
+
 	// draw "X"
 	SetHighColor(0,0,0);
 	StrokeLine(BPoint(x1+3, y1+3), BPoint(x2-3, y2-4));
@@ -443,7 +443,7 @@ void CCloseButton::MouseUp(BPoint where)
 {
 	pressed = false;
 	Invalidate();
-	
+
 	if (Bounds().Contains(where))
 	{
 		if (invokeMsg && invokeTarget)

@@ -54,7 +54,7 @@ DirMenu::DirMenu(BRect frame, BPath *initialPath, uint32 resizingMode)
 	// so that the drive icon is visible even when the dirmenu is closed.
 	fSuperMenu = new DirMenuItem(fMenu);
 	
-	fMenuBar->RemoveItem((long)0);
+	fMenuBar->RemoveItem((int32)0);
 	fMenuBar->AddItem(fSuperMenu);
 
 	// populate

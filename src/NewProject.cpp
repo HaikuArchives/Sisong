@@ -112,7 +112,7 @@ const char *projectName;
 BString *projectPath;
 
 	txtProjectName->MakeFocus();
-	
+
 	projectName = txtProjectName->Text();
 	if (!projectName || !projectName[0])
 	{
@@ -120,19 +120,16 @@ BString *projectPath;
 		return;
 	}
 	
-	// the 32 is arbitrary I believe, it's just so that it's not so
-	// long that it looks ugly in the menu.
 	if (strlen(projectName) >= 32 || \
 		strchr(projectName, '/') || \
-		strchr(projectName, '|') || \
-		strstr(projectName, ".."))
+		strchr(projectName, '|'))
 	{
 		(new BAlert("", "The project name is too long or contains some invalid characters.\n\n"
 						"Projects are stored as folders so must be valid folder names.\n",
 						"OK", NULL, NULL, B_WIDTH_AS_USUAL, B_WARNING_ALERT))->Go();
 		return;
 	}
-	
+
 	// save current project if any
 	if (ProjectManager.SaveProject()) return;
 	
@@ -147,7 +144,7 @@ BString *projectPath;
 	
 	// open the project. (this also creates an empty build script).
 	ProjectManager.OpenProject(projectPath->String(), true);
-	
+
 	// open all files that were created from New Project window, as we assume
 	// they're part of the project.
 	EditView::Close_All();
