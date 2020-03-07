@@ -5,7 +5,7 @@ public:
 	CViewTimer(BLooper *view, int msg, uint interval);
 	~CViewTimer();
 
-	friend int32 ThreadFunc(CViewTimer *data);
+	friend status_t ThreadFunc(CViewTimer *data);
 	
 //private:
 public:
