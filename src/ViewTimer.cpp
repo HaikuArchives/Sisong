@@ -5,7 +5,7 @@
 #include "ViewTimer.h"
 #include "../common/basics.h"
 
-int ThreadFunc(void *vtimer)
+status_t ThreadFunc(void *vtimer)
 {
 CViewTimer *timer = (CViewTimer *)vtimer;
 	rept
