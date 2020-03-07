@@ -1,3 +1,18 @@
+Update 03/07/2020
+
+This patches it to compile on modern systems.
+
+It will compile as-is with just a clone and make on 64-bit systems.
+
+For 32-bit systems:
+
+	* To compile with GCC2.95, "cp Makefile.gcc2 Makefile"
+
+	* To use modern GCC, try find/replace all of the "gcc" in the Makefile with "gcc-x86".
+
+----------
+
+
 SISONG editor/IDE source code
 SVN VERSION
 
