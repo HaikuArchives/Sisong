@@ -8,7 +8,7 @@ For 32-bit systems:
 
 	* To compile with GCC2.95, "cp Makefile.gcc2 Makefile"
 
-	* To use modern GCC, try find/replace all of the "gcc" in the Makefile with "gcc-x86".
+	* To use modern GCC, do a "setarch x86" before building.
 
 ----------
 
